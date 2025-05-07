@@ -9,6 +9,11 @@
     "require": {
         "slim/slim": "4.*",
         "slim/psr7": "^1.7",
-        "ext-json": "*"
+        "ext-json": "*",
+        "slim/twig-view": "*",
+        "vlucas/phpdotenv": "*",
+        "doctrine/dbal": "*",
+        "respect/validation": "*",
+        "ext-pdo": "*"
     }
 }
