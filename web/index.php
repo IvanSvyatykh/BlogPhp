@@ -10,7 +10,7 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 $app = AppFactory::create();
 
 $app->get('/', function (Request $request, Response $response, $args) {
-    $data = array('name' => 'Max', 'role' => 'web developer');
+    $data = "Hello World!";
     $response->getBody()->write(json_encode($data));
 
     return $response->withHeader('Content-Type', 'application/json');
