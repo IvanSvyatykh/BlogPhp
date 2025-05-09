@@ -20,4 +20,13 @@ services:
       context: ./docker/php
     volumes:
       - .:/var/www
+    depends_on:
+      - blog_db
     restart: on-failure
+
+
+  blog_db:
+    image: postgres:17
+    restart: on-failure
+    env_file:
+      - .env

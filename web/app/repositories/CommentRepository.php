@@ -2,8 +2,8 @@
 
 namespace app\repositories;
 
-use app\entities\Comment;
 use Doctrine\DBAL\Connection;
+use Pri301\Blog\Enteties\Comment;
 
 class CommentRepository
 {

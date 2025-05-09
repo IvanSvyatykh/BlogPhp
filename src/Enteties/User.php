@@ -1,6 +1,6 @@
 <?php
 
-namespace app\entities;
+namespace Pri301\Blog\Enteties;
 
 class User
 {

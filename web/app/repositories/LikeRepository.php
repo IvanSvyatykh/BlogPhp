@@ -2,8 +2,8 @@
 
 namespace app\repositories;
 
-use app\entities\Like;
 use Doctrine\DBAL\Connection;
+use Pri301\Blog\Enteties\Like;
 
 class LikeRepository
 {

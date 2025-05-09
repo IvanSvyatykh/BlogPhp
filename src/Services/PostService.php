@@ -1,6 +1,6 @@
 <?php
 
-namespace app\services;
+namespace Pri301\Blog\Services;
 
 use app\repositories\PostRepository;
 use Pri301\Blog\Enteties\Post;

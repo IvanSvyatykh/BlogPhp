@@ -2,8 +2,8 @@
 
 namespace app\repositories;
 
-use app\entities\Post;
 use Doctrine\DBAL\Connection;
+use Pri301\Blog\Enteties\Post;
 
 class PostRepository
 {

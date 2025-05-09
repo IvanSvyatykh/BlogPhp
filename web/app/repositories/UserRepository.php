@@ -2,8 +2,8 @@
 
 namespace app\repositories;
 
-use app\entities\User;
 use Doctrine\DBAL\Connection;
+use Pri301\Blog\Enteties\User;
 
 class UserRepository
 {

@@ -1,19 +1,15 @@
 <?php
 
-
-use Psr\Http\Message\ResponseInterface as Response;
-use Psr\Http\Message\ServerRequestInterface as Request;
+use DI\Container;
 use Slim\Factory\AppFactory;
 
 
 require dirname(__DIR__) . '/vendor/autoload.php';
+
+$container = new Container();
+AppFactory::setContainer($container);
 $app = AppFactory::create();
 
-$app->get('/', function (Request $request, Response $response, $args) {
-    $data = "Hello World!";
-    $response->getBody()->write(json_encode($data));
-
-    return $response->withHeader('Content-Type', 'application/json');
-});
+require __DIR__ . '/../src/app/routes/LikeRoutes.php';
 
 $app->run();
