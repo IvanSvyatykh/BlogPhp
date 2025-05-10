@@ -9,11 +9,23 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 final class PostHandler
 {
 
-    public function __construct(private PostService $postService) {}
+    #public function __construct(private PostService $postService) {}
 
     public function getPostsBySubstr(Request $request, Response $response)
     {
-        $data = $request->getParsedBody();
+        $dto = $request->getAttribute('dto');
+
+        $substring = $dto->substring;
+        $articlePart = $dto->articlePart;
+
+        $result = [
+            'substring' => $substring,
+            'articlePart' => $articlePart,
+            'posts' => ["Test"]
+        ];
+
+        $response->getBody()->write(json_encode($result));
+        return $response->withHeader('Content-Type', 'application/json');
 
     }
 
