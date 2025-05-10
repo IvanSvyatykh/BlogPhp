@@ -18,25 +18,27 @@ class UserRepository
 
         return $data ? new User(
             $data['username'],
-            $data['email'],
+            $data['login'],
             $data['password'],
             $data['id'],
+            $data['is_banned'],
             new \DateTimeImmutable($data['created_at'])
         ) : null;
     }
 
-    public function findByEmail(string $email): ?User
+    public function findByLogin(string $login): ?User
     {
         $data = $this->connection->fetchAssociative(
-            'SELECT * FROM users WHERE email = ?',
-            [$email]
+            'SELECT * FROM users WHERE login = ?',
+            [$login]
         );
 
         return $data ? new User(
             $data['username'],
-            $data['email'],
+            $data['login'],
             $data['password'],
             $data['id'],
+            $data['is_banned'],
             new \DateTimeImmutable($data['created_at'])
         ) : null;
     }
@@ -45,7 +47,7 @@ class UserRepository
     {
         $data = [
             'username' => $user->getUsername(),
-            'email' => $user->getEmail(),
+            'login' => $user->getLogin(),
             'password' => $user->getPassword(),
             'created_at' => $user->getCreatedAt()->format('Y-m-d H:i:s'),
         ];
@@ -54,9 +56,10 @@ class UserRepository
             $this->connection->insert('users', $data);
             $user = new User(
                 $user->getUsername(),
-                $user->getEmail(),
+                $user->getLogin(),
                 $user->getPassword(),
                 $this->connection->lastInsertId(),
+                $user->isBanned(),
                 $user->getCreatedAt()
             );
         } else {

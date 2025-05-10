@@ -11,6 +11,7 @@ RUN apt-get clean \
     && locale-gen \
     # Утилиты
     && apt-get install -y git wget mc nano \
+    && apt-get install -y libpq-dev \
     # Установка расширений PHP
     && docker-php-ext-install pdo_mysql mysqli pcntl sockets bcmath iconv \
     && apt-get install -y libffi-dev && docker-php-ext-install ffi \
@@ -26,8 +27,8 @@ RUN apt-get clean \
     # php-imagick
     && apt-get install -y libmagickwand-dev build-essential libtool uuid-dev automake autotools-dev libltdl-dev libltdl7 \
     && pecl install imagick \
-    && docker-php-ext-enable imagick
-
+    && docker-php-ext-enable imagick \
+    && docker-php-ext-install pdo_pgsql
 RUN apt-get -y clean \
     && apt-get -y autoclean \
     && apt-get -y autoremove \
