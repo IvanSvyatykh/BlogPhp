@@ -1,6 +1,6 @@
 <?php
 
-namespace app\repositories;
+namespace Pri301\Blog\Repositories;
 
 use Doctrine\DBAL\Connection;
 use Pri301\Blog\Enteties\Post;

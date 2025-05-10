@@ -2,8 +2,8 @@
 
 namespace Pri301\Blog\Services;
 
-use app\repositories\PostRepository;
 use Pri301\Blog\Enteties\Post;
+use Pri301\Blog\Repositories\PostRepository;
 
 class PostService
 {
