@@ -4,6 +4,7 @@ namespace Pri301\Blog\Repositories;
 
 use Doctrine\DBAL\Connection;
 use Pri301\Blog\Enteties\Post;
+use Pri301\Blog\Enum\PostStatus;
 
 class PostRepository
 {
@@ -28,7 +29,8 @@ class PostRepository
             $data['content'],
             $data['author_id'],
             $data['id'],
-            new \DateTimeImmutable($data['created_at'])
+            new \DateTimeImmutable($data['created_at']),
+            $data['status']
         );
 
         if ($author = $this->userRepository->find($data['author_id'])) {
@@ -38,22 +40,44 @@ class PostRepository
         return $post;
     }
 
-    public function findAll(int $limit = 10, int $offset = 0): array
+    //its for getting articles that make user
+    public function findAll(int $authorId ,int $limit = 10, int $offset = 0): array
     {
         $data = $this->connection->fetchAllAssociative(
-            'SELECT * FROM posts ORDER BY created_at DESC LIMIT ? OFFSET ?',
-            [$limit, $offset],
-            [\PDO::PARAM_INT, \PDO::PARAM_INT]
+            'SELECT * FROM posts WHERE author_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?',
+            [$authorId, $limit, $offset],
+            [\PDO::PARAM_INT, \PDO::PARAM_INT, \PDO::PARAM_INT]
         );
 
+
+
+        return $this->recievePosts($data);
+    }
+
+    //its for getting articles that published (news feeds)
+    public function getPublishedArticles(int $limit = 10, int $offset = 0): array
+    {
+        $data = $this->connection->fetchAllAssociative(
+            'SELECT * FROM posts WHERE status = ? ORDER BY created_at DESC LIMIT ? OFFSET ?',
+            [PostStatus::Published->value, $limit, $offset],
+            [\PDO::PARAM_STR, \PDO::PARAM_INT, \PDO::PARAM_INT]
+        );
+
+        return $this->recievePosts($data);
+    }
+
+    private function recievePosts(array $data): array
+    {
         $posts = [];
+
         foreach ($data as $postData) {
             $post = new Post(
                 $postData['title'],
                 $postData['content'],
                 $postData['author_id'],
                 $postData['id'],
-                new \DateTimeImmutable($postData['created_at'])
+                new \DateTimeImmutable($postData['created_at']),
+                PostStatus::from($postData['status'])
             );
 
             if ($author = $this->userRepository->find($postData['author_id'])) {
@@ -66,6 +90,18 @@ class PostRepository
         return $posts;
     }
 
+    public function getPendingArticles(int $limit = 10, int $offset = 0): array
+    {
+        $data = $this->connection->fetchAllAssociative(
+            'SELECT * FROM posts WHERE status = ? ORDER BY created_at DESC LIMIT ? OFFSET ?',
+            [PostStatus::Pending->value, $limit, $offset],
+            [\PDO::PARAM_STR, \PDO::PARAM_INT, \PDO::PARAM_INT]
+        );
+
+        return $this->recievePosts($data);
+    }
+
+
     public function save(Post $post): void
     {
         $data = [
@@ -73,6 +109,7 @@ class PostRepository
             'content' => $post->getContent(),
             'author_id' => $post->getAuthorId(),
             'created_at' => $post->getCreatedAt()->format('Y-m-d H:i:s'),
+            'status' => $post->getStatus(),
         ];
 
         if ($post->getId() === null) {
@@ -82,7 +119,8 @@ class PostRepository
                 $post->getContent(),
                 $post->getAuthorId(),
                 $this->connection->lastInsertId(),
-                $post->getCreatedAt()
+                $post->getCreatedAt(),
+                $post->getStatus()
             );
         } else {
             $this->connection->update(
