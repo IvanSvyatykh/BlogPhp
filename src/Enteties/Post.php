@@ -12,8 +12,8 @@ class Post
     private int $authorId;
     private \DateTimeImmutable $createdAt;
     private ?User $author = null;
+    private bool $isPublished = false;
     private PostStatus $status;
-
 
     public function __construct(
         string $title,
@@ -39,6 +39,7 @@ class Post
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
     public function getAuthor(): ?User { return $this->author; }
     public function setAuthor(User $author): void { $this->author = $author; }
-    public function getStatus(): PostStatus { return $this->status; }
-    public function setStatus(PostStatus $status): void { $this->status = $status; }
+    public function isPublished(): bool { return $this->isPublished; }
+    public function setPublished(bool $value): void { $this->isPublished = $value; }
+
 }

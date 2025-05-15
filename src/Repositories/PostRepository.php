@@ -2,16 +2,20 @@
 
 namespace Pri301\Blog\Repositories;
 
+use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
+use Exception;
 use Pri301\Blog\Enteties\Post;
 use Pri301\Blog\Enum\PostStatus;
 
 class PostRepository
 {
     public function __construct(
-        private Connection $connection,
+        private Connection     $connection,
         private UserRepository $userRepository
-    ) {}
+    )
+    {
+    }
 
     public function find(int $id): ?Post
     {
@@ -29,7 +33,7 @@ class PostRepository
             $data['content'],
             $data['author_id'],
             $data['id'],
-            new \DateTimeImmutable($data['created_at']),
+            new DateTimeImmutable($data['created_at']),
             $data['status']
         );
 
@@ -76,7 +80,7 @@ class PostRepository
                 $postData['content'],
                 $postData['author_id'],
                 $postData['id'],
-                new \DateTimeImmutable($postData['created_at']),
+                new DateTimeImmutable($postData['created_at']),
                 PostStatus::from($postData['status'])
             );
 
@@ -109,7 +113,7 @@ class PostRepository
             'content' => $post->getContent(),
             'author_id' => $post->getAuthorId(),
             'created_at' => $post->getCreatedAt()->format('Y-m-d H:i:s'),
-            'status' => $post->getStatus(),
+            'is_published' => $post->isPublished()
         ];
 
         if ($post->getId() === null) {
@@ -134,5 +138,46 @@ class PostRepository
     public function delete(int $id): void
     {
         $this->connection->delete('posts', ['id' => $id]);
+    }
+
+    public function findPublishedByUserId(int $userId): array
+    {
+        return $this->hydratePosts($this->connection->fetchAllAssociative(
+            'SELECT * FROM posts WHERE author_id = ? AND is_published = TRUE',
+            [$userId]
+        ));
+    }
+
+    public function findUnpublishedByUserId(int $userId): array
+    {
+        return $this->hydratePosts($this->connection->fetchAllAssociative(
+            'SELECT * FROM posts WHERE author_id = ? AND is_published = FALSE',
+            [$userId]
+        ));
+    }
+
+    private function hydratePosts(array $rows): array
+    {
+        $posts = [];
+
+        foreach ($rows as $row) {
+            $post = new Post(
+                $row['title'],
+                $row['content'],
+                $row['author_id'],
+                $row['id'],
+                new DateTimeImmutable($row['created_at'])
+            );
+
+            $post->setPublished((bool)$row['is_published']);
+
+            if ($author = $this->userRepository->find($row['author_id'])) {
+                $post->setAuthor($author);
+            }
+
+            $posts[] = $post;
+        }
+
+        return $posts;
     }
 }

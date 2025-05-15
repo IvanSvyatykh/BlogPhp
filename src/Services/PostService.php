@@ -35,6 +35,9 @@ class PostService
         return $this->postRepository->getPublishedArticles($limit, $offset);
     }
 
+    public function deletePost(int $id): void
+    {
+        $this->postRepository->delete($id);
     public function getAllPostsByUser(int $authorId, int $limit = 10, int $offset = 0): array
     {
         return $this->postRepository->findAll($authorId, $limit, $offset);
@@ -43,6 +46,21 @@ class PostService
     public function publishPost(int $postId): void
     {
         $post = $this->postRepository->find($postId);
+        if ($post) {
+            $post->setPublished(true);
+            $this->postRepository->save($post);
+        }
+    }
+
+    public function getPublishedPostsByUser(int $userId): array
+    {
+        return $this->postRepository->findPublishedByUserId($userId);
+    }
+
+    public function getUnpublishedPostsByUser(int $userId): array
+    {
+        return $this->postRepository->findUnpublishedByUserId($userId);
+    }
         $post->setStatus(PostStatus::Published);
         $this->postRepository->save($post);
     }
