@@ -2,6 +2,8 @@
 
 namespace Pri301\Blog\Enteties;
 
+use Pri301\Blog\Enum\PostStatus;
+
 class Post
 {
     private ?int $id;
@@ -11,19 +13,22 @@ class Post
     private \DateTimeImmutable $createdAt;
     private ?User $author = null;
     private bool $isPublished = false;
+    private PostStatus $status;
 
     public function __construct(
         string $title,
         string $content,
         int $authorId,
         ?int $id = null,
-        ?\DateTimeImmutable $createdAt = null
+        ?\DateTimeImmutable $createdAt = null,
+        PostStatus $status = PostStatus::Pending
     ) {
         $this->id = $id;
         $this->title = $title;
         $this->content = $content;
         $this->authorId = $authorId;
         $this->createdAt = $createdAt ?? new \DateTimeImmutable();
+        $this->status = $status;
     }
 
     // Getters and setters
@@ -36,4 +41,5 @@ class Post
     public function setAuthor(User $author): void { $this->author = $author; }
     public function isPublished(): bool { return $this->isPublished; }
     public function setPublished(bool $value): void { $this->isPublished = $value; }
+
 }
