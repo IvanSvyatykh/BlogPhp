@@ -11,6 +11,7 @@ class User
     private bool $isBanned;
     private \DateTimeImmutable $createdAt;
     private bool $isAdmin;
+    private bool $isModerator;
 
     public function __construct(
         string $username,
@@ -19,7 +20,8 @@ class User
         ?int $id = null,
         bool $isBanned = false,
         ?\DateTimeImmutable $createdAt = null,
-        bool $isAdmin = false
+        bool $isAdmin = false,
+        bool $isModerator = false
     ) {
         $this->id = $id;
         $this->username = $username;
@@ -28,6 +30,7 @@ class User
         $this->isBanned = $isBanned;
         $this->createdAt = $createdAt ?? new \DateTimeImmutable();
         $this->isAdmin = $isAdmin;
+        $this->isModerator = $isModerator;
     }
 
     // Getters and setters
@@ -38,5 +41,6 @@ class User
     public function isBanned(): bool { return $this->isBanned; }
     public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
     public function isAdmin(): bool { return $this->isAdmin; }
+    public function isModerator(): bool { return $this->isModerator; }
     public function switchBanned(): void { $this->isBanned = !$this->isBanned; }
 }

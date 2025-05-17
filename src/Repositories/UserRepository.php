@@ -24,6 +24,7 @@ class UserRepository
             $data['is_banned'],
             new \DateTimeImmutable($data['created_at']),
             $data['is_admin'],
+            $data['is_moderator']
         ) : null;
     }
 
@@ -46,12 +47,14 @@ class UserRepository
                 $userData['id'],
                 $userData['is_banned'],
                 new \DateTimeImmutable($userData['created_at']),
-                $userData['is_admin']
+                $userData['is_admin'],
+                $userData['is_moderator'],
             );
         }, $data);
 
-         return $users;
+        return $users;
     }
+
     public function findByLogin(string $login): ?User
     {
         $data = $this->connection->fetchAssociative(
@@ -66,7 +69,8 @@ class UserRepository
             $data['id'],
             $data['is_banned'],
             new \DateTimeImmutable($data['created_at']),
-            $data['is_admin']
+            $data['is_admin'],
+            $data['is_moderator']
         ) : null;
     }
 
@@ -79,6 +83,7 @@ class UserRepository
             'created_at' => $user->getCreatedAt()->format('Y-m-d H:i:s'),
             'is_banned' => $user->isBanned(),
             'is_admin' => $user->isAdmin(),
+            'is_moderator' => $user->isModerator()
         ];
 
         if ($user->getId() === null) {
@@ -91,6 +96,7 @@ class UserRepository
                 $user->isBanned(),
                 $user->getCreatedAt(),
                 $user->isAdmin(),
+                $user->isModerator()
             );
         } else {
             $this->connection->update(

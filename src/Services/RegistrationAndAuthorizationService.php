@@ -47,6 +47,10 @@ class RegistrationAndAuthorizationService
 
         $token = $this->generateToken($user);
 
+        if ($user->isModerator()) {
+            return new LoginUserResponse(UserAuthState::USER_AUTHORIZED_AS_MODERATOR, $token);
+        }
+
         return new LoginUserResponse(UserAuthState::USER_AUTHORIZED, $token);
     }
 
