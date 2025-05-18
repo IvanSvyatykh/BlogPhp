@@ -1,12 +1,12 @@
 <?php
 
-namespace Pri301\Blog\Enteties;
+namespace Pri301\Blog\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-
+#[ORM\Entity]
 #[Orm\Table(name: 'post_statuses',schema: "public")]
-class PostStatus {
+class Status {
 
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'SEQUENCE')]

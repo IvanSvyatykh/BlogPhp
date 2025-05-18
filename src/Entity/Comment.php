@@ -1,43 +1,47 @@
 <?php
 
-namespace Pri301\Blog\Enteties;
+namespace Pri301\Blog\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
-
-#[ORM\Table(name: 'likes',schema: "public")]
-#[ORM\UniqueConstraint(name: 'unique_constraint', columns: ['user_id', 'post_id'])]
-class Like
+#[ORM\Entity]
+#[ORM\Table(name: 'comments',schema: "public")]
+class Comment
 {
 
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
     #[ORM\Column(type: 'integer', unique: true)]
-    private int $id;
-
+    private ?int $id;
+    #[ORM\Column(type: 'string', length: 50)]
+    private string $content;
     #[ORM\ManyToOne(targetEntity: Post::class)]
-    #[ORM\Column(type: 'integer', name: 'post_id')]
     #[ORM\JoinColumn(name: 'post_id', referencedColumnName: 'id',nullable: false)]
-    private Post $post;
-
+    private ?Post $post = null;
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id',nullable: false)]
-    private User $user;
-
+    private ?User $author = null;
     #[ORM\Column(type: 'datetime', name: 'created_at')]
     private \DateTime $createdAt;
 
+
     public function __construct(
+        string $content,
         Post $post,
-        User $user,
+        User $author,
         ?\DateTime $createdAt = null
     ) {
+        $this->content = $content;
         $this->post = $post;
-        $this->user = $user;
+        $this->author = $author;
         $this->createdAt = $createdAt ?? new \DateTime();
     }
 
-    // Getters
+    // Getters and setters
+    public function getId(): ?int { return $this->id; }
+    public function getContent(): string { return $this->content; }
     public function getPost(): Post { return $this->post; }
-    public function getUser(): User { return $this->user; }
+    public function getAuthor(): User { return $this->author; }
     public function getCreatedAt(): \DateTime { return $this->createdAt; }
+    public function setAuthor(User $author): void { $this->author = $author; }
+    public function setPost(Post $post): void { $this->post = $post; }
 }

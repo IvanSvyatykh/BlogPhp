@@ -2,7 +2,7 @@
 
 namespace Pri301\Blog\Services;
 
-use Pri301\Blog\Enteties\Post;
+use Pri301\Blog\Entity\Post;
 use Pri301\Blog\Enum\PostStatus;
 use Pri301\Blog\Repositories\PostRepository;
 

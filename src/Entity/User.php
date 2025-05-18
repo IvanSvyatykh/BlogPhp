@@ -1,9 +1,9 @@
 <?php
 
-namespace Pri301\Blog\Enteties;
+namespace Pri301\Blog\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+#[ORM\Entity]
 #[ORM\Table(name: 'user',schema: "public")]
 class User
 {
@@ -13,22 +13,22 @@ class User
     private int $id;
 
     #[ORM\Column(type:"string", length:255,nullable:false)]
-    private $name;
+    private string $name;
 
     #[ORM\Column(type:"string", length:255,unique: true,nullable:false)]
-    private $login;
+    private string $login;
 
     #[ORM\Column(type:"string", length:255,nullable:false)]
-    private $password;
+    private string $password;
 
     #[ORM\Column(type:"boolean", name:'is_admin',nullable:false)]
-    private $isAdmin = false;
+    private bool $isAdmin = false;
 
     #[ORM\Column(type:"boolean", name:'is_moderator',nullable:false)]
-    private $isModerator = false;
+    private bool $isModerator = false;
 
     #[ORM\Column(type:"datetime", name: 'created_at',nullable:false)]
-    private $createdAt;
+    private \DateTime $createdAt;
 
 
     public function __construct(string $name,string $login,string $password)

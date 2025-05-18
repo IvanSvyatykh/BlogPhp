@@ -1,11 +1,11 @@
 <?php
-namespace Pri301\Blog\Enteties;
+namespace Pri301\Blog\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-
-#[Orm\Table(name: 'post_tags',schema: "public")]
-class PostTag {
+#[ORM\Entity]
+#[Orm\Table(name: 'tags',schema: "public")]
+class Tag {
 
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
