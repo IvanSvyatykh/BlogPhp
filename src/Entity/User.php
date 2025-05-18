@@ -27,6 +27,9 @@ class User
     #[ORM\Column(type:"boolean", name:'is_moderator',nullable:false)]
     private bool $isModerator = false;
 
+    #[ORM\Column(type:"boolean", name:'is_banned',nullable:false)]
+    private bool $isBanned = false;
+
     #[ORM\Column(type:"datetime", name: 'created_at',nullable:false)]
     private \DateTime $createdAt;
 
