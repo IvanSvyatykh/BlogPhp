@@ -1,25 +1,43 @@
 <?php
 
 namespace Pri301\Blog\Enteties;
+use Doctrine\ORM\Mapping as ORM;
 
+
+#[ORM\Table(name: 'likes',schema: "public")]
+#[ORM\UniqueConstraint(name: 'unique_constraint', columns: ['user_id', 'post_id'])]
 class Like
 {
-    private int $postId;
-    private int $userId;
-    private \DateTimeImmutable $createdAt;
+
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
+    #[ORM\Column(type: 'integer', unique: true)]
+    private int $id;
+
+    #[ORM\ManyToOne(targetEntity: Post::class)]
+    #[ORM\Column(type: 'integer', name: 'post_id')]
+    #[ORM\JoinColumn(name: 'post_id', referencedColumnName: 'id',nullable: false)]
+    private Post $post;
+
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id',nullable: false)]
+    private User $user;
+
+    #[ORM\Column(type: 'datetime', name: 'created_at')]
+    private \DateTime $createdAt;
 
     public function __construct(
-        int $postId,
-        int $userId,
-        ?\DateTimeImmutable $createdAt = null
+        Post $post,
+        User $user,
+        ?\DateTime $createdAt = null
     ) {
-        $this->postId = $postId;
-        $this->userId = $userId;
-        $this->createdAt = $createdAt ?? new \DateTimeImmutable();
+        $this->post = $post;
+        $this->user = $user;
+        $this->createdAt = $createdAt ?? new \DateTime();
     }
 
     // Getters
-    public function getPostId(): int { return $this->postId; }
-    public function getUserId(): int { return $this->userId; }
-    public function getCreatedAt(): \DateTimeImmutable { return $this->createdAt; }
+    public function getPost(): Post { return $this->post; }
+    public function getUser(): User { return $this->user; }
+    public function getCreatedAt(): \DateTime { return $this->createdAt; }
 }

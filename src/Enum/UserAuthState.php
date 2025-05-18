@@ -1,5 +1,5 @@
 <?php
-namespace Pri301\Blog\Enteties;
+namespace Pri301\Blog\Enum;
 enum UserAuthState: string
 {
     case USER_AUTHORIZED = 'USER_AUTHORIZED';
