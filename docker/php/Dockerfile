@@ -24,6 +24,7 @@ RUN apt-get clean \
     && apt-get install -y libmemcached-dev && pecl install memcached && docker-php-ext-enable memcached \
     && pecl install redis && docker-php-ext-enable redis \
     && apt-get install -y libicu-dev && docker-php-ext-install intl \
+    && apt-get install php-pgsql \
     # php-imagick
     && apt-get install -y libmagickwand-dev build-essential libtool uuid-dev automake autotools-dev libltdl-dev libltdl7 \
     && pecl install imagick \

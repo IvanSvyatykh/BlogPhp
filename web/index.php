@@ -1,8 +1,7 @@
 <?php
 
-use DI\Container;
 use Doctrine\DBAL\DriverManager;
-use Dotenv\Dotenv;
+use DI\Bridge\Slim\Bridge;
 use Pri301\Blog\Handlers\PostHandler;
 use Pri301\Blog\Repositories\PostRepository;
 use Pri301\Blog\Repositories\UserRepository;
@@ -14,10 +13,7 @@ use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
-
-
-$dotenv = Dotenv::createImmutable(__DIR__ . '/../');
-$dotenv->load();
+$app = Bridge::create(require __DIR__ . '/../config/container.php');
 
 $container = new Container();
 

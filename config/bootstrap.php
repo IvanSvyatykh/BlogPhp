@@ -4,9 +4,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\DBAL\Types\Type;
 
-
-
-
+$config = require dirname(__DIR__) . '/config/env.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 
