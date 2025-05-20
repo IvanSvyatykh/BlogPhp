@@ -2,12 +2,12 @@
 
 use DI\Bridge\Slim\Bridge;
 use Doctrine\DBAL\DriverManager;
+use Pri301\Blog\Application\DTO\Validator\DtoValidator;
 use Pri301\Blog\Application\Handlers\PostHandler;
 use Pri301\Blog\Domain\Services\PostService;
 use Pri301\Blog\Domain\Services\RegistrationAndAuthorizationService;
 use Pri301\Blog\Infarastructure\Doctrine\Repositories\PostRepository;
 use Pri301\Blog\Infarastructure\Doctrine\Repositories\UserRepository;
-use Pri301\Blog\Validator\DtoValidator;
 use Slim\Factory\AppFactory;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;

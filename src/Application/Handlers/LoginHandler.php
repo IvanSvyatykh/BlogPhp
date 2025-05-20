@@ -3,8 +3,8 @@
 namespace Pri301\Blog\Application\Handlers;
 
 use Pri301\Blog\Application\DTO\Requests\LoginUserRequest;
+use Pri301\Blog\Application\DTO\Validator\DtoValidator;
 use Pri301\Blog\Domain\Services\RegistrationAndAuthorizationService;
-use Pri301\Blog\Validator\DtoValidator;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 

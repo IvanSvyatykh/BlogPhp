@@ -1,6 +1,6 @@
 <?php
 
-namespace Pri301\Blog\Validator;
+namespace Pri301\Blog\Application\DTO\Validator;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class DtoValidator

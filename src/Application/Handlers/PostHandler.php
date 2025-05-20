@@ -4,10 +4,10 @@ namespace Pri301\Blog\Application\Handlers;
 use Pri301\Blog\Application\DTO\Requests\GetPostsByUserRequest;
 use Pri301\Blog\Application\DTO\Requests\PublishPostRequest;
 use Pri301\Blog\Application\DTO\Response\ArticleResponse;
+use Pri301\Blog\Application\DTO\Validator\DtoValidator;
 use Pri301\Blog\Domain\Services\PostService;
 use Pri301\Blog\Domain\Services\PostService;
 use Pri301\Blog\Infarastructure\Doctrine\Repositories\UserRepository;
-use Pri301\Blog\Validator\DtoValidator;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
