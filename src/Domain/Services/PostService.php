@@ -21,7 +21,7 @@ class PostService
             $authorId
         );
 
-        $this->postRepository->add($post);
+        $this->postRepository->addPost($post);
         return $post;
     }
 
@@ -37,7 +37,7 @@ class PostService
 
     public function deletePost(int $id): void
     {
-        $this->postRepository->delete($id);
+        $this->postRepository->deletePost($id);
     public function getAllPostsByUser(int $authorId, int $limit = 10, int $offset = 0): array
     {
         return $this->postRepository->findAllByUser($authorId, $limit, $offset);
@@ -48,7 +48,7 @@ class PostService
         $post = $this->postRepository->findPostById($postId);
         if ($post) {
             $post->setPublished(true);
-            $this->postRepository->add($post);
+            $this->postRepository->addPost($post);
         }
     }
 
@@ -62,14 +62,14 @@ class PostService
         return $this->postRepository->findUnpublishedByUserId($userId);
     }
         $post->setStatus(PostStatus::Published);
-        $this->postRepository->add($post);
+        $this->postRepository->addPost($post);
     }
 
     public function rejectPost(int $postId): void
     {
         $post = $this->postRepository->findPostById($postId);
         $post->setStatus(PostStatus::Rejected);
-        $this->postRepository->add($post);
+        $this->postRepository->addPost($post);
     }
 
     public function getPendingPosts(): array

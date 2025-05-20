@@ -5,8 +5,9 @@ namespace Pri301\Blog\Infarastructure\Doctrine\Repositories;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Pri301\Blog\Domain\Entity\User;
+use Pri301\Blog\Domain\Repository\UserRepositoryInterface;
 
-class UserRepository
+class UserRepository implements UserRepositoryInterface
 {
     private $entityManager;
 
@@ -15,7 +16,7 @@ class UserRepository
         $this->entityManager = $entityManager;
     }
 
-    public function add(User $user, bool $flush = true): void
+    public function addUser(User $user, bool $flush = true): void
     {
         $this->entityManager->persist($user);
 

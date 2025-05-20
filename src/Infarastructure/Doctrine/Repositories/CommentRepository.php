@@ -4,8 +4,10 @@ namespace Pri301\Blog\Infarastructure\Doctrine\Repositories;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Pri301\Blog\Domain\Entity\Comment;
+use Pri301\Blog\Domain\Entity\Post;
+use Pri301\Blog\Domain\Repository\CommentRepositoryInterface;
 
-class CommentRepository
+class CommentRepository implements CommentRepositoryInterface
 {
     private $entityManager;
 
@@ -14,7 +16,7 @@ class CommentRepository
         $this->entityManager = $entityManager;
     }
 
-    public function find(int $id): ?Comment
+    public function findById(int $id): ?Comment
     {
         return $this->entityManager->find(Comment::class, $id);
     }
@@ -31,15 +33,20 @@ class CommentRepository
            ->getArrayResult();
     }
 
-    public function save(Comment $comment): void
+    public function addComment(Comment $comment): void
     {
        $this->entityManager->persist($comment);
        $this->entityManager->flush();
     }
 
-    public function delete(int $id): void
+    public function deleteComment(int $id): int
     {
-        $this->entityManager->remove($this->find($id));
-        $this->entityManager->flush();
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->delete(Comment::class, 'c')
+            ->where('c.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->execute();
     }
 }

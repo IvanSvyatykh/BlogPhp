@@ -4,8 +4,9 @@ namespace Pri301\Blog\Infarastructure\Doctrine\Repositories;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Pri301\Blog\Domain\Entity\Like;
+use Pri301\Blog\Domain\Repository\LikeRepositoryInterface;
 
-class LikeRepository
+class LikeRepository implements LikeRepositoryInterface
 {
     private $entityManager;
 

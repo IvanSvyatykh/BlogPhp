@@ -4,8 +4,9 @@ namespace Pri301\Blog\Infarastructure\Doctrine\Repositories;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Pri301\Blog\Domain\Entity\Post;
+use Pri301\Blog\Domain\Repository\PostRepositoryInterface;
 
-class PostRepository
+class PostRepository implements PostRepositoryInterface
 {
     private $entityManager;
 
@@ -58,13 +59,13 @@ class PostRepository
             ->getArrayResult();
     }
 
-    public function add(Post $post): void
+    public function addPost(Post $post): void
     {
         $this->entityManager->persist($post);
         $this->entityManager->flush();
     }
 
-    public function delete(int $id): int
+    public function deletePost(int $id): int
     {
         return $this->entityManager
             ->createQueryBuilder()

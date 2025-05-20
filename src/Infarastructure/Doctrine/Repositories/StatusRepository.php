@@ -6,8 +6,9 @@ namespace Pri301\Blog\Infarastructure\Doctrine\Repositories;
 use Doctrine\ORM\EntityManagerInterface;
 use Pri301\Blog\Domain\Entity\Status;
 use Pri301\Blog\Domain\Enum\PostStatus;
+use Pri301\Blog\Domain\Repository\StatusRepositoryInterface;
 
-class StatusRepository
+class StatusRepository implements StatusRepositoryInterface
 {
     private $entityManager;
 
@@ -24,7 +25,7 @@ class StatusRepository
             ->where('s.status := status')
             ->setParameter('status', PostStatus::Published)
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getOneOrNullResult();
     }
 
     public function getPendingStatusId(): ?int{
@@ -35,7 +36,7 @@ class StatusRepository
             ->where('s.status := status')
             ->setParameter('status', PostStatus::Pending)
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getOneOrNullResult();
     }
 
     public function getRejectedStatusId(): ?int{
@@ -46,6 +47,6 @@ class StatusRepository
             ->where('s.status := status')
             ->setParameter('status', PostStatus::Rejected)
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getOneOrNullResult();
     }
 }
