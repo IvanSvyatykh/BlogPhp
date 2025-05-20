@@ -2,108 +2,51 @@
 
 namespace Pri301\Blog\Repositories;
 
-use Doctrine\DBAL\Connection;
-use Pri301\Blog\Enteties\User;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
+use Pri301\Blog\Entity\User;
 
 class UserRepository
 {
-    public function __construct(private Connection $connection) {}
+    private $entityManager;
 
-    public function find(int $id): ?User
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        $data = $this->connection->fetchAssociative(
-            'SELECT * FROM users WHERE id = ?',
-            [$id]
-        );
+        $this->entityManager = $entityManager;
+    }
 
-        return $data ? new User(
-            $data['username'],
-            $data['login'],
-            $data['password'],
-            $data['id'],
-            $data['is_banned'],
-            new \DateTimeImmutable($data['created_at']),
-            $data['is_admin'],
-            $data['is_moderator']
-        ) : null;
+    public function add(User $user, bool $flush = true): void
+    {
+        $this->entityManager->persist($user);
+
+        if ($flush) {
+            $this->entityManager->flush();
+        }
+    }
+
+    /**
+     * Находит пользователя по логину
+     * @throws NonUniqueResultException
+     */
+    public function findByLogin(string $login): ?User
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('u')
+            ->from(User::class, 'u')
+            ->where('u.login = :login')
+            ->setParameter('login', $login)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     public function getAllUsers(): array
     {
-        $data = $this->connection->fetchAssociative(
-            'SELECT * FROM users'
-        );
-
-        return $this->recieveUsers($data);
-    }
-
-    private function recieveUsers(array $data): array
-    {
-        $users = array_map(function ($userData) {
-            return new User(
-                $userData['username'],
-                $userData['login'],
-                $userData['password'],
-                $userData['id'],
-                $userData['is_banned'],
-                new \DateTimeImmutable($userData['created_at']),
-                $userData['is_admin'],
-                $userData['is_moderator'],
-            );
-        }, $data);
-
-        return $users;
-    }
-
-    public function findByLogin(string $login): ?User
-    {
-        $data = $this->connection->fetchAssociative(
-            'SELECT * FROM users WHERE login = ?',
-            [$login]
-        );
-
-        return $data ? new User(
-            $data['username'],
-            $data['login'],
-            $data['password'],
-            $data['id'],
-            $data['is_banned'],
-            new \DateTimeImmutable($data['created_at']),
-            $data['is_admin'],
-            $data['is_moderator']
-        ) : null;
-    }
-
-    public function save(User $user): void
-    {
-        $data = [
-            'username' => $user->getUsername(),
-            'login' => $user->getLogin(),
-            'password' => $user->getPassword(),
-            'created_at' => $user->getCreatedAt()->format('Y-m-d H:i:s'),
-            'is_banned' => $user->isBanned(),
-            'is_admin' => $user->isAdmin(),
-            'is_moderator' => $user->isModerator()
-        ];
-
-        if ($user->getId() === null) {
-            $this->connection->insert('users', $data);
-            $user = new User(
-                $user->getUsername(),
-                $user->getLogin(),
-                $user->getPassword(),
-                $this->connection->lastInsertId(),
-                $user->isBanned(),
-                $user->getCreatedAt(),
-                $user->isAdmin(),
-                $user->isModerator()
-            );
-        } else {
-            $this->connection->update(
-                'users',
-                $data,
-                ['id' => $user->getId()]
-            );
-        }
+        return $this -> entityManager
+            ->createQueryBuilder()
+            ->select('u')
+            ->from(User::class, 'u')
+            ->getQuery()
+            ->getArrayResult();
     }
 }

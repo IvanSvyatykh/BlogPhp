@@ -4,180 +4,105 @@ namespace Pri301\Blog\Repositories;
 
 use DateTimeImmutable;
 use Doctrine\DBAL\Connection;
+use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Pri301\Blog\Enteties\Post;
+use Pri301\Blog\Entity\Post;
+use Pri301\Blog\Entity\User;
 use Pri301\Blog\Enum\PostStatus;
 
 class PostRepository
 {
-    public function __construct(
-        private Connection     $connection,
-        private UserRepository $userRepository
-    )
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
     {
+        $this->entityManager = $entityManager;
     }
 
-    public function find(int $id): ?Post
+    public function findPostById(int $id): ?Post
     {
-        $data = $this->connection->fetchAssociative(
-            'SELECT * FROM posts WHERE id = ?',
-            [$id]
-        );
+        return $this->entityManager
+            ->createQueryBuilder('p')
+            ->select('p')
+            ->from(Post::class, 'p')
+            ->andWhere('p.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
 
-        if (!$data) {
-            return null;
-        }
-
-        $post = new Post(
-            $data['title'],
-            $data['content'],
-            $data['author_id'],
-            $data['id'],
-            new DateTimeImmutable($data['created_at']),
-            $data['status']
-        );
-
-        if ($author = $this->userRepository->find($data['author_id'])) {
-            $post->setAuthor($author);
-        }
-
-        return $post;
     }
 
-    //its for getting articles that make user
-    public function findAll(int $authorId ,int $limit = 10, int $offset = 0): array
+    //it's for getting articles that make user
+    public function findAllByUser(int $authorId , int $limit = 10, int $offset = 0): array
     {
-        $data = $this->connection->fetchAllAssociative(
-            'SELECT * FROM posts WHERE author_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?',
-            [$authorId, $limit, $offset],
-            [\PDO::PARAM_INT, \PDO::PARAM_INT, \PDO::PARAM_INT]
-        );
-
-
-
-        return $this->recievePosts($data);
-    }
-
-    //its for getting articles that published (news feeds)
-    public function getPublishedArticles(int $limit = 10, int $offset = 0): array
-    {
-        $data = $this->connection->fetchAllAssociative(
-            'SELECT * FROM posts WHERE status = ? ORDER BY created_at DESC LIMIT ? OFFSET ?',
-            [PostStatus::Published->value, $limit, $offset],
-            [\PDO::PARAM_STR, \PDO::PARAM_INT, \PDO::PARAM_INT]
-        );
-
-        return $this->recievePosts($data);
-    }
-
-    private function recievePosts(array $data): array
-    {
-        $posts = [];
-
-        foreach ($data as $postData) {
-            $post = new Post(
-                $postData['title'],
-                $postData['content'],
-                $postData['author_id'],
-                $postData['id'],
-                new DateTimeImmutable($postData['created_at']),
-                PostStatus::from($postData['status'])
-            );
-
-            if ($author = $this->userRepository->find($postData['author_id'])) {
-                $post->setAuthor($author);
-            }
-
-            $posts[] = $post;
-        }
-
-        return $posts;
-    }
-
-    public function getPendingArticles(int $limit = 10, int $offset = 0): array
-    {
-        $data = $this->connection->fetchAllAssociative(
-            'SELECT * FROM posts WHERE status = ? ORDER BY created_at DESC LIMIT ? OFFSET ?',
-            [PostStatus::Pending->value, $limit, $offset],
-            [\PDO::PARAM_STR, \PDO::PARAM_INT, \PDO::PARAM_INT]
-        );
-
-        return $this->recievePosts($data);
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('p')
+            ->from(Post::class, 'p')
+            ->andWhere('p.author = :author')
+            ->orderBy('p.createdAt', 'DESC')
+            ->setParameter('author', $authorId)
+            ->setMaxResults($limit)
+            ->setFirstResult($offset)
+            ->getQuery()
+            ->getArrayResult();
     }
 
 
-    public function save(Post $post): void
+    public function getArticlesByStatus(int $statusId , int $limit = 10, int $offset = 0 ): array
     {
-        $data = [
-            'title' => $post->getTitle(),
-            'content' => $post->getContent(),
-            'author_id' => $post->getAuthorId(),
-            'created_at' => $post->getCreatedAt()->format('Y-m-d H:i:s'),
-            'is_published' => $post->isPublished()
-        ];
-
-        if ($post->getId() === null) {
-            $this->connection->insert('posts', $data);
-            $post = new Post(
-                $post->getTitle(),
-                $post->getContent(),
-                $post->getAuthorId(),
-                $this->connection->lastInsertId(),
-                $post->getCreatedAt(),
-                $post->getStatus()
-            );
-        } else {
-            $this->connection->update(
-                'posts',
-                $data,
-                ['id' => $post->getId()]
-            );
-        }
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('p')
+            ->from(Post::class, 'p')
+            ->andWhere('p.status = :status')
+            ->setParameter('status', $statusId)
+            ->setMaxResults($limit)
+            ->setFirstResult($offset)
+            ->getQuery()
+            ->getArrayResult();
     }
 
-    public function delete(int $id): void
+    public function add(Post $post): void
     {
-        $this->connection->delete('posts', ['id' => $id]);
+        $this->entityManager->persist($post);
+        $this->entityManager->flush();
     }
 
-    public function findPublishedByUserId(int $userId): array
+    public function delete(int $id): int
     {
-        return $this->hydratePosts($this->connection->fetchAllAssociative(
-            'SELECT * FROM posts WHERE author_id = ? AND is_published = TRUE',
-            [$userId]
-        ));
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->delete(Post::class, 'p')
+            ->where('p.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->execute();
     }
 
-    public function findUnpublishedByUserId(int $userId): array
+    public function findPublishedByUserId(int $userId,int $publishStatusId): array
     {
-        return $this->hydratePosts($this->connection->fetchAllAssociative(
-            'SELECT * FROM posts WHERE author_id = ? AND is_published = FALSE',
-            [$userId]
-        ));
+        return $this -> entityManager
+            ->createQueryBuilder()
+            ->select('p')
+            ->from(Post::class, 'p')
+            ->where('p.author_id = :userId AND p.status = :status')
+            ->setParameter('userId', $userId)
+            ->setParameter('status', $publishStatusId)
+            ->getQuery()
+            ->getArrayResult();
     }
 
-    private function hydratePosts(array $rows): array
+    public function findUnpublishedByUserId(int $userId,int $unpublishStatusId): array
     {
-        $posts = [];
-
-        foreach ($rows as $row) {
-            $post = new Post(
-                $row['title'],
-                $row['content'],
-                $row['author_id'],
-                $row['id'],
-                new DateTimeImmutable($row['created_at'])
-            );
-
-            $post->setPublished((bool)$row['is_published']);
-
-            if ($author = $this->userRepository->find($row['author_id'])) {
-                $post->setAuthor($author);
-            }
-
-            $posts[] = $post;
-        }
-
-        return $posts;
+        return $this -> entityManager
+            ->createQueryBuilder()
+            ->select('p')
+            ->from(Post::class, 'p')
+            ->where('p.author_id = :userId AND p.status != :status')
+            ->setParameter('userId', $userId)
+            ->setParameter('status',$unpublishStatusId)
+            ->getQuery()
+            ->getArrayResult();
     }
 }
