@@ -65,6 +65,19 @@ class PostRepository implements PostRepositoryInterface
         $this->entityManager->flush();
     }
 
+    public function updatePostStatus(Post $post): void
+    {
+
+        $this->entityManager->createQueryBuilder()
+            ->update(Post::class, 'p')
+            ->set('p.status',':status')
+            ->where('p.id = :id')
+            ->setParameter('status', $post->getStatus())
+            ->setParameter('id', $post->getId())
+            ->getQuery()
+            ->execute();
+    }
+
     public function deletePost(int $id): int
     {
         return $this->entityManager
@@ -89,7 +102,7 @@ class PostRepository implements PostRepositoryInterface
             ->getArrayResult();
     }
 
-    public function findUnpublishedByUserId(int $userId,int $unpublishStatusId): array
+    public function findUnpublishedByUserId(int $userId,int $publishStatusId): array
     {
         return $this -> entityManager
             ->createQueryBuilder()
@@ -97,7 +110,7 @@ class PostRepository implements PostRepositoryInterface
             ->from(Post::class, 'p')
             ->where('p.author_id = :userId AND p.status != :status')
             ->setParameter('userId', $userId)
-            ->setParameter('status',$unpublishStatusId)
+            ->setParameter('status',$publishStatusId)
             ->getQuery()
             ->getArrayResult();
     }

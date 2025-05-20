@@ -28,12 +28,11 @@ class Comment
         string $content,
         Post $post,
         User $author,
-        ?\DateTime $createdAt = null
     ) {
         $this->content = $content;
         $this->post = $post;
         $this->author = $author;
-        $this->createdAt = $createdAt ?? new \DateTime();
+        $this->createdAt = new \DateTime();
     }
 
     // Getters and setters

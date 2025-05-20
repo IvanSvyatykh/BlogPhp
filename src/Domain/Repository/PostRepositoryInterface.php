@@ -12,5 +12,6 @@ interface PostRepositoryInterface
     public function addPost(Post $post): void;
     public function deletePost(int $id): int;
     public function findPublishedByUserId(int $userId,int $publishStatusId): array;
-    public function findUnpublishedByUserId(int $userId,int $unpublishStatusId): array;
+    public function findUnpublishedByUserId(int $userId,int $publishStatusId): array;
+    public function updatePostStatus(Post $post): void;
 }

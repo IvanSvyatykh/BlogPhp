@@ -2,24 +2,27 @@
 
 namespace Pri301\Blog\Domain\Services;
 
+use Doctrine\ORM\EntityManager;
 use Pri301\Blog\Domain\Entity\Comment;
+use Pri301\Blog\Domain\Entity\Post;
 use Pri301\Blog\Infarastructure\Doctrine\Repositories\CommentRepository;
 
-class CommentService
+class CommentService implements CommentServiceInterface
 {
     public function __construct(
-        private CommentRepository $commentRepository
+        private CommentRepository $commentRepository,
+        private EntityManager $entityManager
     ) {}
 
     public function addComment(array $data, int $postId, int $authorId): Comment
     {
         $comment = new Comment(
             $data['content'],
-            $postId,
-            $authorId
+            $this->entityManager->getReference(Post::class, $postId),
+            $this->entityManager->getReference(User::class, $authorId),
         );
 
-        $this->commentRepository->save($comment);
+        $this->commentRepository->addComment($comment);
         return $comment;
     }
 

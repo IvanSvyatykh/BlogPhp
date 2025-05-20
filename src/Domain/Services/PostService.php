@@ -2,14 +2,20 @@
 
 namespace Pri301\Blog\Domain\Services;
 
+use Cassandra\Type;
+use Doctrine\ORM\EntityManager;
 use Pri301\Blog\Domain\Entity\Post;
+use Pri301\Blog\Domain\Entity\User;
 use Pri301\Blog\Domain\Enum\PostStatus;
 use Pri301\Blog\Infarastructure\Doctrine\Repositories\PostRepository;
+use Pri301\Blog\Infarastructure\Doctrine\Repositories\StatusRepository;
 
-class PostService
+class PostService implements PostServiceInterface
 {
     public function __construct(
-        private PostRepository $postRepository
+        private PostRepository $postRepository,
+        private EntityManager $entityManager,
+        private StatusRepository $statusRepository
     ) {}
 
     public function createPost(array $data, int $authorId): Post
@@ -18,7 +24,9 @@ class PostService
         $post = new Post(
             $data['title'],
             $data['content'],
-            $authorId
+            $this->entityManager->getReference(User::class, $authorId),
+            $this->entityManager->getReference(PostStatus::class, $data['status']),
+            $this->entityManager->getReference(Type::class, $data['type'])
         );
 
         $this->postRepository->addPost($post);
@@ -30,6 +38,7 @@ class PostService
         return $this->postRepository->findPostById($id);
     }
 
+
     public function getAllPosts(int $limit = 10, int $offset = 0): array
     {
         return $this->postRepository->getArticlesByStatus($limit, $offset);
@@ -38,6 +47,7 @@ class PostService
     public function deletePost(int $id): void
     {
         $this->postRepository->deletePost($id);
+    }
     public function getAllPostsByUser(int $authorId, int $limit = 10, int $offset = 0): array
     {
         return $this->postRepository->findAllByUser($authorId, $limit, $offset);
@@ -54,27 +64,28 @@ class PostService
 
     public function getPublishedPostsByUser(int $userId): array
     {
-        return $this->postRepository->findPublishedByUserId($userId);
+        $publishedStatusId = $this->statusRepository->getPublishStatusId();
+        return $this->postRepository->findPublishedByUserId($userId,$publishedStatusId);
     }
 
     public function getUnpublishedPostsByUser(int $userId): array
     {
-        return $this->postRepository->findUnpublishedByUserId($userId);
-    }
-        $post->setStatus(PostStatus::Published);
-        $this->postRepository->addPost($post);
+        $publishStatusId = $this->statusRepository->getPublishStatusId();
+        return $this->postRepository->findUnpublishedByUserId($userId,$publishStatusId);
     }
 
     public function rejectPost(int $postId): void
     {
         $post = $this->postRepository->findPostById($postId);
-        $post->setStatus(PostStatus::Rejected);
-        $this->postRepository->addPost($post);
+        $rejectedStatusId = $this->statusRepository->getRejectedStatusId();
+        $post->setStatus($this->entityManager->getReference(PostStatus::class, $rejectedStatusId));
+        $this->postRepository->updatePostStatus($post);
     }
 
-    public function getPendingPosts(): array
+    public function getPendingPosts(int $limit = 10, int $offset = 0): array
     {
-        return $this->postRepository->getPendingArticles();
+        $pendingStatusId = $this->statusRepository->getPendingStatusId();
+        return $this->postRepository->getArticlesByStatus($pendingStatusId,$limit,$offset);
     }
 
 }

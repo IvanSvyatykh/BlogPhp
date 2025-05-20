@@ -2,12 +2,17 @@
 
 namespace Pri301\Blog\Domain\Services;
 
+use Doctrine\ORM\EntityManager;
 use Pri301\Blog\Domain\Entity\Like;
+use Pri301\Blog\Domain\Entity\Post;
+use Pri301\Blog\Domain\Entity\User;
+use Pri301\Blog\Infarastructure\Doctrine\Repositories\CommentRepository;
 use Pri301\Blog\Infarastructure\Doctrine\Repositories\LikeRepository;
 
-class LikeService
+class LikeService implements LikeServiceInterface
 {
-    public function __construct(private LikeRepository $likeRepository) {}
+    public function __construct(private LikeRepository $likeRepository ,
+                                private EntityManager $entityManager) {}
 
     public function toggleLike(int $postId, int $userId): bool
     {
@@ -16,7 +21,9 @@ class LikeService
             return false;
         }
 
-        $like = new Like($postId, $userId);
+        $like = new Like(
+            $this->entityManager->getReference(Post::class,$postId),
+            $this->entityManager->getReference(User::class,$userId));
         $this->likeRepository->addLike($like);
         return true;
     }

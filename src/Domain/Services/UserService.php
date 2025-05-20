@@ -12,9 +12,7 @@ class UserService
 
     public function switchBanUser(int $userId): void
     {
-        $user = $this->userRepository->find($userId);
-        $user->switchBanned();
-        $this->userRepository->save($user);
+       $this->userRepository->setUserBannedStatus($userId,false);
     }
 
     public function getUsersList(): array

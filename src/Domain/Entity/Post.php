@@ -34,14 +34,13 @@ class Post
         string     $title,
         string     $content,
         User       $author,
-        ?\DateTime $createdAt = null,
         Status     $status,
         Type       $type,
     ) {
         $this->title = $title;
         $this->content = $content;
         $this->author = $author;
-        $this->createdAt = $createdAt ?? new \DateTime();
+        $this->createdAt = new \DateTime();
         $this->status = $status;
         $this->type = $type;
     }

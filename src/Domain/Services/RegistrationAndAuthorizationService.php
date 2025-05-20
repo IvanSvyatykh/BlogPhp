@@ -10,7 +10,7 @@ use Pri301\Blog\Domain\Entity\User;
 use Pri301\Blog\Domain\Enum\UserAuthState;
 use Pri301\Blog\Infarastructure\Doctrine\Repositories\UserRepository;
 
-class RegistrationAndAuthorizationService
+class RegistrationAndAuthorizationService implements RegistrationServiceInterface
 {
     public function __construct(private UserRepository $userRepository)
     {
