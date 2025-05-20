@@ -1,0 +1,9 @@
+<?php
+namespace Pri301\Blog\Domain\Enum;
+enum UserAuthState: string
+{
+    case USER_AUTHORIZED = 'USER_AUTHORIZED';
+    case USER_NOT_AUTHORIZED = 'USER_NOT_AUTHORIZED';
+    case USER_BANNED = 'USER_BANNED';
+    case USER_AUTHORIZED_AS_MODERATOR= 'USER_AUTHORIZED_AS_MODERATOR';
+}

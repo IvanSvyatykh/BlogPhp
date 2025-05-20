@@ -1,12 +1,12 @@
 <?php
 
-use Doctrine\DBAL\DriverManager;
 use DI\Bridge\Slim\Bridge;
-use Pri301\Blog\Handlers\PostHandler;
-use Pri301\Blog\Repositories\PostRepository;
-use Pri301\Blog\Repositories\UserRepository;
-use Pri301\Blog\Services\PostService;
-use Pri301\Blog\Services\RegistrationAndAuthorizationService;
+use Doctrine\DBAL\DriverManager;
+use Pri301\Blog\Application\Handlers\PostHandler;
+use Pri301\Blog\Domain\Services\PostService;
+use Pri301\Blog\Domain\Services\RegistrationAndAuthorizationService;
+use Pri301\Blog\Infarastructure\Doctrine\Repositories\PostRepository;
+use Pri301\Blog\Infarastructure\Doctrine\Repositories\UserRepository;
 use Pri301\Blog\Validator\DtoValidator;
 use Slim\Factory\AppFactory;
 use Symfony\Component\Validator\Validation;
@@ -69,7 +69,7 @@ AppFactory::setContainer($container);
 $app = AppFactory::create();
 $app->addBodyParsingMiddleware();
 
-(require __DIR__ . '/../routes/PostRoutes.php')($app);
-(require __DIR__ . '/../routes/RegistrationAndAuthorizationRoutes.php')($app);
+(require __DIR__ . '/../Routes/PostRoutes.php')($app);
+(require __DIR__ . '/../Routes/RegistrationAndAuthorizationRoutes.php')($app);
 
 $app->run();
