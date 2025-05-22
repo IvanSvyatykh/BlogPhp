@@ -40,7 +40,13 @@ class User
         $this->name = $name;
         $this->login = $login;
         $this->password = $password;
-        $this->createdAt = new \DateTime();;
+        $this->createdAt = new \DateTime();
+        $this -> isBanned = false;
+    }
+
+    public function isBanned(): bool
+    {
+        return $this->isBanned;
     }
 
     public function getId(): ?int
@@ -84,7 +90,7 @@ class User
         return $this;
     }
 
-    public function getIsAdmin(): ?bool
+    public function IsAdmin(): ?bool
     {
         return $this->isAdmin;
     }
@@ -96,7 +102,7 @@ class User
         return $this;
     }
 
-    public function getIsModerator(): ?bool
+    public function IsModerator(): ?bool
     {
         return $this->isModerator;
     }

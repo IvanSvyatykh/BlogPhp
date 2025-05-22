@@ -10,7 +10,7 @@ use Pri301\Blog\Domain\Entity\User;
 use Pri301\Blog\Domain\Enum\UserAuthState;
 use Pri301\Blog\Infarastructure\Doctrine\Repositories\UserRepository;
 
-class RegistrationAndAuthorizationService implements RegistrationServiceInterface
+class RegistrationAndAuthorizationAndAuthorizationService implements RegistrationAndAuthorizationServiceInterface
 {
     public function __construct(private UserRepository $userRepository)
     {
@@ -27,7 +27,7 @@ class RegistrationAndAuthorizationService implements RegistrationServiceInterfac
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
         $user = new User($username, $login, $hashedPassword, null, false, new DateTimeImmutable());
-        $this->userRepository->save($user);
+        $this->userRepository->addUser($user);
 
         $token = $this->generateToken($user);
         return new RegisterUserResponse(true, $token);
