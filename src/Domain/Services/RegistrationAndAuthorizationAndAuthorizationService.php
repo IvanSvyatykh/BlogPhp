@@ -8,11 +8,12 @@ use Pri301\Blog\Application\DTO\Response\LoginUserResponse;
 use Pri301\Blog\Application\DTO\Response\RegisterUserResponse;
 use Pri301\Blog\Domain\Entity\User;
 use Pri301\Blog\Domain\Enum\UserAuthState;
-use Pri301\Blog\Infarastructure\Doctrine\Repositories\UserRepository;
+use Pri301\Blog\Domain\Repository\UserRepositoryInterface;
+
 
 class RegistrationAndAuthorizationAndAuthorizationService implements RegistrationAndAuthorizationServiceInterface
 {
-    public function __construct(private UserRepository $userRepository)
+    public function __construct(private UserRepositoryInterface $userRepository)
     {
     }
 

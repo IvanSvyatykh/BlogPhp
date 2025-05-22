@@ -7,15 +7,15 @@ use Doctrine\ORM\EntityManager;
 use Pri301\Blog\Domain\Entity\Post;
 use Pri301\Blog\Domain\Entity\User;
 use Pri301\Blog\Domain\Enum\PostStatus;
-use Pri301\Blog\Infarastructure\Doctrine\Repositories\PostRepository;
-use Pri301\Blog\Infarastructure\Doctrine\Repositories\StatusRepository;
+use Pri301\Blog\Domain\Repository\PostRepositoryInterface;
+use Pri301\Blog\Domain\Repository\StatusRepositoryInterface;
 
 class PostService implements PostServiceInterface
 {
     public function __construct(
-        private PostRepository $postRepository,
+        private PostRepositoryInterface $postRepository,
         private EntityManager $entityManager,
-        private StatusRepository $statusRepository
+        private StatusRepositoryInterface $statusRepository
     ) {}
 
     public function createPost(array $data, int $authorId): Post

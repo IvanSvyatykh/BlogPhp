@@ -6,12 +6,11 @@ use Doctrine\ORM\EntityManager;
 use Pri301\Blog\Domain\Entity\Like;
 use Pri301\Blog\Domain\Entity\Post;
 use Pri301\Blog\Domain\Entity\User;
-use Pri301\Blog\Infarastructure\Doctrine\Repositories\CommentRepository;
-use Pri301\Blog\Infarastructure\Doctrine\Repositories\LikeRepository;
+use Pri301\Blog\Domain\Repository\LikeRepositoryInterface;
 
 class LikeService implements LikeServiceInterface
 {
-    public function __construct(private LikeRepository $likeRepository ,
+    public function __construct(private LikeRepositoryInterface $likeRepository ,
                                 private EntityManager $entityManager) {}
 
     public function toggleLike(int $postId, int $userId): bool

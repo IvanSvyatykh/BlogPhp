@@ -5,12 +5,13 @@ namespace Pri301\Blog\Domain\Services;
 use Doctrine\ORM\EntityManager;
 use Pri301\Blog\Domain\Entity\Comment;
 use Pri301\Blog\Domain\Entity\Post;
-use Pri301\Blog\Infarastructure\Doctrine\Repositories\CommentRepository;
+use Pri301\Blog\Domain\Repository\CommentRepositoryInterface;
+
 
 class CommentService implements CommentServiceInterface
 {
     public function __construct(
-        private CommentRepository $commentRepository,
+        private CommentRepositoryInterface $commentRepository,
         private EntityManager $entityManager
     ) {}
 

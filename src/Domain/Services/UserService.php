@@ -2,12 +2,13 @@
 
 namespace Pri301\Blog\Domain\Services;
 
-use Pri301\Blog\Infarastructure\Doctrine\Repositories\UserRepository;
+use Pri301\Blog\Domain\Repository\UserRepositoryInterface;
+
 
 class UserService
 {
     public function __construct(
-        private UserRepository $userRepository
+        private UserRepositoryInterface $userRepository
     ) {}
 
     public function switchBanUser(int $userId): void
