@@ -43,10 +43,7 @@ services:
 
 volumes:
   postgres-db:
-  minio_data:
-  redis_data:
-
 
 networks:
-  resize_photo:
+  blog_net:
     driver: bridge
