@@ -5,14 +5,15 @@ namespace Pri301\Blog\Application\Handlers;
 use Pri301\Blog\Application\DTO\Requests\GetCommentsByPostIdRequest;
 use Pri301\Blog\Application\DTO\Validator\DtoValidator;
 use Pri301\Blog\Domain\Services\CommentService;
+use Pri301\Blog\Domain\Services\CommentServiceInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 class CommentHandler
 {
     public function __construct(
-        private CommentService $commentService,
-        private DtoValidator $dtoValidator
+        private readonly CommentServiceInterface $commentService,
+        private readonly DtoValidator $dtoValidator
     ) {}
 
     public function getCommentByPostId(Request $request, Response $response)

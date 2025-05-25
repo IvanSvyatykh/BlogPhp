@@ -18,6 +18,7 @@ use Pri301\Blog\Domain\Services\PostService;
 use Pri301\Blog\Domain\Services\PostServiceInterface;
 use Pri301\Blog\Domain\Services\UserService;
 use Pri301\Blog\Domain\Services\UserServiceInterface;
+use Pri301\Blog\Infarastructure\Middlewares\CreatePostMiddleware;
 use Pri301\Blog\Infarastructure\Middlewares\JWTMiddleware;
 use Pri301\Blog\Infrastructure\Doctrine\Repositories\LikeRepository;
 use Pri301\Blog\Infrastructure\Doctrine\Repositories\CommentRepository;
@@ -31,20 +32,32 @@ use Pri301\Blog\Domain\Services\RegistrationAndAuthorizationAndAuthorizationServ
 use \Pri301\Blog\Application\Handlers\RegisterHandler;
 use \Pri301\Blog\Application\Handlers\LoginHandler;
 use Pri301\Blog\Application\Handlers\UserHandler;
+use Pri301\Blog\Infrastructure\Middlewares\DeletePostMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\GetPublishedPostsMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\GetUnpublishedPostsMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\LoginUserMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\RegisterUserMiddleware;
+
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 return function (Container $container) {
     $entityManager = require __DIR__ . '/bootstrap.php';
     #Зависимости для Middleware
-    $container->set(\Pri301\Blog\Infrastructure\Middlewares\LoginUserMiddleware::class,function($container){
-        return new \Pri301\Blog\Infrastructure\Middlewares\LoginUserMiddleware();
+    $container->set(LoginUserMiddleware::class,function($container){
+        return new LoginUserMiddleware();
     });
-    $container->set(\Pri301\Blog\Infrastructure\Middlewares\RegisterUserMiddleware::class,function($container){
-        return new \Pri301\Blog\Infrastructure\Middlewares\RegisterUserMiddleware();
+    $container->set(RegisterUserMiddleware::class,function($container){
+        return new RegisterUserMiddleware();
     });
-    $container->set(\Pri301\Blog\Infarastructure\Middlewares\JWTMiddleware::class,function($container){
-        return new \Pri301\Blog\Infarastructure\Middlewares\JWTMiddleware($_ENV['JWT_SECRET'],$_ENV["ALGORITHM"]);
+    $container->set(JWTMiddleware::class,function($container){
+        return new JWTMiddleware($_ENV['JWT_SECRET'],$_ENV["ALGORITHM"]);
     });
+
+    $container->set(CreatePostMiddleware::class, fn() => new CreatePostMiddleware());
+    $container->set(DeletePostMiddleware::class, fn() => new DeletePostMiddleware());
+    $container->set(GetPublishedPostsMiddleware::class, fn() => new GetPublishedPostsMiddleware());
+    $container->set(GetUnpublishedPostsMiddleware::class, fn() => new GetUnpublishedPostsMiddleware());
+
     #Зависимости для БД
     $container->set(EntityManager::class, $entityManager);
     $container->set(CommentRepositoryInterface::class, function (Container $c) {

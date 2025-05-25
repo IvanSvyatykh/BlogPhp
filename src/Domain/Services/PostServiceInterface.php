@@ -17,5 +17,5 @@ interface PostServiceInterface{
     public function rejectPost(int $postId): void;
     public function getPendingPosts(): array;
     public function getPostsBySubstrAtContent(string $substr): array;
-    public function getPoststBySubstrAtTitle(string $substr): array;
+    public function getPostsBySubstrAtTitle(string $substr): array;
 }
