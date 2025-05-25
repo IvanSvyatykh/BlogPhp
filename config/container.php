@@ -4,6 +4,7 @@ use DI\Container;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Pri301\Blog\Application\Handlers\CommentHandler;
+use Pri301\Blog\Application\Handlers\PostHandler;
 use Pri301\Blog\Domain\Repository\LikeRepositoryInterface;
 use Pri301\Blog\Domain\Repository\CommentRepositoryInterface;
 use Pri301\Blog\Domain\Repository\PostRepositoryInterface;
@@ -116,9 +117,11 @@ return function (Container $container) {
     $container->set(LoginHandler::class, function (Container $c) {
         return new LoginHandler($c->get(RegistrationAndAuthorizationServiceInterface::class));
     });
-
     $container->set(CommentHandler::class, function (Container $c) {
         return new CommentHandler($c->get(CommentServiceInterface::class));
+    });
+    $container->set(PostHandler::class, function (Container $c) {
+        return new PostHandler($c->get(PostServiceInterface::class), $c->get(UserServiceInterface::class));
     });
 
 
