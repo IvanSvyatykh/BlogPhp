@@ -32,7 +32,6 @@ class PostService implements PostServiceInterface
         );
 
         $postId = $this->postRepository->addPost($post);
-        $this->tagRepository->
         return $post;
     }
 

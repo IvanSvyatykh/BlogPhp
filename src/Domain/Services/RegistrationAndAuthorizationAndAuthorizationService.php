@@ -64,6 +64,6 @@ class RegistrationAndAuthorizationAndAuthorizationService implements Registratio
             'exp' => time() + 3600,
         ];
 
-        return JWT::encode($payload, $_ENV['JWT_SECRET'], 'HS256');
+        return JWT::encode($payload, $_ENV['JWT_SECRET'], $_ENV["ALGORITHM"]);
     }
 }

@@ -18,6 +18,7 @@ use Pri301\Blog\Domain\Services\PostService;
 use Pri301\Blog\Domain\Services\PostServiceInterface;
 use Pri301\Blog\Domain\Services\UserService;
 use Pri301\Blog\Domain\Services\UserServiceInterface;
+use Pri301\Blog\Infarastructure\Middlewares\JWTMiddleware;
 use Pri301\Blog\Infrastructure\Doctrine\Repositories\LikeRepository;
 use Pri301\Blog\Infrastructure\Doctrine\Repositories\CommentRepository;
 use Pri301\Blog\Infrastructure\Doctrine\Repositories\PostRepository;
@@ -34,13 +35,18 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 
 return function (Container $container) {
     $entityManager = require __DIR__ . '/bootstrap.php';
-    $container->set(EntityManager::class, $entityManager);
+    #Зависимости для Middleware
     $container->set(\Pri301\Blog\Infrastructure\Middlewares\LoginUserMiddleware::class,function($container){
         return new \Pri301\Blog\Infrastructure\Middlewares\LoginUserMiddleware();
     });
     $container->set(\Pri301\Blog\Infrastructure\Middlewares\RegisterUserMiddleware::class,function($container){
         return new \Pri301\Blog\Infrastructure\Middlewares\RegisterUserMiddleware();
     });
+    $container->set(\Pri301\Blog\Infarastructure\Middlewares\JWTMiddleware::class,function($container){
+        return new \Pri301\Blog\Infarastructure\Middlewares\JWTMiddleware($_ENV['JWT_SECRET'],$_ENV["ALGORITHM"]);
+    });
+    #Зависимости для БД
+    $container->set(EntityManager::class, $entityManager);
     $container->set(CommentRepositoryInterface::class, function (Container $c) {
         return new CommentRepository($c->get(EntityManager::class));
     });
@@ -62,6 +68,7 @@ return function (Container $container) {
     $container->set(UserRepositoryInterface::class, function (Container $c) {
         return new UserRepository($c->get(EntityManager::class));
     });
+    # Сервисы
     $container -> set(CommentServiceInterface::class, function (Container $c) {
        return new CommentService($c->get(CommentRepositoryInterface::class),$c->get(EntityManager::class));
     });
@@ -79,6 +86,7 @@ return function (Container $container) {
     $container->set(UserServiceInterface::class, function (Container $c) {
         return new UserService($c->get(UserRepositoryInterface::class));
     });
+    #Хендлеры
     $container->set(UserHandler::class, function (Container $c) {
         return new UserHandler($c->get(UserServiceInterface::class));
     });
