@@ -3,6 +3,7 @@
 use DI\Container;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Pri301\Blog\Application\Handlers\CommentHandler;
 use Pri301\Blog\Domain\Repository\LikeRepositoryInterface;
 use Pri301\Blog\Domain\Repository\CommentRepositoryInterface;
 use Pri301\Blog\Domain\Repository\PostRepositoryInterface;
@@ -19,6 +20,7 @@ use Pri301\Blog\Domain\Services\PostServiceInterface;
 use Pri301\Blog\Domain\Services\UserService;
 use Pri301\Blog\Domain\Services\UserServiceInterface;
 use Pri301\Blog\Infarastructure\Middlewares\CreatePostMiddleware;
+use Pri301\Blog\Infarastructure\Middlewares\GetUserCommentsMiddleware;
 use Pri301\Blog\Infarastructure\Middlewares\JWTMiddleware;
 use Pri301\Blog\Infrastructure\Doctrine\Repositories\LikeRepository;
 use Pri301\Blog\Infrastructure\Doctrine\Repositories\CommentRepository;
@@ -57,6 +59,7 @@ return function (Container $container) {
     $container->set(DeletePostMiddleware::class, fn() => new DeletePostMiddleware());
     $container->set(GetPublishedPostsMiddleware::class, fn() => new GetPublishedPostsMiddleware());
     $container->set(GetUnpublishedPostsMiddleware::class, fn() => new GetUnpublishedPostsMiddleware());
+    $container->set(GetUserCommentsMiddleware::class, fn() => new GetUserCommentsMiddleware());
 
     #Зависимости для БД
     $container->set(EntityManager::class, $entityManager);
@@ -82,8 +85,12 @@ return function (Container $container) {
         return new UserRepository($c->get(EntityManager::class));
     });
     # Сервисы
-    $container -> set(CommentServiceInterface::class, function (Container $c) {
-       return new CommentService($c->get(CommentRepositoryInterface::class),$c->get(EntityManager::class));
+    $container->set(CommentServiceInterface::class, function (Container $c) {
+        return new CommentService(
+            $c->get(CommentRepositoryInterface::class),
+            $c->get(UserRepositoryInterface::class),
+            $c->get(EntityManager::class)
+        );
     });
     $container->set(LikeServiceInterface::class, function (Container $c) {
         return new LikeService($c->get(LikeRepositoryInterface::class),$c->get(EntityManager::class));
@@ -108,6 +115,10 @@ return function (Container $container) {
     });
     $container->set(LoginHandler::class, function (Container $c) {
         return new LoginHandler($c->get(RegistrationAndAuthorizationServiceInterface::class));
+    });
+
+    $container->set(CommentHandler::class, function (Container $c) {
+        return new CommentHandler($c->get(CommentServiceInterface::class));
     });
 
 
