@@ -87,7 +87,7 @@ class PostService implements PostServiceInterface
         return  $result;
     }
 
-    public function getPoststBySubstrAtTitle(string $substr): array
+    public function getPostsBySubstrAtTitle(string $substr): array
     {
         $result =  $this->postRepository->getPostsBySubstrAtTitle($substr);
         return  $result;

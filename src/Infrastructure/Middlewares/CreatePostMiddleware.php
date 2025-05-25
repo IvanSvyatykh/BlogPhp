@@ -4,21 +4,21 @@
 
 namespace Pri301\Blog\Infarastructure\Middlewares;
 
-use Pri301\Blog\Application\DTO\Requests\PublishPostRequest;
+use Pri301\Blog\Application\DTO\Requests\CreatePostRequest;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
 use Symfony\Component\Validator\Validation;
 
-class PublishPostMiddleware implements MiddlewareInterface
+class CreatePostMiddleware implements MiddlewareInterface
 {
 
     public function process(Request $request, Handler $handler): Response
     {
         $data = $request->getParsedBody();
 
-        $dto = new PublishPostRequest();
+        $dto = new CreatePostRequest();
         $dto->name = $data['name'] ?? '';
         $dto->content = $data['content'] ?? '';
         $dto->authorLogin = $data['authorLogin'] ?? '';

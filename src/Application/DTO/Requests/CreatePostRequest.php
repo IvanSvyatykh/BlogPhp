@@ -4,7 +4,7 @@ namespace Pri301\Blog\Application\DTO\Requests;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class PublishPostRequest
+class CreatePostRequest
 {
     #[Assert\NotBlank(message: "Post title is required")]
     public string $name;
