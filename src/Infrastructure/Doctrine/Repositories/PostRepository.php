@@ -1,6 +1,6 @@
 <?php
 
-namespace Pri301\Blog\Infarastructure\Doctrine\Repositories;
+namespace Pri301\Blog\Infrastructure\Doctrine\Repositories;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Pri301\Blog\Domain\Entity\Post;
@@ -59,10 +59,11 @@ class PostRepository implements PostRepositoryInterface
             ->getArrayResult();
     }
 
-    public function addPost(Post $post): void
+    public function addPost(Post $post): int
     {
         $this->entityManager->persist($post);
         $this->entityManager->flush();
+        return $post->getId();
     }
 
     public function updatePostStatus(Post $post): void
@@ -111,6 +112,30 @@ class PostRepository implements PostRepositoryInterface
             ->where('p.author_id = :userId AND p.status != :status')
             ->setParameter('userId', $userId)
             ->setParameter('status',$publishStatusId)
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+    public function getPostBySubstrAtContent(string $substr): array
+    {
+        $query_builder = $this -> entityManager ->createQueryBuilder();
+        return $query_builder
+            ->select('p')
+            ->from(Post::class, 'p')
+            ->where('to_tsvector(\'english\', p.content) @@ plainto_tsquery(\'english\', :query) = true')
+            ->setParameter('query', $substr)
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+    public function getPostsBySubstrAtTitle(string $substr): array
+    {
+        $query_builder = $this -> entityManager ->createQueryBuilder();
+        return $query_builder
+            ->select('p')
+            ->from(Post::class, 'p')
+            ->where('to_tsvector(\'english\', p.title) @@ plainto_tsquery(\'english\', :query) = true')
+            ->setParameter('query', $substr)
             ->getQuery()
             ->getArrayResult();
     }

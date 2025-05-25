@@ -9,27 +9,30 @@ use Pri301\Blog\Domain\Entity\User;
 use Pri301\Blog\Domain\Enum\PostStatus;
 use Pri301\Blog\Domain\Repository\PostRepositoryInterface;
 use Pri301\Blog\Domain\Repository\StatusRepositoryInterface;
+use Pri301\Blog\Domain\Repository\TagRepositoryInterface;
 
 class PostService implements PostServiceInterface
 {
     public function __construct(
         private PostRepositoryInterface $postRepository,
         private EntityManager $entityManager,
-        private StatusRepositoryInterface $statusRepository
+        private StatusRepositoryInterface $statusRepository,
+        private TagRepositoryInterface $tagRepository
     ) {}
 
     public function createPost(array $data, int $authorId): Post
     {
-
+        $pendingStatusId = $this->statusRepository->getPendingStatusId();
         $post = new Post(
             $data['title'],
             $data['content'],
             $this->entityManager->getReference(User::class, $authorId),
-            $this->entityManager->getReference(PostStatus::class, $data['status']),
+            $this->entityManager->getReference(PostStatus::class, $pendingStatusId),
             $this->entityManager->getReference(Type::class, $data['type'])
         );
 
-        $this->postRepository->addPost($post);
+        $postId = $this->postRepository->addPost($post);
+        $this->tagRepository->
         return $post;
     }
 
@@ -51,15 +54,6 @@ class PostService implements PostServiceInterface
     public function getAllPostsByUser(int $authorId, int $limit = 10, int $offset = 0): array
     {
         return $this->postRepository->findAllByUser($authorId, $limit, $offset);
-    }
-
-    public function publishPost(int $postId): void
-    {
-        $post = $this->postRepository->findPostById($postId);
-        if ($post) {
-            $post->setPublished(true);
-            $this->postRepository->addPost($post);
-        }
     }
 
     public function getPublishedPostsByUser(int $userId): array
@@ -88,4 +82,15 @@ class PostService implements PostServiceInterface
         return $this->postRepository->getArticlesByStatus($pendingStatusId,$limit,$offset);
     }
 
+    public function getPostsBySubstrAtContent(string $substr): array
+    {
+        $result =  $this->postRepository->getPostBySubstrAtContent($substr);
+        return  $result;
+    }
+
+    public function getPoststBySubstrAtTitle(string $substr): array
+    {
+        $result =  $this->postRepository->getPostsBySubstrAtTitle($substr);
+        return  $result;
+    }
 }

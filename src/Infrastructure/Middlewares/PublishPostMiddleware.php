@@ -1,28 +1,34 @@
 <?php
 
+
+
 namespace Pri301\Blog\Infarastructure\Middlewares;
 
-use Pri301\Blog\Application\DTO\Requests\GetPostsRequest;
+use Pri301\Blog\Application\DTO\Requests\PublishPostRequest;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
 use Symfony\Component\Validator\Validation;
 
-class GetPostPartMiddleware implements MiddlewareInterface
+class PublishPostMiddleware implements MiddlewareInterface
 {
 
     public function process(Request $request, Handler $handler): Response
     {
         $data = $request->getParsedBody();
 
-        $dto = new GetPostsRequest();
-        $dto->substring = $data['substring'] ?? $data;
-        $dto->articlePart = $data['articlePart'] ?? '';
+        $dto = new PublishPostRequest();
+        $dto->name = $data['name'] ?? '';
+        $dto->content = $data['content'] ?? '';
+        $dto->authorLogin = $data['authorLogin'] ?? '';
+        $dto->postTags = $data['postTags'] ?? '';
+        $dto->postTypeId = $data['postTypeId'] ?? '';
 
         $validator = Validation::createValidatorBuilder()
             ->enableAttributeMapping()
             ->getValidator();
+
 
         $violations = $validator->validate($dto);
 
@@ -38,7 +44,7 @@ class GetPostPartMiddleware implements MiddlewareInterface
                 'success' => false,
                 'errors' => $errors
             ]));
-            return $response->withStatus(422);
+            return $response->withStatus(422)->withHeader('Content-Type', 'application/json');
         }
 
         return $handler->handle(

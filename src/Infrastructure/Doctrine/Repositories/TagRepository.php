@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Pri301\Blog\Infarastructure\Doctrine\Repositories;
+namespace Pri301\Blog\Infrastructure\Doctrine\Repositories;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Pri301\Blog\Domain\Entity\Tag;

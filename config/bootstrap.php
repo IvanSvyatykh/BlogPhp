@@ -5,7 +5,7 @@ use Doctrine\ORM\ORMSetup;
 use Doctrine\DBAL\Types\Type;
 use Dotenv\Dotenv;
 
-$config = require dirname(__DIR__) . '/config/env.php';
+
 require_once __DIR__ . '/../vendor/autoload.php';
 $dotenv = Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
@@ -19,11 +19,11 @@ $isDevMode = true;
 
 $dbParams = [
     'driver'   => 'pdo_pgsql',
-    'host'     => $_ENV['DB_HOST'] ?? 'localhost',
-    'user'     => $_ENV['DB_USER'] ??'postgres',
-    'password' => $_ENV['DB_PASS'] ?? 'postgres',
-    'dbname'   => $_ENV['DB_NAME'] ??'postgres',
-    'port'     => $_ENV['DB_PORT'] ?? 5432,
+    'host'     => $_ENV['POSTGRES_DOMAIN'] ?? 'localhost',
+    'user'     => $_ENV['POSTGRES_USER'] ??'postgres',
+    'password' => $_ENV['POSTGRES_PASSWORD'] ?? 'postgres',
+    'dbname'   => $_ENV['POSTGRES_DB'] ??'postgres',
+    'port'     => $_ENV['POSTGRES_PORT'] ?? 5432,
 ];
 
 $config = ORMSetup::createAttributeMetadataConfiguration($paths, $isDevMode);

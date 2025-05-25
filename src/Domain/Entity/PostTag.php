@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 #[ORM\Table(name: 'post_tags',schema: "public")]
 #[ORM\UniqueConstraint(name: 'unique_tag_for_post', columns: ['tag_id', 'post_id'])]
-class PostTags
+class PostTag
 {
 
     #[ORM\Id]
