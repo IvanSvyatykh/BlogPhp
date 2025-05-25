@@ -27,7 +27,7 @@ class RegistrationAndAuthorizationAndAuthorizationService implements Registratio
 
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-        $user = new User($username, $login, $hashedPassword, null, false, new DateTimeImmutable());
+        $user = new User($username, $login, $hashedPassword);
         $this->userRepository->addUser($user);
 
         $token = $this->generateToken($user);
