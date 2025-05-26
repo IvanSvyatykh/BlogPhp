@@ -10,8 +10,8 @@ class Post
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
-    #[ORM\Column(type: 'integer',name: "Id", unique: true)]
-    private ?int $id;
+    #[ORM\Column(type: 'integer', unique: true)]
+    private int $id;
     #[ORM\Column(type: 'string', length: 50)]
     private string $title;
     #[ORM\Column(type: 'string')]
@@ -44,7 +44,7 @@ class Post
     }
 
     // Getters and setters
-    public function getId(): ?int { return $this->id; }
+    public function getId(): int { return $this->id; }
     public function getTitle(): string { return $this->title; }
     public function getContent(): string { return $this->content; }
     public function getCreatedAt(): \DateTime { return $this->createdAt; }

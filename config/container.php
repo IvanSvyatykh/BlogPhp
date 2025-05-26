@@ -4,6 +4,7 @@ use DI\Container;
 use Doctrine\ORM\EntityManager;
 use Pri301\Blog\Application\Handlers\CreatePostHandler;
 use Doctrine\ORM\EntityManagerInterface;
+use Pri301\Blog\Application\Handlers\ToggleLikeHandler;
 use Pri301\Blog\Application\Handlers\CommentHandler;
 use Pri301\Blog\Application\Handlers\PostHandler;
 use Pri301\Blog\Domain\Repository\LikeRepositoryInterface;
@@ -43,6 +44,7 @@ use Pri301\Blog\Infrastructure\Middlewares\GetUserCommentsMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\JWTMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\LoginUserMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\RegisterUserMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\ToggleLikeMiddleware;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
@@ -58,6 +60,7 @@ return function (Container $container) {
     $container->set(JWTMiddleware::class,function($container){
         return new JWTMiddleware($_ENV['JWT_SECRET'],$_ENV["ALGORITHM"]);
     });
+    $container->set(ToggleLikeMiddleware::class,fn() => new ToggleLikeMiddleware());
     $container->set(CreatePostMiddleware::class, fn() => new CreatePostMiddleware());
     $container->set(DeletePostMiddleware::class, fn() => new DeletePostMiddleware());
     $container->set(GetPublishedPostsMiddleware::class, fn() => new GetPublishedPostsMiddleware());
@@ -96,7 +99,7 @@ return function (Container $container) {
         );
     });
     $container->set(LikeServiceInterface::class, function (Container $c) {
-        return new LikeService($c->get(LikeRepositoryInterface::class),$c->get(EntityManager::class));
+        return new LikeService($c->get(LikeRepositoryInterface::class), $c->get(UserRepositoryInterface::class),$c->get(EntityManager::class));
     });
     $container->set(PostServiceInterface::class, function (Container $c) {
         return new PostService($c->get(PostRepositoryInterface::class),$c->get(EntityManager::class),
@@ -118,6 +121,9 @@ return function (Container $container) {
     });
     $container->set(LoginHandler::class, function (Container $c) {
         return new LoginHandler($c->get(RegistrationAndAuthorizationServiceInterface::class));
+    });
+    $container->set(ToggleLikeHandler::class, function (Container $c) {
+        return new ToggleLikeHandler($c->get(LikeServiceInterface::class));
     });
     $container->set(CreatePostHandler::class, function (Container $c) {
         return new CreatePostHandler($c->get(PostServiceInterface::class),$c->get(UserServiceInterface::class));

@@ -15,7 +15,6 @@ class Like
     private int $id;
 
     #[ORM\OneToOne(targetEntity: Post::class)]
-    #[ORM\Column(type: 'integer', name: 'post_id')]
     #[ORM\JoinColumn(name: 'post_id', referencedColumnName: 'id',nullable: false)]
     private Post $post;
 
@@ -28,12 +27,11 @@ class Like
 
     public function __construct(
         Post $post,
-        User $user,
-        ?\DateTime $createdAt = null
+        User $user
     ) {
         $this->post = $post;
         $this->user = $user;
-        $this->createdAt = $createdAt ?? new \DateTime();
+        $this->createdAt = new \DateTime();
     }
 
     // Getters
