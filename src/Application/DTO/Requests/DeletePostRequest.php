@@ -2,6 +2,8 @@
 
 namespace Pri301\Blog\Application\DTO\Requests;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 final class DeletePostRequest
 {
     #[Assert\NotBlank(message: 'Article id is required')]

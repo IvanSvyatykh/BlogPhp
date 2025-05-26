@@ -7,7 +7,8 @@ use function count;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
 use Psr\Http\Message\ResponseInterface as Response;
-final class DeletePostMiddleware extends BaseValidationMiddleware
+
+final class DeletePostMiddleware implements MiddlewareInterface
 {
     public function process(Request $request, Handler $handler): Response
     {
@@ -18,9 +19,24 @@ final class DeletePostMiddleware extends BaseValidationMiddleware
         $dto->articleId = $pathId;
         $dto->userLogin = $body['user_login'] ?? '';
 
-        $violations = $this->validator->validate($dto);
+        $validator = Validation::createValidatorBuilder()
+            ->enableAttributeMapping()
+            ->getValidator();
+
+        $violations = $validator->validate($dto);
         if (count($violations) > 0) {
-            return $this->error($this->violationsToArray($violations));
+            $errors = [];
+            foreach ($violations as $violation) {
+                $field = $violation->getPropertyPath();
+                $errors[$field] = $violation->getMessage();
+            }
+
+            $response = new Response();
+            $response->getBody()->write(json_encode([
+                'success' => false,
+                'errors' => $errors
+            ]));
+            return $response->withStatus(422)->withHeader('Content-Type', 'application/json');
         }
 
         return $handler->handle($request->withAttribute('dto', $dto));
