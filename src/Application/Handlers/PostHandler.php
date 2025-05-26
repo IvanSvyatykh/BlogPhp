@@ -12,7 +12,7 @@ use Pri301\Blog\Domain\Services\UserServiceInterface;
 use Slim\Psr7\Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-final class PostHandler
+class PostHandler
 {
     public function __construct(
         private readonly PostServiceInterface $postService,

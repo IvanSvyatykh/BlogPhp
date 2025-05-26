@@ -3,6 +3,7 @@
 
 namespace Pri301\Blog\Infrastructure\Doctrine\Repositories;
 
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Pri301\Blog\Domain\Entity\Status;
 use Pri301\Blog\Domain\Enum\PostStatus;
@@ -18,35 +19,38 @@ class StatusRepository implements StatusRepositoryInterface
     }
 
     public function getPublishStatusId(): ?int{
-        return $this->entityManager
+        $result = $this->entityManager
             ->createQueryBuilder()
             ->select('s.id')
             ->from(Status::class, 's')
             ->where('s.status := status')
-            ->setParameter('status', PostStatus::Published)
+            ->setParameter('status', PostStatus::Published->value)
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
+        return $result ? (int)$result : null;
     }
 
     public function getPendingStatusId(): ?int{
-        return $this->entityManager
+        $result = $this->entityManager
             ->createQueryBuilder()
             ->select('s.id')
             ->from(Status::class, 's')
-            ->where('s.status := status')
-            ->setParameter('status', PostStatus::Pending)
+            ->where('s.status = :status')
+            ->setParameter('status', PostStatus::Pending->value)
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
+        return $result ? (int)$result : null;
     }
 
     public function getRejectedStatusId(): ?int{
-        return $this->entityManager
+        $result =$this->entityManager
             ->createQueryBuilder()
             ->select('s.id')
             ->from(Status::class, 's')
             ->where('s.status := status')
-            ->setParameter('status', PostStatus::Rejected)
+            ->setParameter('status', PostStatus::Rejected->value)
             ->getQuery()
-            ->getOneOrNullResult();
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
+        return $result ? (int)$result : null;
     }
 }
