@@ -26,4 +26,12 @@ class TagRepository implements TagRepositoryInterface
             ->getSingleScalarResult();
     }
 
+    public function addTag(Tag $tag): void
+    {
+        $this->entityManager->persist($tag);
+        $this->entityManager->flush();
+
+    }
+
+
 }

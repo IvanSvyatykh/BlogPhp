@@ -23,7 +23,7 @@ class StatusRepository implements StatusRepositoryInterface
             ->createQueryBuilder()
             ->select('s.id')
             ->from(Status::class, 's')
-            ->where('s.status := status')
+            ->where('s.status = :status')
             ->setParameter('status', PostStatus::Published->value)
             ->getQuery()
             ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
@@ -47,7 +47,7 @@ class StatusRepository implements StatusRepositoryInterface
             ->createQueryBuilder()
             ->select('s.id')
             ->from(Status::class, 's')
-            ->where('s.status := status')
+            ->where('s.status = :status')
             ->setParameter('status', PostStatus::Rejected->value)
             ->getQuery()
             ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);

@@ -4,17 +4,15 @@ namespace Pri301\Blog\Infrastructure\Middlewares;
 
 use Psr\Http\Server\MiddlewareInterface;
 use Slim\Psr7\Response;
-use Symfony\Component\Validator\Validation;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 abstract class BaseValidationMiddleware implements MiddlewareInterface
 {
     protected ValidatorInterface $validator;
 
-    public function __construct()
+    public function __construct(ValidatorInterface $validator)
     {
-        $this->validator = Validation::createValidatorBuilder()
-            ->enableAttributeMapping()
-            ->getValidator();
+        $this->validator = $validator;
     }
 
     protected function error(array $errors, int $status = 422): Response

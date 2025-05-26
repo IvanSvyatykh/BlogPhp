@@ -5,7 +5,7 @@ namespace Pri301\Blog\Application\Handlers;
 
 use Pri301\Blog\Domain\Services\PostServiceInterface;
 use Pri301\Blog\Domain\Services\UserServiceInterface;
-use Psr\Http\Message\ResponseInterface as Response;
+use Slim\Psr7\Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 
@@ -23,7 +23,7 @@ final class GetUnpublishedPostsHandler
         $user  = $this->userService->GetUserById($login);
 
         if (!$user) {
-            return $this->errorResponse('Author not found', 404);
+            return $this->errorResponse('Author not found' , 404);
         }
 
         $posts = $this->postService->getUnpublishedPostsByUser($user->getId());
@@ -34,6 +34,13 @@ final class GetUnpublishedPostsHandler
     {
         $response = $res->withStatus($status);
         $response->getBody()->write(json_encode($payload, JSON_UNESCAPED_UNICODE));
+        return $response->withHeader('Content-Type', 'application/json');
+    }
+
+    private function errorResponse(string $msg, int $code): \Slim\Psr7\Response
+    {
+        $response = new Response($code);
+        $response->getBody()->write(json_encode(['error' => ['message' => $msg]]));
         return $response->withHeader('Content-Type', 'application/json');
     }
 }
