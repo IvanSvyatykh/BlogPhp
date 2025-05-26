@@ -1,8 +1,10 @@
-﻿<?php
+<?php
 
 namespace Pri301\Blog\Infrastructure\Middlewares;
 
+use Psr\Http\Server\MiddlewareInterface;
 use Slim\Psr7\Response;
+use Symfony\Component\Validator\Validation;
 
 abstract class BaseValidationMiddleware implements MiddlewareInterface
 {

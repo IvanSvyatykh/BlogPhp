@@ -72,24 +72,6 @@ class PostHandler
         return $res->withStatus(204);
     }
 
-    public function createPost(Request $req, Response $res): Response
-    {
-        $dto  = $req->getAttribute('dto');
-        $user = $this->userService->GetUserById($dto->authorLogin);
-
-        if (!$user) {
-            return $this->errorResponse('Author not found', 404);
-        }
-
-        $post = $this->postService->createPost([
-            'title' => $dto->name,
-            'content' => $dto->content,
-            'type' => $dto->type,
-        ], $user->getId());
-
-        return $this->json($res, ['article_id' => $post->getId()], 201);
-    }
-
     private function json(Response $res, mixed $payload, int $status = 200): Response
     {
         $response = $res->withStatus($status);
