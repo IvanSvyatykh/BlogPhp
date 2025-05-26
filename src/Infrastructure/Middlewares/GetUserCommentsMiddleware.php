@@ -13,10 +13,10 @@ final class GetUserCommentsMiddleware extends BaseValidationMiddleware
 {
     public function process(Request $request, Handler $handler): Response
     {
-        $login = $request->getQueryParams()['user_login'] ?? '';
+        $data = $request->getParsedBody();
 
         $dto = new GetUserCommentsRequest();
-        $dto->userLogin = $login;
+        $dto->userLogin = $data['userLogin'] ?? '';
 
         $violations = $this->validator->validate($dto);
         if (\count($violations) > 0) {

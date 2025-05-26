@@ -57,7 +57,8 @@ class CommentRepository implements CommentRepositoryInterface
             ->createQueryBuilder()
             ->select('c')
             ->from(Comment::class, 'c')
-            ->where('c.author.id = :authorId')
+            ->join('c.author', 'a')                      // join с сущностью User
+            ->where('a.id = :authorId')                  // фильтрация по id пользователя
             ->orderBy('c.createdAt', 'DESC')
             ->setParameter('authorId', $userId)
             ->getQuery()

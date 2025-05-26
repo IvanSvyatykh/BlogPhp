@@ -95,7 +95,6 @@ return function (Container $container) {
     $container->set(CommentServiceInterface::class, function (Container $c) {
         return new CommentService(
             $c->get(CommentRepositoryInterface::class),
-            $c->get(UserRepositoryInterface::class),
             $c->get(EntityManager::class)
         );
     });
