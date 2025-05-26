@@ -23,7 +23,7 @@ $dbParams = [
     'user'     => $_ENV['POSTGRES_USER'] ??'postgres',
     'password' => $_ENV['POSTGRES_PASSWORD'] ?? 'postgres',
     'dbname'   => $_ENV['POSTGRES_DB'] ??'postgres',
-    'port'     => 5432,
+    'port'     => $_ENV['POSTGRES_PORT'] ?? 5432,
 ];
 
 $config = ORMSetup::createAttributeMetadataConfiguration($paths, $isDevMode);
