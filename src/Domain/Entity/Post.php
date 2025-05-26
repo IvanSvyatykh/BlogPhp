@@ -10,8 +10,8 @@ class Post
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
-    #[ORM\Column(type: 'integer',name: "Id", unique: true)]
-    private ?int $id;
+    #[ORM\Column(type: 'integer', unique: true)]
+    private int $id;
     #[ORM\Column(type: 'string', length: 50)]
     private string $title;
     #[ORM\Column(type: 'string')]
@@ -24,7 +24,7 @@ class Post
     #[ORM\Column(type: 'boolean' )]
     private bool $isPublished = false;
     #[ORM\OneToOne(targetEntity: Status::class)]
-    #[ORM\JoinColumn(name: 'status_id', referencedColumnName: 'id')]
+    #[ORM\JoinColumn(name: 'status_id', referencedColumnName: 'id', nullable: false)]
     private Status $status;
     #[ORM\OneToOne(targetEntity: Type::class)]
     #[ORM\JoinColumn(name:'post_type_id', referencedColumnName: 'id')]
@@ -35,18 +35,16 @@ class Post
         string     $content,
         User       $author,
         Status     $status,
-        Type       $type,
     ) {
         $this->title = $title;
         $this->content = $content;
         $this->author = $author;
         $this->createdAt = new \DateTime();
         $this->status = $status;
-        $this->type = $type;
     }
 
     // Getters and setters
-    public function getId(): ?int { return $this->id; }
+    public function getId(): int { return $this->id; }
     public function getTitle(): string { return $this->title; }
     public function getContent(): string { return $this->content; }
     public function getCreatedAt(): \DateTime { return $this->createdAt; }

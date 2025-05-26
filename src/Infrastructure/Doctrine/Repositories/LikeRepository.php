@@ -25,10 +25,11 @@ class LikeRepository implements LikeRepositoryInterface
     {
         $this->entityManager
             ->createQueryBuilder()
-            ->delete(Like::class, 'like')
-            ->where('like.post = :postId and like.user = :userId')
-            ->setParameter('postId', $postId)
-            ->setParameter('userId', $userId)
+            ->delete(Like::class, 'l')
+            ->where('l.post = :post_id')
+            ->andWhere('l.user = :user_id')
+            ->setParameter('post_id', $postId)
+            ->setParameter('user_id', $userId)
             ->getQuery()
             ->execute();
     }
