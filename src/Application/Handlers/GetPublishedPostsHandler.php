@@ -8,25 +8,26 @@ use Pri301\Blog\Domain\Services\UserServiceInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Psr7\Response;
 
-final class GetUnpublishedPostsHandler
+final class GetPublishedPostsHandler
 {
     public function __construct(
         private PostServiceInterface $postService,
         private readonly UserServiceInterface $userService,
     ){}
 
-    public function __invoke(Request $request, Response $response): Response
+    public function __invoke(Request $req, Response $res): Response
     {
-        $dto   = $request->getAttribute('dto');
+        $dto = $req->getAttribute('dto');
         $login = $dto->userLogin;
-        $user  = $this->userService->GetUserById($login);
+        $user = $this->userService->GetUserById($login);
 
         if (!$user) {
             return $this->errorResponse('Author not found', 404);
         }
 
-        $posts = $this->postService->getUnpublishedPostsByUser($user->getId());
-        return $this->json($response, $posts);
+        $posts = $this->postService->getPublishedPostsByUser($user->getId());
+
+        return $this->json($res, $posts);
     }
 
     private function json(Response $res, mixed $payload, int $status = 200): Response

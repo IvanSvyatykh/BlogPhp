@@ -5,8 +5,8 @@ namespace Pri301\Blog\Application\Handlers;
 
 use Pri301\Blog\Domain\Services\PostServiceInterface;
 use Pri301\Blog\Domain\Services\UserServiceInterface;
-use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Psr7\Response;
 
 
 final class CreatePostHandler
@@ -37,6 +37,13 @@ final class CreatePostHandler
     {
         $response = $res->withStatus($status);
         $response->getBody()->write(json_encode($payload, JSON_UNESCAPED_UNICODE));
+        return $response->withHeader('Content-Type', 'application/json');
+    }
+
+    private function errorResponse(string $msg, int $code): \Slim\Psr7\Response
+    {
+        $response = new Response($code);
+        $response->getBody()->write(json_encode(['error' => ['message' => $msg]]));
         return $response->withHeader('Content-Type', 'application/json');
     }
 }

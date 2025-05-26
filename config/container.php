@@ -4,8 +4,11 @@ use DI\Container;
 use Doctrine\ORM\EntityManager;
 use Pri301\Blog\Application\Handlers\CreatePostHandler;
 use Doctrine\ORM\EntityManagerInterface;
+use Pri301\Blog\Application\Handlers\DeletePostHandler;
+use Pri301\Blog\Application\Handlers\GetPublishedPostsHandler;
+use Pri301\Blog\Application\Handlers\GetUnpublishedPostsHandler;
 use Pri301\Blog\Application\Handlers\ToggleLikeHandler;
-use Pri301\Blog\Application\Handlers\CommentHandler;
+use Pri301\Blog\Application\Handlers\GetUserCommentsHandler;
 use Pri301\Blog\Application\Handlers\PostHandler;
 use Pri301\Blog\Domain\Repository\LikeRepositoryInterface;
 use Pri301\Blog\Domain\Repository\CommentRepositoryInterface;
@@ -36,12 +39,10 @@ use Pri301\Blog\Domain\Services\RegistrationAndAuthorizationAndAuthorizationServ
 use \Pri301\Blog\Application\Handlers\RegisterHandler;
 use \Pri301\Blog\Application\Handlers\LoginHandler;
 use Pri301\Blog\Application\Handlers\UserHandler;
-use Pri301\Blog\Infrastructure\Middlewares\CreatePostMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\DeletePostMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\GetPublishedPostsMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\GetUnpublishedPostsMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\GetUserCommentsMiddleware;
-use Pri301\Blog\Infrastructure\Middlewares\JWTMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\LoginUserMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\RegisterUserMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\ToggleLikeMiddleware;
@@ -51,16 +52,16 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 return function (Container $container) {
     $entityManager = require __DIR__ . '/bootstrap.php';
     #Зависимости для Middleware
-    $container->set(LoginUserMiddleware::class,function($container){
+    $container->set(LoginUserMiddleware::class, function ($container) {
         return new LoginUserMiddleware();
     });
-    $container->set(RegisterUserMiddleware::class,function($container){
+    $container->set(RegisterUserMiddleware::class, function ($container) {
         return new RegisterUserMiddleware();
     });
-    $container->set(JWTMiddleware::class,function($container){
-        return new JWTMiddleware($_ENV['JWT_SECRET'],$_ENV["ALGORITHM"]);
+    $container->set(JWTMiddleware::class, function ($container) {
+        return new JWTMiddleware($_ENV['JWT_SECRET'], $_ENV["ALGORITHM"]);
     });
-    $container->set(ToggleLikeMiddleware::class,fn() => new ToggleLikeMiddleware());
+    $container->set(ToggleLikeMiddleware::class, fn() => new ToggleLikeMiddleware());
     $container->set(CreatePostMiddleware::class, fn() => new CreatePostMiddleware());
     $container->set(DeletePostMiddleware::class, fn() => new DeletePostMiddleware());
     $container->set(GetPublishedPostsMiddleware::class, fn() => new GetPublishedPostsMiddleware());
@@ -99,10 +100,10 @@ return function (Container $container) {
         );
     });
     $container->set(LikeServiceInterface::class, function (Container $c) {
-        return new LikeService($c->get(LikeRepositoryInterface::class), $c->get(UserRepositoryInterface::class),$c->get(EntityManager::class));
+        return new LikeService($c->get(LikeRepositoryInterface::class), $c->get(UserRepositoryInterface::class), $c->get(EntityManager::class));
     });
     $container->set(PostServiceInterface::class, function (Container $c) {
-        return new PostService($c->get(PostRepositoryInterface::class),$c->get(EntityManager::class),
+        return new PostService($c->get(PostRepositoryInterface::class), $c->get(EntityManager::class),
             $c->get(StatusRepositoryInterface::class),
             $c->get(TagRepositoryInterface::class));
     });
@@ -126,9 +127,21 @@ return function (Container $container) {
         return new ToggleLikeHandler($c->get(LikeServiceInterface::class));
     });
     $container->set(CreatePostHandler::class, function (Container $c) {
-        return new CreatePostHandler($c->get(PostServiceInterface::class),$c->get(UserServiceInterface::class));
+        return new CreatePostHandler($c->get(PostServiceInterface::class), $c->get(UserServiceInterface::class));
     });
-    $container->set(CommentHandler::class, function (Container $c) {
-        return new CommentHandler($c->get(CommentServiceInterface::class));
+    $container->set(GetUserCommentsHandler::class, function (Container $c) {
+        return new GetUserCommentsHandler($c->get(CommentServiceInterface::class), $c->get(UserServiceInterface::class));
+    });
+
+    $container->set(GetPublishedPostsHandler::class, function (Container $c) {
+        return new GetPublishedPostsHandler($c->get(CommentServiceInterface::class), $c->get(UserServiceInterface::class));
+    });
+
+    $container->set(GetUnPublishedPostsHandler::class, function (Container $c) {
+        return new GetUnpublishedPostsHandler($c->get(CommentServiceInterface::class), $c->get(UserServiceInterface::class));
+    });
+
+    $container->set(DeletePostHandler::class, function (Container $c) {
+        return new DeletePostHandler($c->get(CommentServiceInterface::class), $c->get(UserServiceInterface::class));
     });
 };

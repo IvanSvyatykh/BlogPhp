@@ -51,16 +51,16 @@ class CommentRepository implements CommentRepositoryInterface
             ->execute();
     }
 
-    public function findByAuthor(User $user): array
+    public function findByAuthorId(int $userId): array
     {
         return $this->entityManager
             ->createQueryBuilder()
             ->select('c')
             ->from(Comment::class, 'c')
-            ->where('c.author = :author')
+            ->where('c.author.id = :authorId')
             ->orderBy('c.createdAt', 'DESC')
-            ->setParameter('author', $user)
+            ->setParameter('authorId', $userId)
             ->getQuery()
-            ->getResult(); // массив сущностей Comment
+            ->getResult();
     }
 }

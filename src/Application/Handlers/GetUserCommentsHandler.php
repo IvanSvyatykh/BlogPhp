@@ -4,13 +4,15 @@ namespace Pri301\Blog\Application\Handlers;
 
 use Pri301\Blog\Application\DTO\Requests\GetCommentsByPostIdRequest;
 use Pri301\Blog\Domain\Services\CommentServiceInterface;
+use Pri301\Blog\Domain\Services\UserServiceInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class CommentHandler
+final class GetUserCommentsHandler
 {
     public function __construct(
         private readonly CommentServiceInterface $commentService,
+        private readonly UserServiceInterface $userService,
     )
     {
     }
@@ -33,13 +35,25 @@ class CommentHandler
 //            ->withHeader('Content-Type', 'application/json');
 //    }
 
-    public function getUserComments(Request $request, Response $response): Response
+    public function __invoke(Request $request, Response $response): Response
     {
         $dto = $request->getAttribute('dto');
 
-        $comments = $this->commentService->getCommentsByUserLogin($dto->user_login);
+        $login = $dto->userLogin;
+        $user  = $this->userService->GetUserById($login);
 
-        $response->getBody()->write(json_encode($comments, JSON_UNESCAPED_UNICODE));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+        if (!$user) {
+            return $this->errorResponse('Author not found', 404);
+        }
+
+        $comments = $this->commentService->getCommentsByUser($user);
+        return $this->json($response, $comments);
+    }
+
+    private function json(Response $res, mixed $payload, int $status = 200): Response
+    {
+        $response = $res->withStatus($status);
+        $response->getBody()->write(json_encode($payload, JSON_UNESCAPED_UNICODE));
+        return $response->withHeader('Content-Type', 'application/json');
     }
 }
