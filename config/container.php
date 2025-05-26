@@ -2,6 +2,7 @@
 
 use DI\Container;
 use Doctrine\ORM\EntityManager;
+use Pri301\Blog\Application\Handlers\CreatePostHandler;
 use Doctrine\ORM\EntityManagerInterface;
 use Pri301\Blog\Application\Handlers\CommentHandler;
 use Pri301\Blog\Application\Handlers\PostHandler;
@@ -20,6 +21,8 @@ use Pri301\Blog\Domain\Services\PostService;
 use Pri301\Blog\Domain\Services\PostServiceInterface;
 use Pri301\Blog\Domain\Services\UserService;
 use Pri301\Blog\Domain\Services\UserServiceInterface;
+use Pri301\Blog\Infrastructure\Middlewares\CreatePostMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\JWTMiddleware;
 use Pri301\Blog\Infrastructure\Doctrine\Repositories\LikeRepository;
 use Pri301\Blog\Infrastructure\Doctrine\Repositories\CommentRepository;
 use Pri301\Blog\Infrastructure\Doctrine\Repositories\PostRepository;
@@ -55,7 +58,6 @@ return function (Container $container) {
     $container->set(JWTMiddleware::class,function($container){
         return new JWTMiddleware($_ENV['JWT_SECRET'],$_ENV["ALGORITHM"]);
     });
-
     $container->set(CreatePostMiddleware::class, fn() => new CreatePostMiddleware());
     $container->set(DeletePostMiddleware::class, fn() => new DeletePostMiddleware());
     $container->set(GetPublishedPostsMiddleware::class, fn() => new GetPublishedPostsMiddleware());
@@ -117,12 +119,10 @@ return function (Container $container) {
     $container->set(LoginHandler::class, function (Container $c) {
         return new LoginHandler($c->get(RegistrationAndAuthorizationServiceInterface::class));
     });
+    $container->set(CreatePostHandler::class, function (Container $c) {
+        return new CreatePostHandler($c->get(PostServiceInterface::class),$c->get(UserServiceInterface::class));
+    });
     $container->set(CommentHandler::class, function (Container $c) {
         return new CommentHandler($c->get(CommentServiceInterface::class));
     });
-    $container->set(PostHandler::class, function (Container $c) {
-        return new PostHandler($c->get(PostServiceInterface::class), $c->get(UserServiceInterface::class));
-    });
-
-
 };

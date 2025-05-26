@@ -7,7 +7,7 @@ use Pri301\Blog\Domain\Services\UserServiceInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Psr7\Response;
 
-final class PostHandler
+class PostHandler
 {
     public function __construct(
         private readonly PostServiceInterface $postService,
@@ -67,24 +67,6 @@ final class PostHandler
 
         $this->postService->deletePost($postId);
         return $res->withStatus(204);
-    }
-
-    public function createPost(Request $req, Response $res): Response
-    {
-        $dto = $req->getAttribute('dto');
-        $user = $this->userService->GetUserById($dto->authorLogin);
-
-        if (!$user) {
-            return $this->errorResponse('Author not found', 404);
-        }
-
-        $post = $this->postService->createPost([
-            'title' => $dto->name,
-            'content' => $dto->content,
-            'type' => $dto->type,
-        ], $user->getId());
-
-        return $this->json($res, ['article_id' => $post->getId()], 201);
     }
 
     private function json(Response $res, mixed $payload, int $status = 200): Response

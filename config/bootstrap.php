@@ -14,7 +14,7 @@ $dotenv->load();
 if (!Type::hasType('boolean')) {
     Type::addType('boolean', 'Doctrine\DBAL\Types\BooleanType');
 }
-$paths = [__DIR__ . '/../src/Entity'];
+$paths = [__DIR__ . '/../src/Domain/Entity'];
 $isDevMode = true;
 
 $dbParams = [
