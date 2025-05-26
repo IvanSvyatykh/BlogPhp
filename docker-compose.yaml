@@ -43,9 +43,6 @@ services:
 
 volumes:
   postgres-db:
-  minio_data:
-  redis_data:
-
 
 networks:
   blog_net:

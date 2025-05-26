@@ -3,6 +3,9 @@
 use DI\Container;
 use Doctrine\ORM\EntityManager;
 use Pri301\Blog\Application\Handlers\CreatePostHandler;
+use Doctrine\ORM\EntityManagerInterface;
+use Pri301\Blog\Application\Handlers\CommentHandler;
+use Pri301\Blog\Application\Handlers\PostHandler;
 use Pri301\Blog\Domain\Repository\LikeRepositoryInterface;
 use Pri301\Blog\Domain\Repository\CommentRepositoryInterface;
 use Pri301\Blog\Domain\Repository\PostRepositoryInterface;
@@ -32,9 +35,12 @@ use Pri301\Blog\Domain\Services\RegistrationAndAuthorizationAndAuthorizationServ
 use \Pri301\Blog\Application\Handlers\RegisterHandler;
 use \Pri301\Blog\Application\Handlers\LoginHandler;
 use Pri301\Blog\Application\Handlers\UserHandler;
+use Pri301\Blog\Infrastructure\Middlewares\CreatePostMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\DeletePostMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\GetPublishedPostsMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\GetUnpublishedPostsMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\GetUserCommentsMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\JWTMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\LoginUserMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\RegisterUserMiddleware;
 
@@ -56,6 +62,7 @@ return function (Container $container) {
     $container->set(DeletePostMiddleware::class, fn() => new DeletePostMiddleware());
     $container->set(GetPublishedPostsMiddleware::class, fn() => new GetPublishedPostsMiddleware());
     $container->set(GetUnpublishedPostsMiddleware::class, fn() => new GetUnpublishedPostsMiddleware());
+    $container->set(GetUserCommentsMiddleware::class, fn() => new GetUserCommentsMiddleware());
 
     #Зависимости для БД
     $container->set(EntityManager::class, $entityManager);
@@ -81,8 +88,12 @@ return function (Container $container) {
         return new UserRepository($c->get(EntityManager::class));
     });
     # Сервисы
-    $container -> set(CommentServiceInterface::class, function (Container $c) {
-       return new CommentService($c->get(CommentRepositoryInterface::class),$c->get(EntityManager::class));
+    $container->set(CommentServiceInterface::class, function (Container $c) {
+        return new CommentService(
+            $c->get(CommentRepositoryInterface::class),
+            $c->get(UserRepositoryInterface::class),
+            $c->get(EntityManager::class)
+        );
     });
     $container->set(LikeServiceInterface::class, function (Container $c) {
         return new LikeService($c->get(LikeRepositoryInterface::class),$c->get(EntityManager::class));
@@ -110,5 +121,8 @@ return function (Container $container) {
     });
     $container->set(CreatePostHandler::class, function (Container $c) {
         return new CreatePostHandler($c->get(PostServiceInterface::class),$c->get(UserServiceInterface::class));
+    });
+    $container->set(CommentHandler::class, function (Container $c) {
+        return new CommentHandler($c->get(CommentServiceInterface::class));
     });
 };

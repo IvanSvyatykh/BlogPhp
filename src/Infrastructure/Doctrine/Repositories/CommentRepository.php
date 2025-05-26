@@ -5,6 +5,7 @@ namespace Pri301\Blog\Infrastructure\Doctrine\Repositories;
 use Doctrine\ORM\EntityManagerInterface;
 use Pri301\Blog\Domain\Entity\Comment;
 use Pri301\Blog\Domain\Entity\Post;
+use Pri301\Blog\Domain\Entity\User;
 use Pri301\Blog\Domain\Repository\CommentRepositoryInterface;
 
 class CommentRepository implements CommentRepositoryInterface
@@ -48,5 +49,18 @@ class CommentRepository implements CommentRepositoryInterface
             ->setParameter('id', $id)
             ->getQuery()
             ->execute();
+    }
+
+    public function findByAuthor(User $user): array
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('c')
+            ->from(Comment::class, 'c')
+            ->where('c.author = :author')
+            ->orderBy('c.createdAt', 'DESC')
+            ->setParameter('author', $user)
+            ->getQuery()
+            ->getResult(); // массив сущностей Comment
     }
 }

@@ -1,29 +1,26 @@
 <?php
+
 namespace Pri301\Blog\Application\Handlers;
 
-use Pri301\Blog\Application\DTO\Requests\GetPostsByUserRequest;
-use Pri301\Blog\Application\DTO\Requests\CreatePostRequest;
-use Pri301\Blog\Application\DTO\Response\ArticleResponse;
-use Pri301\Blog\Application\DTO\Validator\DtoValidator;
-use Pri301\Blog\Domain\Entity\Post;
-use Pri301\Blog\Domain\Enum\PostStatus;
 use Pri301\Blog\Domain\Services\PostServiceInterface;
 use Pri301\Blog\Domain\Services\UserServiceInterface;
-use Slim\Psr7\Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Psr7\Response;
 
 class PostHandler
 {
     public function __construct(
         private readonly PostServiceInterface $postService,
         private readonly UserServiceInterface $userService,
-    ) {}
+    )
+    {
+    }
 
     public function getPublishedPosts(Request $req, Response $res): Response
     {
-        $dto   = $req->getAttribute('dto');
+        $dto = $req->getAttribute('dto');
         $login = $dto->userLogin;
-        $user  = $this->userService->GetUserById($login);
+        $user = $this->userService->GetUserById($login);
 
         if (!$user) {
             return $this->errorResponse('Author not found', 404);
@@ -36,9 +33,9 @@ class PostHandler
 
     public function getUnpublishedPosts(Request $req, Response $res): Response
     {
-        $dto   = $req->getAttribute('dto');
+        $dto = $req->getAttribute('dto');
         $login = $dto->userLogin;
-        $user  = $this->userService->GetUserById($login);
+        $user = $this->userService->GetUserById($login);
 
         if (!$user) {
             return $this->errorResponse('Author not found', 404);
@@ -51,9 +48,9 @@ class PostHandler
     public function deletePost(Request $req, Response $res, array $args): Response
     {
         $postId = (int)$args['id'];
-        $dto    = $req->getAttribute('dto');
-        $login  = $dto->userLogin;
-        $user   = $this->userService->GetUserById($login);
+        $dto = $req->getAttribute('dto');
+        $login = $dto->userLogin;
+        $user = $this->userService->GetUserById($login);
 
         if (!$user) {
             return $this->errorResponse('User not found', 404);

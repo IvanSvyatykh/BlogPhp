@@ -18,5 +18,4 @@ final class CreatePostRequest
         new Assert\Length(max: 50),
     ])]
     public array $postTags;
-
 }
