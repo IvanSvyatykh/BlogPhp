@@ -9,7 +9,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 
-final class CreatePostHandler
+final class GetUnpublishedPostsHandler
 {
     public function __construct(
         private PostServiceInterface $postService,
@@ -18,19 +18,16 @@ final class CreatePostHandler
 
     public function __invoke(Request $request, Response $response): Response
     {
-        $dto  = $request->getAttribute('dto');
-        $user = $this->userService->GetUserById($dto->authorLogin);
+        $dto   = $request->getAttribute('dto');
+        $login = $dto->userLogin;
+        $user  = $this->userService->GetUserById($login);
 
         if (!$user) {
             return $this->errorResponse('Author not found', 404);
         }
 
-        $post = $this->postService->createPost([
-            'title' => $dto->title,
-            'content' => $dto->content,
-        ], $user->getId());
-
-        return $this->json($response, ['article_id' => $post->getId()], 201);
+        $posts = $this->postService->getUnpublishedPostsByUser($user->getId());
+        return $this->json($response, $posts);
     }
 
     private function json(Response $res, mixed $payload, int $status = 200): Response

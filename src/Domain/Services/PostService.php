@@ -5,6 +5,7 @@ namespace Pri301\Blog\Domain\Services;
 use Cassandra\Type;
 use Doctrine\ORM\EntityManager;
 use Pri301\Blog\Domain\Entity\Post;
+use Pri301\Blog\Domain\Entity\Status;
 use Pri301\Blog\Domain\Entity\User;
 use Pri301\Blog\Domain\Enum\PostStatus;
 use Pri301\Blog\Domain\Repository\PostRepositoryInterface;
@@ -27,8 +28,7 @@ class PostService implements PostServiceInterface
             $data['title'],
             $data['content'],
             $this->entityManager->getReference(User::class, $authorId),
-            $this->entityManager->getReference(PostStatus::class, $pendingStatusId),
-            $this->entityManager->getReference(Type::class, $data['type'])
+            $this->entityManager->getReference(Status::class, $pendingStatusId),
         );
 
         $postId = $this->postRepository->addPost($post);

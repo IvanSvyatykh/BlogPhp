@@ -1,6 +1,6 @@
 <?php
 
-namespace Pri301\Blog\Infarastructure\Middlewares;
+namespace Pri301\Blog\Infrastructure\Middlewares;
 
 use Pri301\Blog\Application\DTO\Requests\GetPostsRequest;
 use Psr\Http\Message\ResponseInterface as Response;

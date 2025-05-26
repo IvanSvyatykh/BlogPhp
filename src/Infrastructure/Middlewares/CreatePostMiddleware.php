@@ -2,7 +2,7 @@
 
 
 
-namespace Pri301\Blog\Infarastructure\Middlewares;
+namespace Pri301\Blog\Infrastructure\Middlewares;
 
 use Pri301\Blog\Application\DTO\Requests\CreatePostRequest;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -19,11 +19,10 @@ class CreatePostMiddleware implements MiddlewareInterface
         $data = $request->getParsedBody();
 
         $dto = new CreatePostRequest();
-        $dto->name = $data['name'] ?? '';
+        $dto->title = $data['title'] ?? '';
         $dto->content = $data['content'] ?? '';
         $dto->authorLogin = $data['authorLogin'] ?? '';
         $dto->postTags = $data['postTags'] ?? '';
-        $dto->postTypeId = $data['postTypeId'] ?? '';
 
         $validator = Validation::createValidatorBuilder()
             ->enableAttributeMapping()
@@ -48,7 +47,7 @@ class CreatePostMiddleware implements MiddlewareInterface
         }
 
         return $handler->handle(
-            $request->withAttribute('dto', $dto)
+            $request->withAttribute('dto', $dto),
         );
     }
 }
