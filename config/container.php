@@ -20,9 +20,6 @@ use Pri301\Blog\Domain\Services\PostService;
 use Pri301\Blog\Domain\Services\PostServiceInterface;
 use Pri301\Blog\Domain\Services\UserService;
 use Pri301\Blog\Domain\Services\UserServiceInterface;
-use Pri301\Blog\Infarastructure\Middlewares\CreatePostMiddleware;
-use Pri301\Blog\Infarastructure\Middlewares\GetUserCommentsMiddleware;
-use Pri301\Blog\Infarastructure\Middlewares\JWTMiddleware;
 use Pri301\Blog\Infrastructure\Doctrine\Repositories\LikeRepository;
 use Pri301\Blog\Infrastructure\Doctrine\Repositories\CommentRepository;
 use Pri301\Blog\Infrastructure\Doctrine\Repositories\PostRepository;
@@ -35,9 +32,12 @@ use Pri301\Blog\Domain\Services\RegistrationAndAuthorizationAndAuthorizationServ
 use \Pri301\Blog\Application\Handlers\RegisterHandler;
 use \Pri301\Blog\Application\Handlers\LoginHandler;
 use Pri301\Blog\Application\Handlers\UserHandler;
+use Pri301\Blog\Infrastructure\Middlewares\CreatePostMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\DeletePostMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\GetPublishedPostsMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\GetUnpublishedPostsMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\GetUserCommentsMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\JWTMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\LoginUserMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\RegisterUserMiddleware;
 

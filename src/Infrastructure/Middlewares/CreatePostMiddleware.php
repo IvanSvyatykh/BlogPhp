@@ -2,7 +2,7 @@
 
 
 
-namespace Pri301\Blog\Infarastructure\Middlewares;
+namespace Pri301\Blog\Infrastructure\Middlewares;
 
 use Pri301\Blog\Application\DTO\Requests\CreatePostRequest;
 use Psr\Http\Message\ResponseInterface as Response;

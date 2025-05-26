@@ -1,12 +1,11 @@
 <?php
 
 use Pri301\Blog\Application\Handlers\PostHandler;
-use Pri301\Blog\Infarastructure\Middlewares\CreatePostMiddleware;
-use Pri301\Blog\Infarastructure\Middlewares\GetPostPartMiddleware;
-use Pri301\Blog\Infarastructure\Middlewares\JWTMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\CreatePostMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\DeletePostMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\GetPublishedPostsMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\GetUnpublishedPostsMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\JWTMiddleware;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 

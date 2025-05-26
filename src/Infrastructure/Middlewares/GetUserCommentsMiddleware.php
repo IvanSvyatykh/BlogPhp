@@ -2,16 +2,12 @@
 
 
 
-namespace Pri301\Blog\Infarastructure\Middlewares;
+namespace Pri301\Blog\Infrastructure\Middlewares;
 
-use Pri301\Blog\Application\DTO\Requests\CreatePostRequest;
 use Pri301\Blog\Application\DTO\Requests\GetUserCommentsRequest;
-use Pri301\Blog\Infrastructure\Middlewares\BaseValidationMiddleware;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
-use Symfony\Component\Validator\Validation;
 
 final class GetUserCommentsMiddleware extends BaseValidationMiddleware
 {

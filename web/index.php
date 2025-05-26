@@ -13,5 +13,5 @@ $app = Bridge::create($container);
 $app->addBodyParsingMiddleware();
 
 (require __DIR__ . '/../src/Infrastructure/Routes/RegistrationAndAuthorizationRoutes.php')($app);
-(require __DIR__ . '/../Routes/PostRoutes.php')($app);
+(require __DIR__ . '/../src/Infrastructure/Routes/PostRoutes.php')($app);
 $app->run();

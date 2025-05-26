@@ -1,8 +1,8 @@
 <?php
 
 use Pri301\Blog\Application\Handlers\CommentHandler;
-use Pri301\Blog\Infarastructure\Middlewares\GetUserCommentsMiddleware;
-use Pri301\Blog\Infarastructure\Middlewares\JWTMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\GetUserCommentsMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\JWTMiddleware;
 use Slim\App;
 
 return function (App $app) {
