@@ -22,12 +22,15 @@ final class Version20250518173000 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql(<<<'SQL'
-            INSERT INTO post_statuses (id, status) VALUES
+            INSERT INTO post_statuses (id,status) VALUES
                                (1,'PUBLISHED'),
                                (2,'PENDING'),
                                            (3,'REJECTED');
         SQL
         );
+        $this->addSql(<<<'SQL'
+             SELECT setval('post_statuses_id_seq', (SELECT MAX(id) FROM post_statuses));
+        SQL);
         $this->addSql(<<<'SQL'
                     INSERT INTO post_types (id,type) VALUES
                                               (1,'Коммерческие игры'),
@@ -35,6 +38,9 @@ final class Version20250518173000 extends AbstractMigration
                                               (3,'Другое');
         SQL
         );
+        $this->addSql(<<<'SQL'
+             SELECT setval('post_types_id_seq', (SELECT MAX(id) FROM post_types));
+        SQL);
 
     }
 
