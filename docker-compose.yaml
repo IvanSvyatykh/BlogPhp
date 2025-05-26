@@ -48,5 +48,5 @@ volumes:
 
 
 networks:
-  resize_photo:
+  blog_net:
     driver: bridge
