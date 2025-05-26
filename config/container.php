@@ -36,12 +36,10 @@ use Pri301\Blog\Domain\Services\RegistrationAndAuthorizationAndAuthorizationServ
 use \Pri301\Blog\Application\Handlers\RegisterHandler;
 use \Pri301\Blog\Application\Handlers\LoginHandler;
 use Pri301\Blog\Application\Handlers\UserHandler;
-use Pri301\Blog\Infrastructure\Middlewares\CreatePostMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\DeletePostMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\GetPublishedPostsMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\GetUnpublishedPostsMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\GetUserCommentsMiddleware;
-use Pri301\Blog\Infrastructure\Middlewares\JWTMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\LoginUserMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\RegisterUserMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\ToggleLikeMiddleware;
