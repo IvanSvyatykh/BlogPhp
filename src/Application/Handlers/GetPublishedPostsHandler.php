@@ -15,9 +15,9 @@ final class GetPublishedPostsHandler
         private readonly UserServiceInterface $userService,
     ){}
 
-    public function __invoke(Request $req, Response $res): Response
+    public function __invoke(Request $request, Response $response): Response
     {
-        $dto = $req->getAttribute('dto');
+        $dto = $request->getAttribute('dto');
         $login = $dto->userLogin;
         $user = $this->userService->GetUserById($login);
 
@@ -27,7 +27,7 @@ final class GetPublishedPostsHandler
 
         $posts = $this->postService->getPublishedPostsByUser($user->getId());
 
-        return $this->json($res, $posts);
+        return $this->json($response, $posts);
     }
 
     private function json(Response $res, mixed $payload, int $status = 200): Response

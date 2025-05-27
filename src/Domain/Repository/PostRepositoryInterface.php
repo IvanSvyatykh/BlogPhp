@@ -13,7 +13,7 @@ interface PostRepositoryInterface
     public function deletePost(int $id): int;
     public function findPublishedByUserId(int $userId,int $publishStatusId): array;
     public function findUnpublishedByUserId(int $userId,int $publishStatusId): array;
-    public function updatePostStatus(Post $post): void;
+    public function updatePostStatusById(int $postId, int $statusId): void;
     public function getPostBySubstrAtContent(string $substr): array;
     public function getPostsBySubstrAtTitle(string $substr): array;
 }

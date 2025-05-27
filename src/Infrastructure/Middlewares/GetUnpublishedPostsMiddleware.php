@@ -8,33 +8,18 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
 use function count;
 
-final class GetUnpublishedPostsMiddleware implements MiddlewareInterface
+final class GetUnpublishedPostsMiddleware extends BaseValidationMiddleware
 {
     public function process(Request $request, Handler $handler): Response
     {
-        $login = $request->getQueryParams()['user_login'] ?? '';
-
+        $data = $request->getParsedBody();
         $dto = new GetUnpublishedPostsRequest();
-        $dto->userLogin = $login;
 
-        $validator = Validation::createValidatorBuilder()
-            ->enableAttributeMapping()
-            ->getValidator();
+        $dto->userLogin = $data['userLogin'] ?? '';
 
-        $violations = $validator->validate($dto);
+        $violations = $this->validator->validate($dto);
         if (count($violations) > 0) {
-            $errors = [];
-            foreach ($violations as $violation) {
-                $field = $violation->getPropertyPath();
-                $errors[$field] = $violation->getMessage();
-            }
-
-            $response = new Response();
-            $response->getBody()->write(json_encode([
-                'success' => false,
-                'errors' => $errors
-            ]));
-            return $response->withStatus(422)->withHeader('Content-Type', 'application/json');
+            return $this->error($this->violationsToArray($violations));
         }
 
         return $handler->handle($request->withAttribute('dto', $dto));

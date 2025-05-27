@@ -7,37 +7,36 @@ use Pri301\Blog\Domain\Services\UserServiceInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Psr7\Response;
 
-class DeletePostHandler
+final class DeletePostHandler
 {
     public function __construct(
         private readonly PostServiceInterface $postService,
         private readonly UserServiceInterface $userService,
-    )
-    {
-    }
+    ) {}
 
-    public function __invoke(Request $req, Response $res, array $args): Response
+    public function __invoke(Request $request, Response $response): Response
     {
-        $postId = (int)$args['id'];
-        $dto = $req->getAttribute('dto');
-        $login = $dto->userLogin;
-        $user = $this->userService->GetUserById($login);
+        $dto = $request->getAttribute('dto');
+        $userLogin = $dto->userLogin;
+        $postId = $dto->articleId;
+
+        $user = $this->userService->GetUserById($userLogin);
 
         if (!$user) {
-            return $this->errorResponse('User not found', 404);
+            return $this->errorResponse('Author not found', 404);
         }
 
         $post = $this->postService->getPost($postId);
         if (!$post) {
-            return $this->errorResponse('Post not found', 404);
+            return $this->errorResponse( 'Post not found', 404);
         }
 
         if ($post->getAuthor()->getId() !== $user->getId()) {
-            return $this->errorResponse('Forbidden', 403);
+            return $this->errorResponse( 'Forbidden', 403);
         }
 
-        $this->postService->deletePost($postId);
-        return $res->withStatus(204);
+        $this->postService->rejectPost($postId);
+        return $response->withStatus(204);
     }
 
     private function errorResponse(string $msg, int $code): Response
