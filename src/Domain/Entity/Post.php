@@ -21,8 +21,6 @@ class Post
     private User $author;
     #[ORM\Column(type: 'datetime', name: 'created_at')]
     private \DateTime $createdAt;
-    #[ORM\Column(type: 'boolean' )]
-    private bool $isPublished = false;
     #[ORM\ManyToOne(targetEntity: Status::class)]
     #[ORM\JoinColumn(name: 'status_id', referencedColumnName: 'id', nullable: false)]
     private Status $status;
@@ -67,7 +65,4 @@ class Post
         $this->type = $type;
     }
     public function setAuthor(User $author): void { $this->author = $author; }
-    public function isPublished(): bool { return $this->isPublished; }
-    public function setPublished(bool $value): void { $this->isPublished = $value; }
-
 }
