@@ -59,7 +59,7 @@ class PostService implements PostServiceInterface
 
     public function getUnpublishedPostsByUser(int $userId): array
     {
-        $publishStatusId = $this->statusRepository->getPublishStatusId();
+        $publishStatusId = $this->statusRepository->getPendingStatusId();
         return $this->postRepository->findUnpublishedByUserId($userId,$publishStatusId);
     }
 
