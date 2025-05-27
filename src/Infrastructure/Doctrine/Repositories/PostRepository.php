@@ -4,6 +4,8 @@ namespace Pri301\Blog\Infrastructure\Doctrine\Repositories;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Pri301\Blog\Domain\Entity\Post;
+use Pri301\Blog\Domain\Entity\Status;
+use Pri301\Blog\Domain\Entity\User;
 use Pri301\Blog\Domain\Repository\PostRepositoryInterface;
 
 class PostRepository implements PostRepositoryInterface
@@ -66,15 +68,14 @@ class PostRepository implements PostRepositoryInterface
         return $post->getId();
     }
 
-    public function updatePostStatus(Post $post): void
+    public function updatePostStatusById(int $postId, int $statusId): void
     {
-
         $this->entityManager->createQueryBuilder()
             ->update(Post::class, 'p')
-            ->set('p.status',':status')
-            ->where('p.id = :id')
-            ->setParameter('status', $post->getStatus())
-            ->setParameter('id', $post->getId())
+            ->set('p.status', ':statusId')
+            ->where('p.id = :postId')
+            ->setParameter('statusId', $statusId)
+            ->setParameter('postId', $postId)
             ->getQuery()
             ->execute();
     }
@@ -92,26 +93,29 @@ class PostRepository implements PostRepositoryInterface
 
     public function findPublishedByUserId(int $userId,int $publishStatusId): array
     {
-        return $this -> entityManager
+        return $this->entityManager
             ->createQueryBuilder()
             ->select('p')
             ->from(Post::class, 'p')
-            ->where('p.author_id = :userId AND p.status = :status')
+            ->where('IDENTITY(p.author) = :userId')
+            ->andWhere('IDENTITY(p.status) = :statusId')
             ->setParameter('userId', $userId)
-            ->setParameter('status', $publishStatusId)
+            ->setParameter('statusId', $publishStatusId)
             ->getQuery()
             ->getArrayResult();
     }
 
-    public function findUnpublishedByUserId(int $userId,int $publishStatusId): array
+    public function findUnpublishedByUserId(int $userId, int $publishStatusId): array
     {
-        return $this -> entityManager
+        return $this->entityManager
             ->createQueryBuilder()
             ->select('p')
             ->from(Post::class, 'p')
             ->where('p.author = :userId AND p.status != :status')
+            ->where('IDENTITY(p.author) = :userId')
+            ->andWhere('IDENTITY(p.status) = :statusId')
             ->setParameter('userId', $userId)
-            ->setParameter('status',$publishStatusId)
+            ->setParameter('statusId', $publishStatusId)
             ->getQuery()
             ->getArrayResult();
     }

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Pri301\Blog\Application\Handlers;
 
 use Pri301\Blog\Domain\Services\PostServiceInterface;
@@ -8,32 +7,36 @@ use Pri301\Blog\Domain\Services\UserServiceInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Psr7\Response;
 
-final class GetUnpublishedPostsHandler
+final class DeletePostHandler
 {
     public function __construct(
-        private PostServiceInterface $postService,
+        private readonly PostServiceInterface $postService,
         private readonly UserServiceInterface $userService,
-    ){}
+    ) {}
 
     public function __invoke(Request $request, Response $response): Response
     {
-        $dto   = $request->getAttribute('dto');
-        $login = $dto->userLogin;
-        $user  = $this->userService->GetUserById($login);
+        $dto = $request->getAttribute('dto');
+        $userLogin = $dto->userLogin;
+        $postId = $dto->articleId;
+
+        $user = $this->userService->GetUserById($userLogin);
 
         if (!$user) {
-            return $this->errorResponse('Author not found' , 404);
+            return $this->errorResponse('Author not found', 404);
         }
 
-        $posts = $this->postService->getUnpublishedPostsByUser($user->getId());
-        return $this->json($response, $posts);
-    }
+        $post = $this->postService->getPost($postId);
+        if (!$post) {
+            return $this->errorResponse( 'Post not found', 404);
+        }
 
-    private function json(Response $res, mixed $payload, int $status = 200): Response
-    {
-        $response = $res->withStatus($status);
-        $response->getBody()->write(json_encode($payload, JSON_UNESCAPED_UNICODE));
-        return $response->withHeader('Content-Type', 'application/json');
+        if ($post->getAuthor()->getId() !== $user->getId()) {
+            return $this->errorResponse( 'Forbidden', 403);
+        }
+
+        $this->postService->rejectPost($postId);
+        return $response->withStatus(204);
     }
 
     private function errorResponse(string $msg, int $code): Response

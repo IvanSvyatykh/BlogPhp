@@ -61,10 +61,6 @@ class PostService implements PostServiceInterface
         return $this->postRepository->getArticlesByStatus($limit, $offset);
     }
 
-    public function deletePost(int $id): void
-    {
-        $this->postRepository->deletePost($id);
-    }
     public function getAllPostsByUser(int $authorId, int $limit = 10, int $offset = 0): array
     {
         return $this->postRepository->findAllByUser($authorId, $limit, $offset);
@@ -73,21 +69,19 @@ class PostService implements PostServiceInterface
     public function getPublishedPostsByUser(int $userId): array
     {
         $publishedStatusId = $this->statusRepository->getPublishStatusId();
-        return $this->postRepository->findPublishedByUserId($userId,$publishedStatusId);
+        return $this->postRepository->findPublishedByUserId($userId, $publishedStatusId);
     }
 
     public function getUnpublishedPostsByUser(int $userId): array
     {
-        $publishStatusId = $this->statusRepository->getPublishStatusId();
+        $publishStatusId = $this->statusRepository->getPendingStatusId();
         return $this->postRepository->findUnpublishedByUserId($userId,$publishStatusId);
     }
 
     public function rejectPost(int $postId): void
     {
-        $post = $this->postRepository->findPostById($postId);
         $rejectedStatusId = $this->statusRepository->getRejectedStatusId();
-        $post->setStatus($this->entityManager->getReference(PostStatus::class, $rejectedStatusId));
-        $this->postRepository->updatePostStatus($post);
+        $this->postRepository->updatePostStatusById($postId, $rejectedStatusId);
     }
 
     public function getPendingPosts(int $limit = 10, int $offset = 0): array

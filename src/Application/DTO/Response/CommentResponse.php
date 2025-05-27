@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace Pri301\Blog\Application\DTO\Response;
 

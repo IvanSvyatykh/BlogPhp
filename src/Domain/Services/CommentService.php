@@ -6,15 +6,13 @@ use Doctrine\ORM\EntityManager;
 use Pri301\Blog\Application\DTO\Response\CommentResponse;
 use Pri301\Blog\Domain\Entity\Comment;
 use Pri301\Blog\Domain\Entity\Post;
+use Pri301\Blog\Domain\Entity\User;
 use Pri301\Blog\Domain\Repository\CommentRepositoryInterface;
-use Pri301\Blog\Domain\Repository\UserRepositoryInterface;
-
 
 class CommentService implements CommentServiceInterface
 {
     public function __construct(
         private CommentRepositoryInterface $commentRepository,
-        private UserRepositoryInterface $userRepository,
         private EntityManager $entityManager
     ) {}
 
@@ -34,15 +32,9 @@ class CommentService implements CommentServiceInterface
     {
         return $this->commentRepository->findByPost($postId);
     }
-    public function getCommentsByUserLogin(string $userLogin): array
+    public function getCommentsByUser(User $user): array
     {
-        $user = $this->userRepository->findByLogin($userLogin);
-
-        if (!$user) {
-            throw new \RuntimeException('User not found');
-        }
-
-        $comments = $this->commentRepository->findByAuthor($user);
+        $comments = $this->commentRepository->findByAuthorId($user->getId());
 
         return array_map(function (Comment $comment) use ($user) {
             return new CommentResponse(
