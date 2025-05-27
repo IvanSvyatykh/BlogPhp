@@ -50,37 +50,38 @@ use Pri301\Blog\Infrastructure\Middlewares\RegisterUserMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\ToggleLikeMiddleware;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Validation;
+
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 return function (Container $container) {
     $entityManager = require __DIR__ . '/bootstrap.php';
     #Зависимости для Middleware
-    $container->set(ValidatorInterface::class,function (Container $container) {
+    $container->set(ValidatorInterface::class, function (Container $container) {
         return Validation::createValidatorBuilder()
             ->enableAttributeMapping()
             ->getValidator();
     });
-    $container->set(LoginUserMiddleware::class,function(Container $container){
-        return new LoginUserMiddleware();
+    $container->set(LoginUserMiddleware::class, function (Container $container) {
+        return new LoginUserMiddleware($container->get(ValidatorInterface::class));
     });
     $container->set(RegisterUserMiddleware::class, function ($container) {
-        return new RegisterUserMiddleware();
+        return new RegisterUserMiddleware($container->get(ValidatorInterface::class));
     });
     $container->set(JWTMiddleware::class, function ($container) {
         return new JWTMiddleware($_ENV['JWT_SECRET'], $_ENV["ALGORITHM"]);
     });
     $container->set(ToggleLikeMiddleware::class, fn() => new ToggleLikeMiddleware());
-    $container->set(CreatePostMiddleware::class, fn() => new CreatePostMiddleware());
-    $container->set(DeletePostMiddleware::class, function(Container $container){
+    $container->set(CreatePostMiddleware::class, fn() => new CreatePostMiddleware($container->get(ValidatorInterface::class)));
+    $container->set(DeletePostMiddleware::class, function (Container $container) {
         return new DeletePostMiddleware($container->get(ValidatorInterface::class));
     });
-    $container->set(GetPublishedPostsMiddleware::class, function(Container $container) {
+    $container->set(GetPublishedPostsMiddleware::class, function (Container $container) {
         return new GetPublishedPostsMiddleware($container->get(ValidatorInterface::class));
     });
-    $container->set(GetUnpublishedPostsMiddleware::class, function(Container $container) {
+    $container->set(GetUnpublishedPostsMiddleware::class, function (Container $container) {
         return new GetUnpublishedPostsMiddleware($container->get(ValidatorInterface::class));
     });
-    $container->set(GetUserCommentsMiddleware::class, function(Container $container) {
+    $container->set(GetUserCommentsMiddleware::class, function (Container $container) {
         return new GetUserCommentsMiddleware($container->get(ValidatorInterface::class));
     });
     #Зависимости для БД

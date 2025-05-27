@@ -19,14 +19,21 @@ final class LoginHandler
     {
         $dto = $request->getAttribute('dto');
 
-        $result = $this->registrationAndAuthorizationService->login($dto->user_login, $dto->user_password);
-        $response->getBody()->write(json_encode([
+        $result = $this->registrationAndAuthorizationService->login(
+            $dto->user_login,
+            $dto->user_password
+        );
+
+        return $this->json($response, [
             'user_authorized_state' => $result->userAuthorizedState,
             'token' => $result->token
-        ]));
-        if ($result->userAuthorizedState === UserAuthState::USER_NOT_AUTHORIZED) {
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(401);
-        }
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+        ]);
+    }
+
+    private function json(Response $res, mixed $payload, int $status = 200): Response
+    {
+        $res = $res->withStatus($status);
+        $res->getBody()->write(json_encode($payload, JSON_UNESCAPED_UNICODE));
+        return $res->withHeader('Content-Type', 'application/json');
     }
 }
