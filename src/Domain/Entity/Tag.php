@@ -9,14 +9,14 @@ class Tag {
 
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
-    #[ORM\Column(type: 'integer', unique: true)]
-    private ?int $id = null;
-    #[ORM\Column(type: 'string', length: 50, unique: true)]
-    private ?string $tag = null;
+    #[ORM\Column(type: 'integer', unique: true, nullable: false)]
+    private int $id;
+    #[ORM\Column(type: 'string', length: 50, unique: true,nullable: false)]
+    private string $tag;
 
     public function __construct(string $tag)
     {
-        $this->$tag = $tag;
+        $this->tag = $tag;
     }
 
     public function getId(): ?int

@@ -2,7 +2,7 @@
 
 
 namespace Pri301\Blog\Infrastructure\Doctrine\Repositories;
-
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Pri301\Blog\Domain\Entity\Tag;
 use Pri301\Blog\Domain\Repository\TagRepositoryInterface;
@@ -31,6 +31,20 @@ class TagRepository implements TagRepositoryInterface
         $this->entityManager->persist($tag);
         $this->entityManager->flush();
 
+    }
+
+    public function getTagIdByName(string $name): ?int
+    {
+        $result = $this->entityManager
+            ->createQueryBuilder()
+            ->select('t.id')
+            ->from(Tag::class, 't')
+            ->where('t.tag = :name')
+            ->setParameter('name', $name)
+            ->getQuery()
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
+
+        return $result ? (int) $result : null;
     }
 
 

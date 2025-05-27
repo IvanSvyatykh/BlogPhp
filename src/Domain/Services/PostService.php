@@ -5,10 +5,13 @@ namespace Pri301\Blog\Domain\Services;
 use Cassandra\Type;
 use Doctrine\ORM\EntityManager;
 use Pri301\Blog\Domain\Entity\Post;
+use Pri301\Blog\Domain\Entity\PostTag;
 use Pri301\Blog\Domain\Entity\Status;
+use Pri301\Blog\Domain\Entity\Tag;
 use Pri301\Blog\Domain\Entity\User;
 use Pri301\Blog\Domain\Enum\PostStatus;
 use Pri301\Blog\Domain\Repository\PostRepositoryInterface;
+use Pri301\Blog\Domain\Repository\PostTagsRepositoryInterface;
 use Pri301\Blog\Domain\Repository\StatusRepositoryInterface;
 use Pri301\Blog\Domain\Repository\TagRepositoryInterface;
 
@@ -18,7 +21,8 @@ class PostService implements PostServiceInterface
         private PostRepositoryInterface $postRepository,
         private EntityManager $entityManager,
         private StatusRepositoryInterface $statusRepository,
-        private TagRepositoryInterface $tagRepository
+        private TagRepositoryInterface $tagRepository,
+        private PostTagsRepositoryInterface $postTagsRepository
     ) {}
 
     public function createPost(array $data, int $authorId): Post
@@ -30,8 +34,19 @@ class PostService implements PostServiceInterface
             $this->entityManager->getReference(User::class, $authorId),
             $this->entityManager->getReference(Status::class, $pendingStatusId),
         );
-
         $postId = $this->postRepository->addPost($post);
+        $tags = $data['tags'];
+        foreach ($tags as $tag_name) {
+
+            $tagId = $this->tagRepository->getTagIdByName($tag_name);
+            if (!$tagId) {
+                $tag = new Tag($tag_name);
+                $this->tagRepository->addTag($tag);
+                $tagId = $tag->getId();            }
+            $postTag = new PostTag($post,$this->entityManager->getReference(Tag::class, $tagId));
+            $this->postTagsRepository->addTag($postTag);
+        }
+
         return $post;
     }
 

@@ -6,7 +6,7 @@ use Pri301\Blog\Application\Handlers\CreatePostHandler;
 use Doctrine\ORM\EntityManagerInterface;
 use Pri301\Blog\Application\Handlers\ToggleLikeHandler;
 use Pri301\Blog\Application\Handlers\CommentHandler;
-use Pri301\Blog\Application\Handlers\PostHandler;
+use Pri301\Blog\Domain\Repository\PostTagsRepositoryInterface;
 use Pri301\Blog\Domain\Repository\LikeRepositoryInterface;
 use Pri301\Blog\Domain\Repository\CommentRepositoryInterface;
 use Pri301\Blog\Domain\Repository\PostRepositoryInterface;
@@ -22,6 +22,7 @@ use Pri301\Blog\Domain\Services\PostService;
 use Pri301\Blog\Domain\Services\PostServiceInterface;
 use Pri301\Blog\Domain\Services\UserService;
 use Pri301\Blog\Domain\Services\UserServiceInterface;
+use Pri301\Blog\Infrastructure\Doctrine\Repositories\PostTagsRepository;
 use Pri301\Blog\Infrastructure\Middlewares\CreatePostMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\JWTMiddleware;
 use Pri301\Blog\Infrastructure\Doctrine\Repositories\LikeRepository;
@@ -101,6 +102,9 @@ return function (Container $container) {
     $container->set(UserRepositoryInterface::class, function (Container $c) {
         return new UserRepository($c->get(EntityManager::class));
     });
+    $container->set(PostTagsRepositoryInterface::class, function (Container $c) {
+        return new PostTagsRepository($c->get(EntityManager::class));
+    });
     # Сервисы
     $container->set(CommentServiceInterface::class, function (Container $c) {
         return new CommentService(
@@ -115,7 +119,8 @@ return function (Container $container) {
     $container->set(PostServiceInterface::class, function (Container $c) {
         return new PostService($c->get(PostRepositoryInterface::class),$c->get(EntityManager::class),
             $c->get(StatusRepositoryInterface::class),
-            $c->get(TagRepositoryInterface::class));
+            $c->get(TagRepositoryInterface::class),
+            $c->get(PostTagsRepositoryInterface::class));
     });
     $container->set(RegistrationAndAuthorizationServiceInterface::class, function (Container $c) {
         return new RegistrationAndAuthorizationAndAuthorizationService($c->get(UserRepositoryInterface::class));

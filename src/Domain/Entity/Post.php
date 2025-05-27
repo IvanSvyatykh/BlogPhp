@@ -16,17 +16,17 @@ class Post
     private string $title;
     #[ORM\Column(type: 'string')]
     private string $content;
-    #[ORM\OneToOne(targetEntity: User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
     private User $author;
     #[ORM\Column(type: 'datetime', name: 'created_at')]
     private \DateTime $createdAt;
     #[ORM\Column(type: 'boolean' )]
     private bool $isPublished = false;
-    #[ORM\OneToOne(targetEntity: Status::class)]
+    #[ORM\ManyToOne(targetEntity: Status::class)]
     #[ORM\JoinColumn(name: 'status_id', referencedColumnName: 'id', nullable: false)]
     private Status $status;
-    #[ORM\OneToOne(targetEntity: Type::class)]
+    #[ORM\ManyToOne(targetEntity: Type::class)]
     #[ORM\JoinColumn(name:'post_type_id', referencedColumnName: 'id')]
     private Type $type;
 
