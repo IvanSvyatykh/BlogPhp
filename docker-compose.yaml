@@ -25,6 +25,8 @@ services:
     depends_on:
       - blog_db
     restart: on-failure
+    command: > 
+      sh -c "echo yes | php /var/www/bin/doctrine.php migrate && php-fpm || nginx"
     networks:
       - blog_net
 

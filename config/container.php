@@ -8,8 +8,9 @@ use Pri301\Blog\Application\Handlers\DeletePostHandler;
 use Pri301\Blog\Application\Handlers\GetPublishedPostsHandler;
 use Pri301\Blog\Application\Handlers\GetUnpublishedPostsHandler;
 use Pri301\Blog\Application\Handlers\ToggleLikeHandler;
+use Pri301\Blog\Application\Handlers\CommentHandler;
+use Pri301\Blog\Domain\Repository\PostTagsRepositoryInterface;
 use Pri301\Blog\Application\Handlers\GetUserCommentsHandler;
-use Pri301\Blog\Application\Handlers\PostHandler;
 use Pri301\Blog\Domain\Repository\LikeRepositoryInterface;
 use Pri301\Blog\Domain\Repository\CommentRepositoryInterface;
 use Pri301\Blog\Domain\Repository\PostRepositoryInterface;
@@ -25,6 +26,7 @@ use Pri301\Blog\Domain\Services\PostService;
 use Pri301\Blog\Domain\Services\PostServiceInterface;
 use Pri301\Blog\Domain\Services\UserService;
 use Pri301\Blog\Domain\Services\UserServiceInterface;
+use Pri301\Blog\Infrastructure\Doctrine\Repositories\PostTagsRepository;
 use Pri301\Blog\Infrastructure\Middlewares\CreatePostMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\JWTMiddleware;
 use Pri301\Blog\Infrastructure\Doctrine\Repositories\LikeRepository;
@@ -46,13 +48,19 @@ use Pri301\Blog\Infrastructure\Middlewares\GetUserCommentsMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\LoginUserMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\RegisterUserMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\ToggleLikeMiddleware;
-
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Validator\Validation;
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 return function (Container $container) {
     $entityManager = require __DIR__ . '/bootstrap.php';
     #Зависимости для Middleware
-    $container->set(LoginUserMiddleware::class, function ($container) {
+    $container->set(ValidatorInterface::class,function (Container $container) {
+        return Validation::createValidatorBuilder()
+            ->enableAttributeMapping()
+            ->getValidator();
+    });
+    $container->set(LoginUserMiddleware::class,function(Container $container){
         return new LoginUserMiddleware();
     });
     $container->set(RegisterUserMiddleware::class, function ($container) {
@@ -63,11 +71,18 @@ return function (Container $container) {
     });
     $container->set(ToggleLikeMiddleware::class, fn() => new ToggleLikeMiddleware());
     $container->set(CreatePostMiddleware::class, fn() => new CreatePostMiddleware());
-    $container->set(DeletePostMiddleware::class, fn() => new DeletePostMiddleware());
-    $container->set(GetPublishedPostsMiddleware::class, fn() => new GetPublishedPostsMiddleware());
-    $container->set(GetUnpublishedPostsMiddleware::class, fn() => new GetUnpublishedPostsMiddleware());
-    $container->set(GetUserCommentsMiddleware::class, fn() => new GetUserCommentsMiddleware());
-
+    $container->set(DeletePostMiddleware::class, function(Container $container){
+        return new DeletePostMiddleware($container->get(ValidatorInterface::class));
+    });
+    $container->set(GetPublishedPostsMiddleware::class, function(Container $container) {
+        return new GetPublishedPostsMiddleware($container->get(ValidatorInterface::class));
+    });
+    $container->set(GetUnpublishedPostsMiddleware::class, function(Container $container) {
+        return new GetUnpublishedPostsMiddleware($container->get(ValidatorInterface::class));
+    });
+    $container->set(GetUserCommentsMiddleware::class, function(Container $container) {
+        return new GetUserCommentsMiddleware($container->get(ValidatorInterface::class));
+    });
     #Зависимости для БД
     $container->set(EntityManager::class, $entityManager);
     $container->set(CommentRepositoryInterface::class, function (Container $c) {
@@ -91,6 +106,9 @@ return function (Container $container) {
     $container->set(UserRepositoryInterface::class, function (Container $c) {
         return new UserRepository($c->get(EntityManager::class));
     });
+    $container->set(PostTagsRepositoryInterface::class, function (Container $c) {
+        return new PostTagsRepository($c->get(EntityManager::class));
+    });
     # Сервисы
     $container->set(CommentServiceInterface::class, function (Container $c) {
         return new CommentService(
@@ -104,7 +122,8 @@ return function (Container $container) {
     $container->set(PostServiceInterface::class, function (Container $c) {
         return new PostService($c->get(PostRepositoryInterface::class), $c->get(EntityManager::class),
             $c->get(StatusRepositoryInterface::class),
-            $c->get(TagRepositoryInterface::class));
+            $c->get(TagRepositoryInterface::class),
+            $c->get(PostTagsRepositoryInterface::class));
     });
     $container->set(RegistrationAndAuthorizationServiceInterface::class, function (Container $c) {
         return new RegistrationAndAuthorizationAndAuthorizationService($c->get(UserRepositoryInterface::class));

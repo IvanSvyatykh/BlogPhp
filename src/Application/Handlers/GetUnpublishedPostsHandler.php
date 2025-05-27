@@ -22,7 +22,7 @@ final class GetUnpublishedPostsHandler
         $user  = $this->userService->GetUserById($login);
 
         if (!$user) {
-            return $this->errorResponse('Author not found', 404);
+            return $this->errorResponse('Author not found' , 404);
         }
 
         $posts = $this->postService->getUnpublishedPostsByUser($user->getId());

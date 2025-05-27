@@ -111,6 +111,7 @@ class PostRepository implements PostRepositoryInterface
             ->createQueryBuilder()
             ->select('p')
             ->from(Post::class, 'p')
+            ->where('p.author = :userId AND p.status != :status')
             ->where('IDENTITY(p.author) = :userId')
             ->andWhere('IDENTITY(p.status) = :statusId')
             ->setParameter('userId', $userId)

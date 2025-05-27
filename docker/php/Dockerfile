@@ -4,42 +4,70 @@ ENV COMPOSER_ALLOW_SUPERUSER=1 \
     TZ="Asia/Yekaterinburg" \
     LANG="ru_RU.UTF-8"
 
-RUN apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
-    && apt-get -y update \
-    && apt-get -y install locales && echo "ru_RU.UTF-8 UTF-8" >> /etc/locale.gen  \
+# Установка базовых пакетов и локалей
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    locales \
+    git \
+    wget \
+    mc \
+    nano \
+    && echo "ru_RU.UTF-8 UTF-8" >> /etc/locale.gen \
     && locale-gen \
-    # Утилиты
-    && apt-get install -y git wget mc nano \
-    && apt-get install -y libpq-dev \
-    # Установка расширений PHP
-    && docker-php-ext-install pdo_mysql mysqli pcntl sockets bcmath iconv \
-    && apt-get install -y libffi-dev && docker-php-ext-install ffi \
-    && apt-get install -y libc-client-dev libkrb5-dev && PHP_OPENSSL=yes docker-php-ext-configure imap --with-kerberos --with-imap-ssl && docker-php-ext-install imap \
-    && apt-get install -y libpng-dev libfreetype6-dev libjpeg-dev libzip-dev && docker-php-ext-configure gd --with-freetype --with-jpeg && docker-php-ext-install gd \
-    && apt-get install -y zlib1g-dev && docker-php-ext-install zip \
-    && apt-get install -y libonig-dev && docker-php-ext-install mbstring opcache \
-    && apt-get install -y libsodium-dev && docker-php-ext-install sodium \
-    && pecl install apcu && docker-php-ext-enable apcu \
-    && apt-get install -y libmemcached-dev && pecl install memcached && docker-php-ext-enable memcached \
-    && pecl install redis && docker-php-ext-enable redis \
-    && apt-get install -y libicu-dev && docker-php-ext-install intl \
-    # php-imagick
-    && apt-get install -y libmagickwand-dev build-essential libtool uuid-dev automake autotools-dev libltdl-dev libltdl7 \ libpq-dev \
-    && pecl install imagick \
-    && docker-php-ext-enable imagick \
-    && docker-php-ext-install pdo_pgsql
-RUN apt-get -y clean \
-    && apt-get -y autoclean \
-    && apt-get -y autoremove \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Ставим Composer'а.
+# Установка зависимостей для PHP расширений
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq-dev \
+    libffi-dev \
+    libc-client-dev \
+    libkrb5-dev \
+    libpng-dev \
+    libfreetype6-dev \
+    libjpeg-dev \
+    libzip-dev \
+    zlib1g-dev \
+    libonig-dev \
+    libsodium-dev \
+    libmemcached-dev \
+    libicu-dev \
+    libmagickwand-dev \
+    build-essential \
+    libtool \
+    uuid-dev \
+    automake \
+    autotools-dev \
+    libltdl-dev \
+    libltdl7 \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Установка PHP расширений
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && PHP_OPENSSL=yes docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
+    && docker-php-ext-install -j$(nproc) \
+        pdo_mysql \
+        mysqli \
+        pcntl \
+        sockets \
+        bcmath \
+        iconv \
+        ffi \
+        imap \
+        gd \
+        zip \
+        mbstring \
+        opcache \
+        sodium \
+        intl \
+        pdo_pgsql \
+    && pecl install apcu memcached redis imagick \
+    && docker-php-ext-enable apcu memcached redis imagick
+
+# Установка Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-USER www-data:www-data
-
+# Настройка рабочей директории и пользователя
 WORKDIR /var/www/
-
-# Запускаем контейнер
-CMD ["php-fpm", "-R"]
+RUN chown -R www-data:www-data /var/www
+USER www-data:www-data

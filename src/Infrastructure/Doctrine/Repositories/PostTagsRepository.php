@@ -18,7 +18,6 @@ class PostTagsRepository implements PostTagsRepositoryInterface{
     }
     public function addTag(PostTag $postTag) : int
     {
-
         $this->entityManager->persist($postTag);
         $this->entityManager->flush();
         return $postTag->getId();

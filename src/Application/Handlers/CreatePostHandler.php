@@ -24,11 +24,13 @@ final class CreatePostHandler
         if (!$user) {
             return $this->errorResponse('Author not found', 404);
         }
-
         $post = $this->postService->createPost([
             'title' => $dto->title,
             'content' => $dto->content,
+            'tags' => $dto->postTags,
         ], $user->getId());
+
+
 
         return $this->json($response, ['article_id' => $post->getId()], 201);
     }

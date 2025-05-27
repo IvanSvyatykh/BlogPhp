@@ -12,7 +12,7 @@ final class CreatePostRequest
     public string $content;
     #[Assert\NotBlank(message: "Author login is required")]
     public string $authorLogin;
-    #[Assert\NotBlank(message: "Post tags id cannot be empty")]
+    #[Assert\NotBlank(message: "Post tags cannot be empty")]
     #[Assert\All([
         new Assert\Type('string'),
         new Assert\Length(max: 50),
