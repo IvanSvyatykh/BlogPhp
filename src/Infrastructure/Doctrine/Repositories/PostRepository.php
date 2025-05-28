@@ -133,7 +133,7 @@ class PostRepository implements PostRepositoryInterface
             ->setParameter('userId', $userId)
             ->setParameter('statusId', $publishStatusId)
             ->getQuery()
-            ->getArrayResult();
+            ->getResult();
     }
 
     public function findUnpublishedByUserId(int $userId, int $publishStatusId): array
@@ -148,7 +148,7 @@ class PostRepository implements PostRepositoryInterface
             ->setParameter('userId', $userId)
             ->setParameter('statusId', $publishStatusId)
             ->getQuery()
-            ->getArrayResult();
+            ->getResult();
     }
 
     public function getUnpublished(int $publishedStatusId): array

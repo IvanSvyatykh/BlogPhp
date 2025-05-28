@@ -54,6 +54,7 @@ return function (App $app) {
         ->add(AdminPostMiddleware::class)
         ->add(JWTMiddleware::class)
         ->add(ModeratorMiddleware::class);
+
     $app->get('/categories', GetCategoriesHandler::class);
 
     $app->get('/post/substrwithlogin',GetPostsBySubstrForUserHandler::class)

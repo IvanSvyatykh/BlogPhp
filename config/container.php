@@ -111,7 +111,6 @@ return function (Container $container) {
         return new GetUserCommentsMiddleware($container->get(ValidatorInterface::class));
     });
     $container->set(ToggleLikeMiddleware::class,fn() => new ToggleLikeMiddleware());
-    $container->set(GetUserCommentsMiddleware::class, fn() => new GetUserCommentsMiddleware());
     $container->set(AdminPostMiddleware::class, fn() => new AdminPostMiddleware());
     $container->set(GetAllPostsMiddleware::class, fn() => new GetAllPostsMiddleware());
     $container->set(GetUserListMiddleware::class, fn() => new GetUserListMiddleware());

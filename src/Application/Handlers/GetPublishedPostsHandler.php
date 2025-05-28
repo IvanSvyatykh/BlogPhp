@@ -4,6 +4,7 @@
 namespace Pri301\Blog\Application\Handlers;
 
 use Pri301\Blog\Application\DTO\Response\ArticleResponse;
+use Pri301\Blog\Application\DTO\Response\LimitedArticleResponse;
 use Pri301\Blog\Domain\Services\LikeServiceInterface;
 use Pri301\Blog\Domain\Services\PostServiceInterface;
 use Pri301\Blog\Domain\Services\PostTagsServiceInterface;
@@ -20,7 +21,9 @@ final class GetPublishedPostsHandler
         private readonly LikeServiceInterface     $likeService,
         private readonly TypeServiceInterface     $typeService,
         private readonly PostTagsServiceInterface $postTagsService,
-    ){}
+    )
+    {
+    }
 
     public function __invoke(Request $request, Response $response): Response
     {
@@ -34,20 +37,17 @@ final class GetPublishedPostsHandler
 
         $result = array();
         $posts = $this->postService->getPublishedPostsByUser($user->getId());
-        foreach ($posts as $post)
-        {
+        foreach ($posts as $post) {
             $author = $this->userService->getUserById($post->getAuthor()->getId());
-            $article = new ArticleResponse(
+            $article = new LimitedArticleResponse(
                 article_id: $post->getId(),
-                article_title: $post->getTitle(),
+                article_name: $post->getTitle(),
                 article_text: $post->getContent(),
                 author_login: $author->getLogin(),
                 author_name: $author->getName(),
-                article_category: $this->typeService->getTypeById($post->getType()->getId()),
-                article_tags: $this->postTagsService->getTagsByPostId($post->getId()),
                 article_likes_count: $this->likeService->countLikes($post->getId()),
             );
-            $result[]=$article;
+            $result[] = $article;
         }
 
         return $this->json($response, $result);
