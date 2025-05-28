@@ -10,6 +10,7 @@ use Pri301\Blog\Application\Handlers\GetAllUnpublishedHandler;
 use Pri301\Blog\Application\Handlers\GetCategoriesHandler;
 use Pri301\Blog\Application\Handlers\GetPublishedPostsHandler;
 use Pri301\Blog\Application\Handlers\GetUnpublishedPostsHandler;
+use Pri301\Blog\Application\Handlers\GetUserNameByLoginHandler;
 use Pri301\Blog\Application\Handlers\PublishPostHandler;
 use Pri301\Blog\Application\Handlers\ToggleLikeHandler;
 use Pri301\Blog\Application\Handlers\GetUsersHandler;
@@ -41,6 +42,7 @@ use Pri301\Blog\Infrastructure\Doctrine\Repositories\PostTagsRepository;
 use Pri301\Blog\Infrastructure\Middlewares\CreateCommentMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\CreatePostMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\GetPostCommentsMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\GetUserNameByLoginMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\JWTMiddleware;
 use Pri301\Blog\Infrastructure\Doctrine\Repositories\LikeRepository;
 use Pri301\Blog\Infrastructure\Doctrine\Repositories\CommentRepository;
@@ -71,6 +73,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Validation;
 use Pri301\Blog\Infrastructure\Middlewares\GetPostsBySubstrForUserMiddleware;
 use Pri301\Blog\Application\Handlers\GetPostsBySubstrForUserHandler;
+
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 return function (Container $container) {
@@ -80,6 +83,9 @@ return function (Container $container) {
         return Validation::createValidatorBuilder()
             ->enableAttributeMapping()
             ->getValidator();
+    });
+    $container->set(GetUserNameByLoginMiddleware::class,function (Container $container) {
+        return new GetUserNameByLoginMiddleware();
     });
     $container->set(GetPostsBySubstrForUserMiddleware::class,function (Container $container) {
         return new GetPostsBySubstrForUserMiddleware();
@@ -249,5 +255,8 @@ return function (Container $container) {
             $c->get(TypeServiceInterface::class),
             $c->get(PostTagsServiceInterface::class),
         );
+    });
+    $container->set(GetUserNameByLoginHandler::class,function (Container $c) {
+        return new GetUserNameByLoginHandler($c->get(UserServiceInterface::class));
     });
 };

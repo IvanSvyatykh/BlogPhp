@@ -1,8 +1,10 @@
 <?php
 
 
+use Pri301\Blog\Application\Handlers\GetUserNameByLoginHandler;
 use Pri301\Blog\Application\Handlers\SwitchUserBanHandler;
 use Pri301\Blog\Infrastructure\Middlewares\GetUserListMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\GetUserNameByLoginMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\SwitchUserActivityMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\AdminMiddleware;
 use Pri301\Blog\Application\Handlers\GetUsersHandler;
@@ -21,4 +23,8 @@ return function (App $app) {
         ->add(SwitchUserActivityMiddleware::class)
         ->add(JWTMiddleware::class)
         ->add(AdminMiddleware::class);
+
+    $app->get('/users/namebylogin',GetUserNameByLoginHandler::class)
+    ->add(GetUserNameByLoginMiddleware::class);
+
 };
