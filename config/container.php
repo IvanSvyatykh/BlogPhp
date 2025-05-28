@@ -9,6 +9,7 @@ use Pri301\Blog\Application\Handlers\DeletePostHandler;
 use Pri301\Blog\Application\Handlers\GetCategoriesHandler;
 use Pri301\Blog\Application\Handlers\GetPublishedPostsHandler;
 use Pri301\Blog\Application\Handlers\GetUnpublishedPostsHandler;
+use Pri301\Blog\Application\Handlers\PublishPostHandler;
 use Pri301\Blog\Application\Handlers\ToggleLikeHandler;
 use Pri301\Blog\Application\Handlers\CommentHandler;
 use Pri301\Blog\Domain\Repository\PostTagsRepositoryInterface;
@@ -49,6 +50,7 @@ use Pri301\Blog\Infrastructure\Middlewares\GetPublishedPostsMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\GetUnpublishedPostsMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\GetUserCommentsMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\LoginUserMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\PublishPostMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\RegisterUserMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\ToggleLikeMiddleware;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -73,6 +75,7 @@ return function (Container $container) {
     $container->set(JWTMiddleware::class, function ($container) {
         return new JWTMiddleware($_ENV['JWT_SECRET'], $_ENV["ALGORITHM"]);
     });
+    $container->set(PublishPostMiddleware::class, fn() => new PublishPostMiddleware($container->get(ValidatorInterface::class)));
     $container->set(CreateCommentMiddleware::class, fn() => new CreateCommentMiddleware($container->get(ValidatorInterface::class)));
     $container->set(ToggleLikeMiddleware::class, fn() => new ToggleLikeMiddleware());
     $container->set(CreatePostMiddleware::class, fn() => new CreatePostMiddleware($container->get(ValidatorInterface::class)));
@@ -175,5 +178,9 @@ return function (Container $container) {
 
     $container->set(GetCategoriesHandler::class, function (Container $c) {
         return new GetCategoriesHandler($c->get(PostServiceInterface::class));
+    });
+
+    $container->set(PublishPostHandler::class, function (Container $c) {
+        return new PublishPostHandler($c->get(PostServiceInterface::class));
     });
 };

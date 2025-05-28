@@ -80,6 +80,20 @@ class PostRepository implements PostRepositoryInterface
             ->execute();
     }
 
+    public function updatePostTypeAndStatusById(int $postId, int $typeId, int $statusId): void
+    {
+        $this->entityManager->createQueryBuilder()
+            ->update(Post::class, 'p')
+            ->set('p.type', ':typeId')
+            ->set('p.status', ':statusId')
+            ->where('p.id = :postId')
+            ->setParameter('typeId', $typeId)
+            ->setParameter('postId', $postId)
+            ->setParameter('statusId', $statusId)
+            ->getQuery()
+            ->execute();
+    }
+
     public function deletePost(int $id): int
     {
         return $this->entityManager

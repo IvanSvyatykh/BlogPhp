@@ -15,6 +15,7 @@ use Pri301\Blog\Domain\Repository\PostTagsRepositoryInterface;
 use Pri301\Blog\Domain\Repository\StatusRepositoryInterface;
 use Pri301\Blog\Domain\Repository\TagRepositoryInterface;
 use Pri301\Blog\Domain\Repository\TypeRepositoryInterface;
+use Pri301\Blog\Domain\Repository\UserRepositoryInterface;
 
 class PostService implements PostServiceInterface
 {
@@ -109,8 +110,14 @@ class PostService implements PostServiceInterface
         return $this->typeRepository->getAllTypes();
     }
 
-    public function findCategoryByName(string $name): ?Type
+    public function findCategoryByName(string $categoryName): ?Type
     {
-        return $this->typeRepository->findCategoryByName($name);
+        return $this->typeRepository->findCategoryByName($categoryName);
+    }
+
+    public function publishPost(int $postId, int $categoryId): void
+    {
+        $publishedStatusId = $this->statusRepository->getPublishStatusId();
+        $this->postRepository->updatePostTypeAndStatusById($postId, $categoryId, $publishedStatusId);
     }
 }
