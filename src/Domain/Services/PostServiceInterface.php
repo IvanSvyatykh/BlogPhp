@@ -11,7 +11,6 @@ interface PostServiceInterface{
 
     public function createPost(array $data, int $authorId): Post;
     public function getPost(int $id): ?Post;
-    public function deletePost(int $id): void;
     public function getAllPosts(int $limit = 10, int $offset = 0): array;
     /**
      * @return Post[]
@@ -22,7 +21,6 @@ interface PostServiceInterface{
     public function getPendingPosts(): array;
     public function getPostsBySubstrAtContent(string $substr): array;
     public function getPostsBySubstrAtTitle(string $substr): array;
-    public function publishPost(int $postId): void;
     public function findCategoryByName(string $categoryName): ?Type;
     public function publishPost(int $postId, int $categoryId): void;
     public function getAllUnpublishedPosts(): array;

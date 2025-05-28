@@ -7,7 +7,6 @@ interface UserServiceInterface{
 
     public function switchBanUser(int $userId, bool $active): void;
     public function getUserByLogin(string $userLogin): ?User;
-    public function switchBanUser(int $userId): void;
     public function getUsersList(): array;
     public function getUserIdBySubstrAtName(string $substr): array;
     public function getUserById(int $userId): ?User;

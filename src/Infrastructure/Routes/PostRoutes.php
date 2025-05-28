@@ -12,8 +12,6 @@ use Pri301\Blog\Application\Handlers\RejectPostHandler;
 use Pri301\Blog\Application\Handlers\PublishPostHandler;
 use Pri301\Blog\Infrastructure\Middlewares\CreatePostMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\AdminPostMiddleware;
-use Pri301\Blog\Application\Handlers\PublishPostHandler;
-use Pri301\Blog\Infrastructure\Middlewares\CreatePostMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\GetPostsBySubstrMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\JWTMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\DeletePostMiddleware;
@@ -55,9 +53,6 @@ return function (App $app) {
         ->add(AdminMiddleware::class);
     $app->get('/categories', GetCategoriesHandler::class);
 
-    $app->patch('/posts/publish', PublishPostHandler::class)
-        ->add(PublishPostMiddleware::class)
-        ->add(JWTMiddleware::class);
 
     $app->get('/post/substr' , GetPostsBySubstrHandler::class)
         ->add(GetPostsBySubstrMiddleware::class);

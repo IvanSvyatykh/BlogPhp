@@ -109,12 +109,13 @@ class PostService implements PostServiceInterface
         return  $result;
     }
 
-    public function publishPost(int $postId): void
+    public function publishPost(int $postId , int $categoryId): void
     {
         $post = $this->postRepository->findPostById($postId);
         $publishStatusId = $this->statusRepository->getPublishStatusId();
         $post->setStatus($this->entityManager->getReference(Status::class, $publishStatusId));
         $this->postRepository->updatePostStatus($post);
+    }
 
     public function getAllCategories(): array
     {
@@ -132,4 +133,5 @@ class PostService implements PostServiceInterface
         $pendingStatusId = $this->statusRepository->getPendingStatusId();
         return $this->postRepository->getUnpublished($pendingStatusId);
     }
+
 }
