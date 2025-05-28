@@ -3,12 +3,10 @@
 use DI\Container;
 use Doctrine\ORM\EntityManager;
 use Pri301\Blog\Application\Handlers\CreatePostHandler;
-use Doctrine\ORM\EntityManagerInterface;
 use Pri301\Blog\Application\Handlers\DeletePostHandler;
 use Pri301\Blog\Application\Handlers\GetPublishedPostsHandler;
 use Pri301\Blog\Application\Handlers\GetUnpublishedPostsHandler;
 use Pri301\Blog\Application\Handlers\ToggleLikeHandler;
-use Pri301\Blog\Application\Handlers\CommentHandler;
 use Pri301\Blog\Domain\Repository\PostTagsRepositoryInterface;
 use Pri301\Blog\Application\Handlers\GetUserCommentsHandler;
 use Pri301\Blog\Domain\Repository\LikeRepositoryInterface;
@@ -61,10 +59,10 @@ return function (Container $container) {
             ->getValidator();
     });
     $container->set(LoginUserMiddleware::class,function(Container $container){
-        return new LoginUserMiddleware();
+        return new LoginUserMiddleware($container->get(ValidatorInterface::class));
     });
     $container->set(RegisterUserMiddleware::class, function ($container) {
-        return new RegisterUserMiddleware();
+        return new RegisterUserMiddleware($container->get(ValidatorInterface::class));
     });
     $container->set(JWTMiddleware::class, function ($container) {
         return new JWTMiddleware($_ENV['JWT_SECRET'], $_ENV["ALGORITHM"]);
