@@ -19,7 +19,7 @@ class CreateCommentHandler
     public function __invoke(Request $request, Response $response): Response
     {
         $dto = $request->getAttribute("dto");
-        $user = $this->userService->GetUserById($dto->userLogin);
+        $user = $this->userService->GetUserByLogin($dto->userLogin);
         if (!$user) {
             return $this->json($response, ["error" => ["message" => "User not found"]], 404);
         }

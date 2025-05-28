@@ -26,12 +26,14 @@ class CommentRepository implements CommentRepositoryInterface
     {
        return   $this->entityManager
            ->createQueryBuilder()
-           ->select('comment')
-           ->from(Comment::class, 'comment')
-           ->where('comment.post_id = :postId')
+           ->select('c')
+           ->from(Comment::class, 'c')
+           ->join('c.author', 'a')
+           ->where('c.post = :postId')
+           ->orderBy('c.createdAt', 'DESC')
            ->setParameter('postId', $postId)
            ->getQuery()
-           ->getArrayResult();
+           ->getResult();
     }
 
     public function addComment(Comment $comment): void

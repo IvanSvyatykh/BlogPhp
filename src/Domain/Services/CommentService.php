@@ -30,8 +30,22 @@ class CommentService implements CommentServiceInterface
 
     public function getCommentsForPost(int $postId): array
     {
-        return $this->commentRepository->findByPost($postId);
+        $comments = $this->commentRepository->findByPost($postId);
+        $result = array();
+
+        foreach ($comments as $comment) {
+            $user = $comment->getAuthor();
+            $result[] = new CommentResponse(
+                comment_id: $comment->getId(),
+                comment_text: $comment->getContent(),
+                comment_author_login: $user->getLogin(),
+                comment_author_name: $user->getName()
+            );
+        }
+
+        return $result;
     }
+
     public function getCommentsByUser(User $user): array
     {
         $comments = $this->commentRepository->findByAuthorId($user->getId());

@@ -40,6 +40,7 @@ use Pri301\Blog\Domain\Services\UserServiceInterface;
 use Pri301\Blog\Infrastructure\Doctrine\Repositories\PostTagsRepository;
 use Pri301\Blog\Infrastructure\Middlewares\CreateCommentMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\CreatePostMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\GetPostCommentsMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\JWTMiddleware;
 use Pri301\Blog\Infrastructure\Doctrine\Repositories\LikeRepository;
 use Pri301\Blog\Infrastructure\Doctrine\Repositories\CommentRepository;
@@ -92,6 +93,7 @@ return function (Container $container) {
     $container->set(JWTMiddleware::class, function ($container) {
         return new JWTMiddleware($_ENV['JWT_SECRET'], $_ENV["ALGORITHM"]);
     });
+    $container->set(GetPostCommentsMiddleware::class,fn() => new GetPostCommentsMiddleware($container->get(ValidatorInterface::class)));
     $container->set(PublishPostMiddleware::class, fn() => new PublishPostMiddleware($container->get(ValidatorInterface::class)));
     $container->set(CreateCommentMiddleware::class, fn() => new CreateCommentMiddleware($container->get(ValidatorInterface::class)));
     $container->set(ToggleLikeMiddleware::class, fn() => new ToggleLikeMiddleware());
