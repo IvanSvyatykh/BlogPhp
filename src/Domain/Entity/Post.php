@@ -16,17 +16,15 @@ class Post
     private string $title;
     #[ORM\Column(type: 'string')]
     private string $content;
-    #[ORM\OneToOne(targetEntity: User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
     private User $author;
     #[ORM\Column(type: 'datetime', name: 'created_at')]
     private \DateTime $createdAt;
-    #[ORM\Column(type: 'boolean' )]
-    private bool $isPublished = false;
-    #[ORM\OneToOne(targetEntity: Status::class)]
+    #[ORM\ManyToOne(targetEntity: Status::class)]
     #[ORM\JoinColumn(name: 'status_id', referencedColumnName: 'id', nullable: false)]
     private Status $status;
-    #[ORM\OneToOne(targetEntity: Type::class)]
+    #[ORM\ManyToOne(targetEntity: Type::class)]
     #[ORM\JoinColumn(name:'post_type_id', referencedColumnName: 'id')]
     private Type $type;
     public function __construct(
@@ -49,7 +47,7 @@ class Post
     public function getCreatedAt(): \DateTime { return $this->createdAt; }
     public function getAuthor(): ?User { return $this->author; }
     public function getStatus(): Status { return $this->status; }
-    public function getType(): Type { return $this->type; }
+    public function getType(): ?Type { return $this->type; }
     public function setTitle(string $title): void
     {
         $this->title = $title;
@@ -66,7 +64,4 @@ class Post
         $this->type = $type;
     }
     public function setAuthor(User $author): void { $this->author = $author; }
-    public function isPublished(): bool { return $this->isPublished; }
-    public function setPublished(bool $value): void { $this->isPublished = $value; }
-
 }

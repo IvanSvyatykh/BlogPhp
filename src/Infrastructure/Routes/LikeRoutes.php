@@ -1,7 +1,7 @@
 <?php
 
 use Pri301\Blog\Application\Handlers\ToggleLikeHandler;
-use Pri301\Blog\Infarastructure\Middlewares\JWTMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\JWTMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\ToggleLikeMiddleware;
 use Slim\App;
 

@@ -12,16 +12,14 @@ class PostTag
 
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
-    #[ORM\Column(type: 'integer',name: "Id", unique: true)]
-    private ?int $id;
+    #[ORM\Column(type: 'integer',name: "Id", unique: true,nullable: false)]
+    private int $id;
 
-    #[ORM\OneToOne(targetEntity: Post::class)]
-    #[ORM\Column(type: 'integer', name: 'post_id')]
+    #[ORM\ManyToOne(targetEntity: Post::class)]
     #[ORM\JoinColumn(name: 'post_id', referencedColumnName: 'id',nullable: false)]
     private Post $post;
 
-    #[ORM\OneToOne(targetEntity: Tag::class)]
-    #[ORM\Column(type: 'integer', name: 'tag_id')]
+    #[ORM\ManyToOne(targetEntity: Tag::class)]
     #[ORM\JoinColumn(name: 'tag_id', referencedColumnName: 'id',nullable: false)]
     private Tag $tag;
 
@@ -37,6 +35,10 @@ class PostTag
 
     public function getTag(): Tag{
         return $this->tag;
+    }
+
+    public function getId(): int{
+        return $this->id;
     }
 
 }

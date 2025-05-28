@@ -68,4 +68,16 @@ class UserRepository implements UserRepositoryInterface
             ->getQuery()
             ->getArrayResult();
     }
+
+    public function getUsersIdBySubstrAtName(string $substr): array
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('u.id')
+            ->from(User::class, 'u')
+            ->where('u.login LIKE :substr')
+            ->setParameter('substr', '%' . $substr . '%')
+            ->getQuery()
+            ->getSingleColumnResult();
+    }
 }

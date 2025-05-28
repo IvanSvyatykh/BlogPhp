@@ -16,7 +16,7 @@ class ToggleLikeMiddleware implements MiddlewareInterface
         $data = $request->getParsedBody();
 
         $dto = new ToggleLikeRequest();
-        $dto->articleId = $data['article_id'] ?? 5;
+        $dto->articleId = $data['article_id'] ?? -1;
         $dto->userLogin = $data['user_login'] ?? '';
 
         $validator = Validation::createValidatorBuilder()

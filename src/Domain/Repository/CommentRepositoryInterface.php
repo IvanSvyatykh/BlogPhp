@@ -12,5 +12,5 @@ interface CommentRepositoryInterface
     public function findByPost(int $postId): array;
     public function addComment(Comment $comment): void;
     public function deleteComment(int $id): int;
-    public function findByAuthor(User $user): array;
+    public function findByAuthorId(int $userId): array;
 }

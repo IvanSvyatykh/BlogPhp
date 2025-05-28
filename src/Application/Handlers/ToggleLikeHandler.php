@@ -19,7 +19,10 @@ final class ToggleLikeHandler
 
         $result = $this->likeService->toggleLike($dto->articleId, $dto->userLogin);
 
-        return $this->json($response, ['like' => $result], 201);
+        if ($result) {
+            return $this->json($response, ['like' => $result], 201);
+        }
+        return $this->json($response, ['like' => $result]);
     }
 
     private function json(Response $res, mixed $payload, int $status = 200): Response

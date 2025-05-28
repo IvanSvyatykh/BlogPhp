@@ -20,7 +20,7 @@ class PostHandler
     {
         $dto = $req->getAttribute('dto');
         $login = $dto->userLogin;
-        $user = $this->userService->GetUserById($login);
+        $user = $this->userService->getUserByLogin($login);
 
         if (!$user) {
             return $this->errorResponse('Author not found', 404);
@@ -35,7 +35,7 @@ class PostHandler
     {
         $dto = $req->getAttribute('dto');
         $login = $dto->userLogin;
-        $user = $this->userService->GetUserById($login);
+        $user = $this->userService->getUserByLogin($login);
 
         if (!$user) {
             return $this->errorResponse('Author not found', 404);
@@ -50,7 +50,7 @@ class PostHandler
         $postId = (int)$args['id'];
         $dto = $req->getAttribute('dto');
         $login = $dto->userLogin;
-        $user = $this->userService->GetUserById($login);
+        $user = $this->userService->getUserByLogin($login);
 
         if (!$user) {
             return $this->errorResponse('User not found', 404);

@@ -1,21 +1,23 @@
-﻿<?php
+<?php
 
 namespace Pri301\Blog\Infrastructure\Middlewares;
 
 use Pri301\Blog\Application\DTO\Requests\GetPublishedPostsRequest;
 use Slim\Psr7\Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Server\RequestHandlerInterface as Handler;
 
 final class GetPublishedPostsMiddleware extends BaseValidationMiddleware
 {
     public function process(Request $request, Handler $handler): Response
     {
-        $login = $request->getQueryParams()['user_login'] ?? '';
-
+        $data = $request->getParsedBody();
         $dto = new GetPublishedPostsRequest();
-        $dto->userLogin = $login;
+
+        $dto->userLogin = $data['userLogin'] ?? '';
 
         $violations = $this->validator->validate($dto);
-        if (\count($violations) > 0) {
+        if (count($violations) > 0) {
             return $this->error($this->violationsToArray($violations));
         }
 

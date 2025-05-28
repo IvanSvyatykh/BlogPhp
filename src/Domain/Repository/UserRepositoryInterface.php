@@ -14,4 +14,5 @@ interface UserRepositoryInterface{
     public function getAllUsers(): array;
     public function findById(int $id): ?User;
     public function setUserBannedStatus(int $userId , bool $isBanned): void;
+    public function getUsersIdBySubstrAtName(string $substr): array;
 }

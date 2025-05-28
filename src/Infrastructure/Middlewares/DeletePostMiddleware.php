@@ -1,22 +1,32 @@
-﻿<?php
+<?php
 
 namespace Pri301\Blog\Infrastructure\Middlewares;
 
 use Pri301\Blog\Application\DTO\Requests\DeletePostRequest;
-use function count;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
-use Psr\Http\Message\ResponseInterface as Response;
+use Slim\Psr7\Response;
+use Slim\Routing\RouteContext;
+use function count;
+
 final class DeletePostMiddleware extends BaseValidationMiddleware
 {
     public function process(Request $request, Handler $handler): Response
     {
         $body = (array)$request->getParsedBody();
-        $pathId = (int)$request->getAttribute('route')->getArgument('id');
+
+        $routeContext = RouteContext::fromRequest($request);
+        $route = $routeContext->getRoute();
+
+        if ($route === null) {
+            return $this->error(['message' => 'Route not resolved']);
+        }
+
+        $pathId = (int)$route->getArgument('id');
 
         $dto = new DeletePostRequest();
         $dto->articleId = $pathId;
-        $dto->userLogin = $body['user_login'] ?? '';
+        $dto->userLogin = $body['userLogin'] ?? '';
 
         $violations = $this->validator->validate($dto);
         if (count($violations) > 0) {

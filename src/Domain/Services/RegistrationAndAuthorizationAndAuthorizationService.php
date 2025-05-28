@@ -52,7 +52,7 @@ class RegistrationAndAuthorizationAndAuthorizationService implements Registratio
             return new LoginUserResponse(UserAuthState::USER_AUTHORIZED_AS_MODERATOR, $token);
         }
 
-        if ($user->IsAdmin()) {
+        if ($user->isAdmin()) {
             return new LoginUserResponse(UserAuthState::USER_AUTHORIZED_AS_ADMIN, $token);
         }
 

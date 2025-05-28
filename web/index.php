@@ -16,4 +16,5 @@ $app->addBodyParsingMiddleware();
 (require __DIR__ . '/../src/Infrastructure/Routes/LikeRoutes.php')($app);
 (require __DIR__ . '/../src/Infrastructure/Routes/PostRoutes.php')($app);
 (require __DIR__ . '/../src/Infrastructure/Routes/UserRoutes.php')($app);
+(require __DIR__ . '/../src/Infrastructure/Routes/CommentRoutes.php')($app);
 $app->run();
