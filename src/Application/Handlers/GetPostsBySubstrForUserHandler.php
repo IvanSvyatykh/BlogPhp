@@ -3,6 +3,7 @@
 
 namespace Pri301\Blog\Application\Handlers;
 
+use Pri301\Blog\Application\DTO\Response\ArticleResponse;
 use Pri301\Blog\Application\DTO\Response\ArticleResponseWithLikeState;
 use Pri301\Blog\Domain\Enum\PostPart;
 use Pri301\Blog\Domain\Repository\PostTagsRepositoryInterface;
@@ -76,6 +77,52 @@ final class GetPostsBySubstrForUserHandler
                     isLiked: $this->likeService->hasLike($post->getId(),$userLogin)
                 );
                 $result[]=$article;
+            }
+        }
+        if ($part === PostPart::Type->value)
+        {
+            $result = array();
+            $posts = $this -> postService->getPostsBySubstrAtType($substr);
+
+            foreach ($posts as $post){
+
+                $author = $this->userService->getUserById($post->getAuthor()->getId());
+                $article = new ArticleResponseWithLikeState(
+                    article_id: $post->getId(),
+                    article_title: $post->getTitle(),
+                    article_text: $post->getContent(),
+                    author_login: $author->getLogin(),
+                    author_name: $author->getName(),
+                    article_likes_count:  $this->likeService->countLikes($post->getId()),
+                    article_category: $this->typeService->getTypeById($post->getType()->getId()),
+                    article_tags: $this->postTagsService->getTagsByPostId($post->getId()),
+                    isLiked: $this->likeService->hasLike($post->getId(),$userLogin)
+                );
+                $result[]=$article;
+            }
+        }
+        if ($part === PostPart::Tag->value) {
+            $result = array();
+            $postIds = $this->postService->getPostsBySubstrAtTag($substr);
+            foreach ($postIds as $postId) {
+
+                $post = $this->postService->getPost($postId['post_id']);
+                if ($post->getType() === null) {
+                    continue;
+                }
+                $author = $this->userService->getUserById($post->getAuthor()->getId());
+                $article = new ArticleResponseWithLikeState(
+                    article_id: $post->getId(),
+                    article_title: $post->getTitle(),
+                    article_text: $post->getContent(),
+                    author_login: $author->getLogin(),
+                    author_name: $author->getName(),
+                    article_likes_count: $this->likeService->countLikes($post->getId()),
+                    article_category: $this->typeService->getTypeById($post->getType()->getId()),
+                    article_tags: $this->postTagsService->getTagsByPostId($post->getId()),
+                    isLiked: $this->likeService->hasLike($post->getId(), $userLogin)
+                );
+                $result[] = $article;
             }
         }
 

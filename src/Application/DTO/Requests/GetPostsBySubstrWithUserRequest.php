@@ -12,7 +12,7 @@ class GetPostsBySubstrWithUserRequest
 
     #[Assert\NotBlank(message: "Article part is required")]
     #[Assert\Choice(
-        choices: [ "ARTICLE_TEXT", "ARTICLE_NAME" , "NONE"],
+        choices: ["ARTICLE_TAG", "ARTICLE_TEXT", "ARTICLE_NAME" , "NONE","ARTICLE_CATEGORY"],
         message: "Article part must be one of:  ARTICLE_TEXT, ARTICLE_NAME , NONE"
     )]
     public string $articlePart;
