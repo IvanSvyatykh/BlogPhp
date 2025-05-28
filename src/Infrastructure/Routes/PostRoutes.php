@@ -13,18 +13,18 @@ use Pri301\Blog\Infrastructure\Middlewares\GetUnpublishedPostsMiddleware;
 use Slim\App;
 use Pri301\Blog\Application\Handlers\GetPostsBySubstrHandler;
 return function (App $app) {
-    $app->get('/posts/published', GetPublishedPostsHandler::class)
+    $app->get('/posts/published', GetPublishedPostsHandler::class) // +
         ->add(GetPublishedPostsMiddleware::class);
 
-    $app->get('/posts/unpublished', GetUnpublishedPostsHandler::class)
+    $app->get('/posts/unpublished', GetUnpublishedPostsHandler::class) // +
         ->add(GetUnpublishedPostsMiddleware::class)
         ->add(JWTMiddleware::class);
 
-    $app->delete('/posts/{id:[0-9]+}', DeletePostHandler::class)
+    $app->delete('/posts/{id:[0-9]+}', DeletePostHandler::class) // Добавить чеки на модератора и админа
         ->add(DeletePostMiddleware::class)
         ->add(JWTMiddleware::class);
 
-    $app->post('/posts', CreatePostHandler::class)
+    $app->post('/posts', CreatePostHandler::class) // +
         ->add(CreatePostMiddleware::class)
         ->add(JWTMiddleware::class);
 

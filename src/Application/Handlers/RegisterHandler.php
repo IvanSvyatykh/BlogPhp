@@ -3,9 +3,8 @@
 namespace Pri301\Blog\Application\Handlers;
 
 use Pri301\Blog\Domain\Services\RegistrationAndAuthorizationServiceInterface;
-use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-
+use Slim\Psr7\Response;
 
 final class RegisterHandler
 {
@@ -19,19 +18,23 @@ final class RegisterHandler
     {
         $dto = $request->getAttribute('dto');
 
-        $result = $this->registrationAndAuthorizationService->register($dto->user_name, $dto->user_login, $dto->user_password);
-        if (!$result->registered) {
-            $response->getBody()->write(json_encode([
-                'is_user_registered' => $result->registered,
-                'token' => $result->token
-            ]));
-            return $response->withHeader('Content-Type', 'application/json')->withStatus(409);
-        }
+        $result = $this->registrationAndAuthorizationService->register(
+            $dto->user_name,
+            $dto->user_login,
+            $dto->user_password
+        );
 
-        $response->getBody()->write(json_encode([
+        return $this->json($response, [
             'is_user_registered' => $result->registered,
             'token' => $result->token
-        ]));
-        return $response->withHeader('Content-Type', 'application/json')->withStatus(200);
+        ]);
     }
+
+    private function json(Response $res, mixed $payload, int $status = 200): Response
+    {
+        $response = $res->withStatus($status);
+        $response->getBody()->write(json_encode($payload, JSON_UNESCAPED_UNICODE));
+        return $response->withHeader('Content-Type', 'application/json');
+    }
+
 }
