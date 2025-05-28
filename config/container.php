@@ -2,6 +2,7 @@
 
 use DI\Container;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Pri301\Blog\Application\Handlers\CreateCommentHandler;
 use Pri301\Blog\Application\Handlers\CreatePostHandler;
 use Pri301\Blog\Application\Handlers\DeletePostHandler;
@@ -67,6 +68,8 @@ use Pri301\Blog\Infrastructure\Middlewares\AdminMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\ModeratorMiddleware;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Validation;
+use Pri301\Blog\Infrastructure\Middlewares\GetPostsBySubstrForUserMiddleware;
+use Pri301\Blog\Application\Handlers\GetPostsBySubstrForUserHandler;
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 return function (Container $container) {
@@ -76,6 +79,9 @@ return function (Container $container) {
         return Validation::createValidatorBuilder()
             ->enableAttributeMapping()
             ->getValidator();
+    });
+    $container->set(GetPostsBySubstrForUserMiddleware::class,function (Container $container) {
+        return new GetPostsBySubstrForUserMiddleware();
     });
     $container->set(LoginUserMiddleware::class,function(Container $container){
         return new LoginUserMiddleware($container->get(ValidatorInterface::class));
@@ -232,5 +238,14 @@ return function (Container $container) {
     });
     $container->set(SwitchUserBanHandler::class, function (Container $c) {
         return new SwitchUserBanHandler($c->get(UserServiceInterface::class));
+    });
+    $container->set(GetPostsBySubstrForUserHandler::class, function (Container $c) {
+        return new GetPostsBySubstrForUserHandler(
+            $c->get(PostServiceInterface::class),
+            $c->get(UserServiceInterface::class),
+            $c->get(LikeServiceInterface::class),
+            $c->get(TypeServiceInterface::class),
+            $c->get(PostTagsServiceInterface::class),
+        );
     });
 };

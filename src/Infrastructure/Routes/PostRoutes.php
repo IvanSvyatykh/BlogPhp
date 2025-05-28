@@ -12,6 +12,7 @@ use Pri301\Blog\Application\Handlers\RejectPostHandler;
 use Pri301\Blog\Application\Handlers\PublishPostHandler;
 use Pri301\Blog\Infrastructure\Middlewares\CreatePostMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\AdminPostMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\GetPostsBySubstrForUserMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\GetPostsBySubstrMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\JWTMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\DeletePostMiddleware;
@@ -20,6 +21,7 @@ use Pri301\Blog\Infrastructure\Middlewares\GetUnpublishedPostsMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\GetAllPostsMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\AdminMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\PublishPostMiddleware;
+use Pri301\Blog\Application\Handlers\GetPostsBySubstrForUserHandler;
 use Slim\App;
 use Pri301\Blog\Application\Handlers\GetPostsBySubstrHandler;
 return function (App $app) {
@@ -53,6 +55,9 @@ return function (App $app) {
         ->add(AdminMiddleware::class);
     $app->get('/categories', GetCategoriesHandler::class);
 
+    $app->get('/post/substrwithlogin',GetPostsBySubstrForUserHandler::class)
+    ->add(GetPostsBySubstrForUserMiddleware::class)
+    ->add(JWTMiddleware::class);
 
     $app->get('/post/substr' , GetPostsBySubstrHandler::class)
         ->add(GetPostsBySubstrMiddleware::class);
