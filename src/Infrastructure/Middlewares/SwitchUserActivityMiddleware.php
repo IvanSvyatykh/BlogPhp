@@ -12,7 +12,7 @@ class SwitchUserActivityMiddleware implements MiddlewareInterface
 {
     public function process(Request $request, Handler $handler): Response
     {
-        $data = $request->getParsedBody();
+        $data = $request->getQueryParams();
 
         $dto = new SwitchUserActivityRequest();
         $dto->userId = $data['userId'] ?? '';
