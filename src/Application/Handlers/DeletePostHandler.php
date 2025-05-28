@@ -12,7 +12,9 @@ final class DeletePostHandler
     public function __construct(
         private readonly PostServiceInterface $postService,
         private readonly UserServiceInterface $userService,
-    ) {}
+    )
+    {
+    }
 
     public function __invoke(Request $request, Response $response): Response
     {
@@ -28,11 +30,12 @@ final class DeletePostHandler
 
         $post = $this->postService->getPost($postId);
         if (!$post) {
-            return $this->errorResponse( 'Post not found', 404);
+            return $this->errorResponse('Post not found', 404);
         }
 
-        if ($post->getAuthor()->getId() !== $user->getId()) {
-            return $this->errorResponse( 'Forbidden', 403);
+        if ($post->getAuthor()->getId() !== $user->getId() &&
+            !$user->IsAdmin() && !$user->IsModerator()) {
+            return $this->errorResponse('Forbidden', 403);
         }
 
         $this->postService->rejectPost($postId);

@@ -117,7 +117,6 @@ return function (Container $container) {
         return new GetUserCommentsMiddleware($container->get(ValidatorInterface::class));
     });
     $container->set(ToggleLikeMiddleware::class,fn() => new ToggleLikeMiddleware());
-    $container->set(GetUserCommentsMiddleware::class, fn() => new GetUserCommentsMiddleware());
     $container->set(AdminPostMiddleware::class, fn() => new AdminPostMiddleware());
     $container->set(GetAllPostsMiddleware::class, fn() => new GetAllPostsMiddleware());
     $container->set(GetUserListMiddleware::class, fn() => new GetUserListMiddleware());
@@ -201,11 +200,23 @@ return function (Container $container) {
     });
 
     $container->set(GetPublishedPostsHandler::class, function (Container $c) {
-        return new GetPublishedPostsHandler($c->get(PostServiceInterface::class), $c->get(UserServiceInterface::class));
+        return new GetPublishedPostsHandler(
+            $c->get(PostServiceInterface::class),
+            $c->get(UserServiceInterface::class),
+            $c->get(LikeServiceInterface::class),
+            $c->get(TypeServiceInterface::class),
+            $c->get(PostTagsServiceInterface::class)
+        );
     });
 
     $container->set(GetUnpublishedPostsHandler::class, function (Container $c) {
-        return new GetUnpublishedPostsHandler($c->get(PostServiceInterface::class), $c->get(UserServiceInterface::class));
+        return new GetUnpublishedPostsHandler(
+            $c->get(PostServiceInterface::class),
+            $c->get(UserServiceInterface::class),
+            $c->get(LikeServiceInterface::class),
+            $c->get(TypeServiceInterface::class),
+            $c->get(PostTagsServiceInterface::class)
+        );
     });
 
     $container->set(DeletePostHandler::class, function (Container $c) {
