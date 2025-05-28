@@ -26,7 +26,7 @@ class Post
     private Status $status;
     #[ORM\ManyToOne(targetEntity: Type::class)]
     #[ORM\JoinColumn(name:'post_type_id', referencedColumnName: 'id')]
-    private Type $type;
+    private ?Type $type=null;
     public function __construct(
         string     $title,
         string     $content,

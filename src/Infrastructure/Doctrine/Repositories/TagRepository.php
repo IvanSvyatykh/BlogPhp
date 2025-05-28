@@ -23,7 +23,19 @@ class TagRepository implements TagRepositoryInterface
             ->select('t')
             ->from(Tag::class, 't')
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getResult();
+    }
+
+    public function getTagsBySubstr(string $substr): array
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('t')
+            ->from(Tag::class, 't')
+            ->where('t.tag LIKE :substr')
+            ->setParameter('substr', '%'.$substr.'%')
+            ->getQuery()
+            ->getResult();
     }
 
     public function addTag(Tag $tag): void

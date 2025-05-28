@@ -186,4 +186,16 @@ class PostRepository implements PostRepositoryInterface
             ->getQuery()
             ->getResult();
     }
+
+    public function getPostsWithTypes(array $typeIds): array
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select(' p')
+            ->from(Post::class, 'p')
+            ->where('p.type IN (:type) and p.type is not null')
+            ->setParameter('type', $typeIds)
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -13,4 +13,6 @@ interface TypeRepositoryInterface
     public function findCategoryByName(string $name): ?Type;
     public function getTypeById(int $id):string;
 
+    public function getTypeIdsBySubstr(string $substr): array;
+
 }

@@ -48,4 +48,16 @@ class TypeRepository implements TypeRepositoryInterface
             ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
         return (string)$result ?? '';
     }
+
+    public function getTypeIdsBySubstr(string $substr): array
+    {
+        $result = $this->entityManager->createQueryBuilder()
+            ->select('t.id')
+            ->from(Type::class, 't')
+            ->where('t.type like :name')
+            ->setParameter('name', '%'.$substr.'%')
+            ->getQuery()
+            ->getResult();
+        return $result;
+    }
 }

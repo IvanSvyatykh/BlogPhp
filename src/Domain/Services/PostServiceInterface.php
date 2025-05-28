@@ -24,4 +24,6 @@ interface PostServiceInterface{
     public function findCategoryByName(string $categoryName): ?Type;
     public function publishPost(int $postId, int $categoryId): void;
     public function getAllUnpublishedPosts(): array;
+    public function getPostsBySubstrAtType(string $substr): array;
+    public function getPostsBySubstrAtTag(string $substr): array;
 }

@@ -130,4 +130,27 @@ class PostService implements PostServiceInterface
         return $this->postRepository->getUnpublished($pendingStatusId);
     }
 
+    public function getPostsBySubstrAtTag(string $substr): array
+    {
+        $tags = $this->tagRepository->getTagsBySubstr($substr);
+        if (!$tags)
+        {
+            return [];
+        }
+        $postsId = $this->postTagsRepository->getPostsIdsByTag($tags);
+        return $postsId;
+    }
+
+    public function getPostsBySubstrAtType(string $substr): array
+    {
+        $type = $this->typeRepository->getTypeIdsBySubstr($substr);
+        if (!$type)
+        {
+            return [];
+        }
+
+        $posts = $this->postRepository->getPostsWithTypes($type);
+        return $posts;
+    }
+
 }

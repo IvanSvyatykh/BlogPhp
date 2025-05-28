@@ -36,4 +36,16 @@ class PostTagsRepository implements PostTagsRepositoryInterface{
             ->getSingleColumnResult();
 
     }
+
+    public function getPostsIdsByTag(array $tagsIds): array
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('DISTINCT IDENTITY(pt.post) as post_id')
+            ->from(PostTag::class, 'pt')
+            ->where('pt.tag IN (:tags)')
+            ->setParameter('tags', $tagsIds)
+            ->getQuery()
+            ->getResult();
+    }
 }
