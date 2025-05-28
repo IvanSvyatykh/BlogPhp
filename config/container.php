@@ -6,6 +6,7 @@ use Pri301\Blog\Application\Handlers\CreateCommentHandler;
 use Pri301\Blog\Application\Handlers\CreatePostHandler;
 use Doctrine\ORM\EntityManagerInterface;
 use Pri301\Blog\Application\Handlers\DeletePostHandler;
+use Pri301\Blog\Application\Handlers\GetCategoriesHandler;
 use Pri301\Blog\Application\Handlers\GetPublishedPostsHandler;
 use Pri301\Blog\Application\Handlers\GetUnpublishedPostsHandler;
 use Pri301\Blog\Application\Handlers\ToggleLikeHandler;
@@ -127,7 +128,8 @@ return function (Container $container) {
         return new PostService($c->get(PostRepositoryInterface::class), $c->get(EntityManager::class),
             $c->get(StatusRepositoryInterface::class),
             $c->get(TagRepositoryInterface::class),
-            $c->get(PostTagsRepositoryInterface::class));
+            $c->get(PostTagsRepositoryInterface::class),
+            $c->get(TypeRepositoryInterface::class),);
     });
     $container->set(RegistrationAndAuthorizationServiceInterface::class, function (Container $c) {
         return new RegistrationAndAuthorizationAndAuthorizationService($c->get(UserRepositoryInterface::class));
@@ -169,5 +171,9 @@ return function (Container $container) {
 
     $container->set(CreateCommentHandler::class, function (Container $c) {
         return new CreateCommentHandler($c->get(CommentServiceInterface::class), $c->get(UserServiceInterface::class));
+    });
+
+    $container->set(GetCategoriesHandler::class, function (Container $c) {
+        return new GetCategoriesHandler($c->get(PostServiceInterface::class));
     });
 };

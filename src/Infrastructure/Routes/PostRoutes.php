@@ -2,6 +2,7 @@
 
 use Pri301\Blog\Application\Handlers\CreatePostHandler;
 use Pri301\Blog\Application\Handlers\DeletePostHandler;
+use Pri301\Blog\Application\Handlers\GetCategoriesHandler;
 use Pri301\Blog\Application\Handlers\GetPublishedPostsHandler;
 use Pri301\Blog\Application\Handlers\GetUnpublishedPostsHandler;
 use Pri301\Blog\Infrastructure\Middlewares\CreatePostMiddleware;
@@ -26,4 +27,6 @@ return function (App $app) {
     $app->post('/posts', CreatePostHandler::class) // +
         ->add(CreatePostMiddleware::class)
         ->add(JWTMiddleware::class);
+
+    $app->get('/categories', GetCategoriesHandler::class);
 };

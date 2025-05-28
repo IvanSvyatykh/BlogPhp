@@ -2,18 +2,19 @@
 
 namespace Pri301\Blog\Domain\Services;
 
-use Cassandra\Type;
 use Doctrine\ORM\EntityManager;
 use Pri301\Blog\Domain\Entity\Post;
 use Pri301\Blog\Domain\Entity\PostTag;
 use Pri301\Blog\Domain\Entity\Status;
 use Pri301\Blog\Domain\Entity\Tag;
 use Pri301\Blog\Domain\Entity\User;
+use Pri301\Blog\Domain\Entity\Type;
 use Pri301\Blog\Domain\Enum\PostStatus;
 use Pri301\Blog\Domain\Repository\PostRepositoryInterface;
 use Pri301\Blog\Domain\Repository\PostTagsRepositoryInterface;
 use Pri301\Blog\Domain\Repository\StatusRepositoryInterface;
 use Pri301\Blog\Domain\Repository\TagRepositoryInterface;
+use Pri301\Blog\Domain\Repository\TypeRepositoryInterface;
 
 class PostService implements PostServiceInterface
 {
@@ -22,7 +23,8 @@ class PostService implements PostServiceInterface
         private EntityManager $entityManager,
         private StatusRepositoryInterface $statusRepository,
         private TagRepositoryInterface $tagRepository,
-        private PostTagsRepositoryInterface $postTagsRepository
+        private PostTagsRepositoryInterface $postTagsRepository,
+        private TypeRepositoryInterface $typeRepository
     ) {}
 
     public function createPost(array $data, int $authorId): Post
@@ -100,5 +102,15 @@ class PostService implements PostServiceInterface
     {
         $result =  $this->postRepository->getPostsBySubstrAtTitle($substr);
         return  $result;
+    }
+
+    public function getAllCategories(): array
+    {
+        return $this->typeRepository->getAllTypes();
+    }
+
+    public function findCategoryByName(string $name): ?Type
+    {
+        return $this->typeRepository->findCategoryByName($name);
     }
 }
