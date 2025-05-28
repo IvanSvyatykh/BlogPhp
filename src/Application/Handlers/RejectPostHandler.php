@@ -20,6 +20,6 @@ final class RejectPostHandler
 
         $this->postService->rejectPost($postId);
 
-        return $response->withStatus(204);
+        return $response->withStatus(200);
     }
 }

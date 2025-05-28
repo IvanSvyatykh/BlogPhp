@@ -22,7 +22,7 @@ class ModeratorMiddleware implements MiddlewareInterface
             return $this->errorResponse('Unauthorized', 401);
         }
 
-        $user = $this->userService->GetUserById($email);
+        $user = $this->userService->GetUserByLogin($email);
 
         if (!$user || !$user->IsModerator()) {
             return $this->errorResponse('Forbidden', 403);

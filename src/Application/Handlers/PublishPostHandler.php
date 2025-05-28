@@ -24,7 +24,7 @@ final class PublishPostHandler
 
         $this->postService->publishPost($dto->postId, $category->getId());
 
-        return $this->json($response, ['success' => true], 204);
+        return $this->json($response, ['success' => true], 200);
     }
 
     private function json(Response $res, mixed $payload, int $status = 200): Response

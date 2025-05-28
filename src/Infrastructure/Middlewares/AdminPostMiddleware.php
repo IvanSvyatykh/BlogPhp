@@ -18,7 +18,7 @@ class AdminPostMiddleware implements MiddlewareInterface
         $data = $request->getParsedBody();
 
         $dto = new AdminPostRequest();
-        $dto->postId = $data['postId'] ?? '';
+        $dto->postId = $data['postId'] ?? 0;
 
         $validator = Validation::createValidatorBuilder()
             ->enableAttributeMapping()

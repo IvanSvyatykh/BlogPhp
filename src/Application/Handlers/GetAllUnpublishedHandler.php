@@ -26,7 +26,7 @@ class GetAllUnpublishedHandler
         $result = array();
         foreach ($posts as $post)
         {
-            $author = $this->userService->getUserById($post->getAuthor()->getId());
+            $author = $post->getAuthor();
             $article = new ArticleResponse(
                 article_id: $post->getId(),
                 article_title: $post->getTitle(),
