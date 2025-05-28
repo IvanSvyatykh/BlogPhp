@@ -22,8 +22,19 @@ class UserService implements UserServiceInterface
         return $this->userRepository->getAllUsers();
     }
 
-    public function GetUserById(string $userLogin): ?User
+    public function getUserByLogin(string $userLogin): ?User
     {
         return $this->userRepository->findByLogin($userLogin);
+    }
+
+    public function getUserById(int $userId): ?User
+    {
+        return $this->userRepository->findById($userId);
+    }
+
+    public function getUserIdBySubstrAtName(string $substr): array
+    {
+        return $this->userRepository->getUsersIdBySubstrAtName($substr);
+
     }
 }

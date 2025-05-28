@@ -22,4 +22,18 @@ class PostTagsRepository implements PostTagsRepositoryInterface{
         $this->entityManager->flush();
         return $postTag->getId();
     }
+
+    public function getAllPostTags(int $postId): array
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('t.tag')
+            ->from(PostTag::class, 'pt')
+            ->join('pt.tag', 't')
+            ->where('pt.post = :postId')
+            ->setParameter('postId', $postId)
+            ->getQuery()
+            ->getSingleColumnResult();
+
+    }
 }

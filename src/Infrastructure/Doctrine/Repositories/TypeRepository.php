@@ -1,6 +1,7 @@
 <?php
 namespace Pri301\Blog\Infrastructure\Doctrine\Repositories;
 
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Pri301\Blog\Domain\Entity\Type;
 use Pri301\Blog\Domain\Repository\TypeRepositoryInterface;
@@ -22,5 +23,17 @@ class TypeRepository implements TypeRepositoryInterface
             ->from(Type::class, 't')
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    public function getTypeById(int $id): string
+    {
+        $result = $this->entityManager->createQueryBuilder()
+            ->select('t.type')
+            ->from(Type::class, 't')
+            ->where('t.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
+        return (string)$result ?? '';
     }
 }

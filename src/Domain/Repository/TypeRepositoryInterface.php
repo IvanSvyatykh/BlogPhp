@@ -10,4 +10,6 @@ interface TypeRepositoryInterface
 
     public function getAllTypes(): array;
 
+    public function getTypeById(int $id):string;
+
 }

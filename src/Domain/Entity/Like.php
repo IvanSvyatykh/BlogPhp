@@ -11,7 +11,7 @@ class Like
 
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
-    #[ORM\Column(type: 'integer', unique: true)]
+    #[ORM\Column(name:'id',type: 'integer', unique: true)]
     private int $id;
 
     #[ORM\ManyToOne(targetEntity: Post::class)]

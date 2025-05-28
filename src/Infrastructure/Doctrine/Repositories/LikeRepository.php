@@ -53,9 +53,9 @@ class LikeRepository implements LikeRepositoryInterface
     {
         return $this ->entityManager
             ->createQueryBuilder()
-            ->select('count(like.id)')
-            ->from(Like::class, 'like')
-            ->where('like.post = :postId')
+            ->select('count(l.id)')
+            ->from(Like::class, 'l')
+            ->where('l.post = :postId')
             ->setParameter('postId', $postId)
             ->getQuery()
             ->getSingleScalarResult();

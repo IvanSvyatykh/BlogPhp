@@ -65,7 +65,9 @@ class PostService implements PostServiceInterface
     {
         return $this->postRepository->findAllByUser($authorId, $limit, $offset);
     }
-
+    /**
+     * @return Post[]
+     */
     public function getPublishedPostsByUser(int $userId): array
     {
         $publishedStatusId = $this->statusRepository->getPublishStatusId();

@@ -11,6 +11,9 @@ interface PostRepositoryInterface
     public function getArticlesByStatus(int $statusId , int $limit = 10, int $offset = 0 ): array;
     public function addPost(Post $post): int;
     public function deletePost(int $id): int;
+    /**
+     * @return Post[]
+     */
     public function findPublishedByUserId(int $userId,int $publishStatusId): array;
     public function findUnpublishedByUserId(int $userId,int $publishStatusId): array;
     public function updatePostStatusById(int $postId, int $statusId): void;

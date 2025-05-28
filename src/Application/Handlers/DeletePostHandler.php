@@ -20,7 +20,7 @@ final class DeletePostHandler
         $userLogin = $dto->userLogin;
         $postId = $dto->articleId;
 
-        $user = $this->userService->GetUserById($userLogin);
+        $user = $this->userService->getUserByLogin($userLogin);
 
         if (!$user) {
             return $this->errorResponse('Author not found', 404);

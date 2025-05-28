@@ -19,7 +19,7 @@ final class CreatePostHandler
     public function __invoke(Request $request, Response $response): Response
     {
         $dto  = $request->getAttribute('dto');
-        $user = $this->userService->GetUserById($dto->authorLogin);
+        $user = $this->userService->getUserByLogin($dto->authorLogin);
 
         if (!$user) {
             return $this->errorResponse('Author not found', 404);

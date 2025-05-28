@@ -3,8 +3,8 @@
 use DI\Container;
 use Doctrine\ORM\EntityManager;
 use Pri301\Blog\Application\Handlers\CreatePostHandler;
-use Doctrine\ORM\EntityManagerInterface;
 use Pri301\Blog\Application\Handlers\DeletePostHandler;
+use Pri301\Blog\Application\Handlers\GetPostsBySubstrHandler;
 use Pri301\Blog\Application\Handlers\GetPublishedPostsHandler;
 use Pri301\Blog\Application\Handlers\GetUnpublishedPostsHandler;
 use Pri301\Blog\Application\Handlers\ToggleLikeHandler;
@@ -24,6 +24,9 @@ use Pri301\Blog\Domain\Services\LikeService;
 use Pri301\Blog\Domain\Services\LikeServiceInterface;
 use Pri301\Blog\Domain\Services\PostService;
 use Pri301\Blog\Domain\Services\PostServiceInterface;
+use Pri301\Blog\Domain\Services\PostTagsService;
+use Pri301\Blog\Domain\Services\PostTagsServiceInterface;
+use Pri301\Blog\Domain\Services\TypeService;
 use Pri301\Blog\Domain\Services\UserService;
 use Pri301\Blog\Domain\Services\UserServiceInterface;
 use Pri301\Blog\Infrastructure\Doctrine\Repositories\PostTagsRepository;
@@ -50,6 +53,7 @@ use Pri301\Blog\Infrastructure\Middlewares\RegisterUserMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\ToggleLikeMiddleware;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Validation;
+use Pri301\Blog\Domain\Services\TypeServiceInterface;
 require dirname(__DIR__) . '/vendor/autoload.php';
 
 return function (Container $container) {
@@ -116,6 +120,12 @@ return function (Container $container) {
             $c->get(EntityManager::class)
         );
     });
+    $container->set(PostTagsServiceInterface::class, function (Container $c) {
+        return new PostTagsService($c->get(PostTagsRepositoryInterface::class));
+    });
+    $container->set(TypeServiceInterface::class, function (Container $c) {
+        return new TypeService($c->get(TypeRepositoryInterface::class));
+    });
     $container->set(LikeServiceInterface::class, function (Container $c) {
         return new LikeService($c->get(LikeRepositoryInterface::class), $c->get(UserRepositoryInterface::class), $c->get(EntityManager::class));
     });
@@ -161,5 +171,13 @@ return function (Container $container) {
 
     $container->set(DeletePostHandler::class, function (Container $c) {
         return new DeletePostHandler($c->get(PostServiceInterface::class), $c->get(UserServiceInterface::class));
+    });
+    $container ->set(GetPostsBySubstrHandler::class, function (Container $c) {
+        return new GetPostsBySubstrHandler(
+            $c->get(PostServiceInterface::class),
+            $c->get(UserServiceInterface::class),
+            $c->get(LikeServiceInterface::class),
+            $c->get(TypeServiceInterface::class),
+            $c->get(PostTagsServiceInterface::class),);
     });
 };

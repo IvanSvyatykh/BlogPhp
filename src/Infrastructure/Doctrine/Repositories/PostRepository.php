@@ -90,7 +90,9 @@ class PostRepository implements PostRepositoryInterface
             ->getQuery()
             ->execute();
     }
-
+    /**
+     * @return Post[]
+     */
     public function findPublishedByUserId(int $userId,int $publishStatusId): array
     {
         return $this->entityManager
@@ -102,7 +104,7 @@ class PostRepository implements PostRepositoryInterface
             ->setParameter('userId', $userId)
             ->setParameter('statusId', $publishStatusId)
             ->getQuery()
-            ->getArrayResult();
+            ->getResult();
     }
 
     public function findUnpublishedByUserId(int $userId, int $publishStatusId): array
