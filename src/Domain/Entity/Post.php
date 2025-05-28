@@ -29,7 +29,6 @@ class Post
     #[ORM\OneToOne(targetEntity: Type::class)]
     #[ORM\JoinColumn(name:'post_type_id', referencedColumnName: 'id')]
     private Type $type;
-
     public function __construct(
         string     $title,
         string     $content,

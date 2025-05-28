@@ -43,7 +43,7 @@ class PostService implements PostServiceInterface
 
     public function getAllPosts(int $limit = 10, int $offset = 0): array
     {
-        return $this->postRepository->getArticlesByStatus($limit, $offset);
+        return $this->postRepository->findAll($limit, $offset);
     }
 
     public function deletePost(int $id): void
@@ -71,7 +71,7 @@ class PostService implements PostServiceInterface
     {
         $post = $this->postRepository->findPostById($postId);
         $rejectedStatusId = $this->statusRepository->getRejectedStatusId();
-        $post->setStatus($this->entityManager->getReference(PostStatus::class, $rejectedStatusId));
+        $post->setStatus($this->entityManager->getReference(Status::class, $rejectedStatusId));
         $this->postRepository->updatePostStatus($post);
     }
 
@@ -91,5 +91,13 @@ class PostService implements PostServiceInterface
     {
         $result =  $this->postRepository->getPostsBySubstrAtTitle($substr);
         return  $result;
+    }
+
+    public function publishPost(int $postId): void
+    {
+        $post = $this->postRepository->findPostById($postId);
+        $publishStatusId = $this->statusRepository->getPublishStatusId();
+        $post->setStatus($this->entityManager->getReference(Status::class, $publishStatusId));
+        $this->postRepository->updatePostStatus($post);
     }
 }

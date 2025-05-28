@@ -12,9 +12,9 @@ class UserService implements UserServiceInterface
         private UserRepositoryInterface $userRepository
     ) {}
 
-    public function switchBanUser(int $userId): void
+    public function switchBanUser(int $userId, bool $active): void
     {
-       $this->userRepository->setUserBannedStatus($userId,false);
+       $this->userRepository->setUserBannedStatus($userId, $active);
     }
 
     public function getUsersList(): array

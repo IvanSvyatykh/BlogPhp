@@ -46,7 +46,7 @@ class UserRepository implements UserRepositoryInterface
         $this->entityManager
             ->createQueryBuilder()
             ->update(User::class, 'u')
-            ->set('u.is_banned',':is_banned')
+            ->set('u.isBanned',':is_banned')
             ->where('u.id = :userId')
             ->setParameter('userId', $userId)
             ->setParameter('is_banned', $isBanned)
