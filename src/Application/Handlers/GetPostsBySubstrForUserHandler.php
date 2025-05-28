@@ -40,6 +40,7 @@ final class GetPostsBySubstrForUserHandler
             $posts = $this -> postService->getPostsBySubstrAtTitle($substr);
             foreach ($posts as $post)
             {
+
                 $author = $this->userService->getUserById($post->getAuthor()->getId());
                 $article = new ArticleResponseWithLikeState(
                     article_id: $post->getId(),
@@ -62,6 +63,7 @@ final class GetPostsBySubstrForUserHandler
             foreach ($posts as $post)
             {
                 $author = $this->userService->getUserById($post->getAuthor()->getId());
+
                 $article = new ArticleResponseWithLikeState(
                     article_id: $post->getId(),
                     article_title: $post->getTitle(),
