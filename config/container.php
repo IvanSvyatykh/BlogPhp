@@ -195,11 +195,23 @@ return function (Container $container) {
     });
 
     $container->set(GetPublishedPostsHandler::class, function (Container $c) {
-        return new GetPublishedPostsHandler($c->get(PostServiceInterface::class), $c->get(UserServiceInterface::class));
+        return new GetPublishedPostsHandler(
+            $c->get(PostServiceInterface::class),
+            $c->get(UserServiceInterface::class),
+            $c->get(LikeServiceInterface::class),
+            $c->get(TypeServiceInterface::class),
+            $c->get(PostTagsServiceInterface::class)
+        );
     });
 
     $container->set(GetUnpublishedPostsHandler::class, function (Container $c) {
-        return new GetUnpublishedPostsHandler($c->get(PostServiceInterface::class), $c->get(UserServiceInterface::class));
+        return new GetUnpublishedPostsHandler(
+            $c->get(PostServiceInterface::class),
+            $c->get(UserServiceInterface::class),
+            $c->get(LikeServiceInterface::class),
+            $c->get(TypeServiceInterface::class),
+            $c->get(PostTagsServiceInterface::class)
+        );
     });
 
     $container->set(DeletePostHandler::class, function (Container $c) {
