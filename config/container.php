@@ -52,7 +52,7 @@ use Pri301\Blog\Infrastructure\Middlewares\GetAllPostsMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\GetUserListMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\SwitchUserActivityMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\AdminMiddleware;
-
+use Pri301\Blog\Infrastructure\Middlewares\ModeratorMiddleware;
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 
@@ -80,6 +80,9 @@ return function (Container $container) {
     $container->set(SwitchUserActivityMiddleware::class, fn() => new SwitchUserActivityMiddleware());
     $container->set(AdminMiddleware::class, function(Container $c) {
         return new AdminMiddleware($c->get(UserServiceInterface::class));
+    });
+    $container->set(ModeratorMiddleware::class, function(Container $c) {
+        return new ModeratorMiddleware($c->get(UserServiceInterface::class));
     });
 
 
