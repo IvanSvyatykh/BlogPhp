@@ -21,7 +21,7 @@ final class GetUserCommentsHandler
         $dto = $request->getAttribute('dto');
 
         $login = $dto->userLogin;
-        $user  = $this->userService->GetUserById($login);
+        $user  = $this->userService->getUserByLogin($login);
 
         if (!$user) {
             return $this->errorResponse('Author not found', 404);

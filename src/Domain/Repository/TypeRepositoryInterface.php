@@ -9,9 +9,8 @@ use Pri301\Blog\Domain\Entity\Type;
 
 interface TypeRepositoryInterface
 {
-
     public function getAllTypes(): array;
-
     public function findCategoryByName(string $name): ?Type;
+    public function getTypeById(int $id):string;
 
 }
