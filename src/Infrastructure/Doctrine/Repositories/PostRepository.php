@@ -61,6 +61,21 @@ class PostRepository implements PostRepositoryInterface
             ->getArrayResult();
     }
 
+    public function findAll( int $limit = 10, int $offset = 0 ) : array
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('p', 's', 'a', 't')
+            ->from(Post::class, 'p')
+            ->leftJoin('p.status', 's')
+            ->leftJoin('p.author', 'a')
+            ->leftJoin('p.type', 't')
+            ->setMaxResults($limit)
+            ->setFirstResult($offset)
+            ->getQuery()
+            ->getArrayResult();
+    }
+
     public function addPost(Post $post): int
     {
         $this->entityManager->persist($post);

@@ -11,10 +11,16 @@ use Pri301\Blog\Application\Handlers\GetPublishedPostsHandler;
 use Pri301\Blog\Application\Handlers\GetUnpublishedPostsHandler;
 use Pri301\Blog\Application\Handlers\PublishPostHandler;
 use Pri301\Blog\Application\Handlers\ToggleLikeHandler;
+use Pri301\Blog\Application\Handlers\CommentHandler;
+use Pri301\Blog\Application\Handlers\GetUsersHandler;
+use Pri301\Blog\Application\Handlers\PublishPostHandler;
+use Pri301\Blog\Application\Handlers\RejectPostHandler;
+use Pri301\Blog\Application\Handlers\SwitchUserBanHandler;
+use Pri301\Blog\Application\Handlers\GetPostsHandler;
 use Pri301\Blog\Domain\Repository\PostTagsRepositoryInterface;
 use Pri301\Blog\Application\Handlers\GetUserCommentsHandler;
 use Pri301\Blog\Domain\Repository\LikeRepositoryInterface;
-use Pri301\Blog\Domain\Repository\CommentRepositoryInterface;
+use Pri301\Blog\Domain\Repository\CommentRepositoryInterface;;
 use Pri301\Blog\Domain\Repository\PostRepositoryInterface;
 use Pri301\Blog\Domain\Repository\StatusRepositoryInterface;
 use Pri301\Blog\Domain\Repository\TagRepositoryInterface;
@@ -56,6 +62,12 @@ use Pri301\Blog\Infrastructure\Middlewares\LoginUserMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\PublishPostMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\RegisterUserMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\ToggleLikeMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\AdminPostMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\GetAllPostsMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\GetUserListMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\SwitchUserActivityMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\AdminMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\ModeratorMiddleware;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Validation;
 require dirname(__DIR__) . '/vendor/autoload.php';
@@ -92,6 +104,18 @@ return function (Container $container) {
     });
     $container->set(GetUserCommentsMiddleware::class, function(Container $container) {
         return new GetUserCommentsMiddleware($container->get(ValidatorInterface::class));
+    });
+    $container->set(ToggleLikeMiddleware::class,fn() => new ToggleLikeMiddleware());
+    $container->set(GetUserCommentsMiddleware::class, fn() => new GetUserCommentsMiddleware());
+    $container->set(AdminPostMiddleware::class, fn() => new AdminPostMiddleware());
+    $container->set(GetAllPostsMiddleware::class, fn() => new GetAllPostsMiddleware());
+    $container->set(GetUserListMiddleware::class, fn() => new GetUserListMiddleware());
+    $container->set(SwitchUserActivityMiddleware::class, fn() => new SwitchUserActivityMiddleware());
+    $container->set(AdminMiddleware::class, function(Container $c) {
+        return new AdminMiddleware($c->get(UserServiceInterface::class));
+    });
+    $container->set(ModeratorMiddleware::class, function(Container $c) {
+        return new ModeratorMiddleware($c->get(UserServiceInterface::class));
     });
     #Зависимости для БД
     $container->set(EntityManager::class, $entityManager);
@@ -149,9 +173,6 @@ return function (Container $container) {
         return new PostTagsService($c->get(PostTagsRepositoryInterface::class));
     });
     #Хендлеры
-    $container->set(UserHandler::class, function (Container $c) {
-        return new UserHandler($c->get(UserServiceInterface::class));
-    });
     $container->set(RegisterHandler::class, function (Container $c) {
         return new RegisterHandler($c->get(RegistrationAndAuthorizationServiceInterface::class));
     });
@@ -199,5 +220,20 @@ return function (Container $container) {
             $c->get(PostTagsServiceInterface::class),
             $c->get(UserServiceInterface::class),
         );
+    });
+    $container->set(GetUsersHandler::class, function (Container $c) {
+        return new GetUsersHandler($c->get(UserServiceInterface::class));
+    });
+    $container->set(GetPostsHandler::class, function (Container $c) {
+        return new GetPostsHandler($c->get(PostServiceInterface::class));
+    });
+    $container->set(PublishPostHandler::class, function (Container $c) {
+        return new PublishPostHandler($c->get(PostServiceInterface::class));
+    });
+    $container->set(RejectPostHandler::class, function (Container $c) {
+        return new RejectPostHandler($c->get(PostServiceInterface::class));
+    });
+    $container->set(SwitchUserBanHandler::class, function (Container $c) {
+        return new SwitchUserBanHandler($c->get(UserServiceInterface::class));
     });
 };

@@ -9,6 +9,7 @@ interface PostRepositoryInterface
     public function findPostById(int $id): ?Post;
     public function findAllByUser(int $authorId , int $limit = 10, int $offset = 0): array;
     public function getArticlesByStatus(int $statusId , int $limit = 10, int $offset = 0 ): array;
+    public function findAll(): array;
     public function addPost(Post $post): int;
     public function deletePost(int $id): int;
     /**

@@ -61,7 +61,7 @@ class PostHandler
             return $this->errorResponse('Post not found', 404);
         }
 
-        if ($post->getAuthor()->getId() !== $user->getId()) {
+        if ($post->getAuthor()->getId() !== $user->getId() && !$user->isAdmin()) {
             return $this->errorResponse('Forbidden', 403);
         }
 

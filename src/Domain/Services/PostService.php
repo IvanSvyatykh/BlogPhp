@@ -61,7 +61,7 @@ class PostService implements PostServiceInterface
 
     public function getAllPosts(int $limit = 10, int $offset = 0): array
     {
-        return $this->postRepository->getArticlesByStatus($limit, $offset);
+        return $this->postRepository->findAll($limit, $offset);
     }
 
     public function getAllPostsByUser(int $authorId, int $limit = 10, int $offset = 0): array
@@ -86,6 +86,8 @@ class PostService implements PostServiceInterface
     public function rejectPost(int $postId): void
     {
         $rejectedStatusId = $this->statusRepository->getRejectedStatusId();
+        $post->setStatus($this->entityManager->getReference(Status::class, $rejectedStatusId));
+        $this->postRepository->updatePostStatus($post);
         $this->postRepository->updatePostStatusById($postId, $rejectedStatusId);
     }
 
@@ -107,6 +109,13 @@ class PostService implements PostServiceInterface
         return  $result;
     }
 
+    public function publishPost(int $postId): void
+    {
+        $post = $this->postRepository->findPostById($postId);
+        $publishStatusId = $this->statusRepository->getPublishStatusId();
+        $post->setStatus($this->entityManager->getReference(Status::class, $publishStatusId));
+        $this->postRepository->updatePostStatus($post);
+
     public function getAllCategories(): array
     {
         return $this->typeRepository->getAllTypes();
@@ -117,11 +126,6 @@ class PostService implements PostServiceInterface
         return $this->typeRepository->findCategoryByName($categoryName);
     }
 
-    public function publishPost(int $postId, int $categoryId): void
-    {
-        $publishedStatusId = $this->statusRepository->getPublishStatusId();
-        $this->postRepository->updatePostTypeAndStatusById($postId, $categoryId, $publishedStatusId);
-    }
 
     public function getAllUnpublishedPosts(): array
     {
