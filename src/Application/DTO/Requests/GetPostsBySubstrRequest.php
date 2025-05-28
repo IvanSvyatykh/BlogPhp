@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 final class GetPostsBySubstrRequest
 {
-    #[Assert\NotBlank(message: "Substr is required")]
+    #[Assert\Length(min: 0, max: 50)]
     public string $substr;
     #[Assert\NotBlank(message: "Post part is required")]
     #[Assert\Choice(
