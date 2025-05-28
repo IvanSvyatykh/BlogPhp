@@ -2,14 +2,17 @@
 
 use Pri301\Blog\Application\Handlers\CreatePostHandler;
 use Pri301\Blog\Application\Handlers\DeletePostHandler;
+use Pri301\Blog\Application\Handlers\GetCategoriesHandler;
 use Pri301\Blog\Application\Handlers\GetPublishedPostsHandler;
 use Pri301\Blog\Application\Handlers\GetUnpublishedPostsHandler;
+use Pri301\Blog\Application\Handlers\PublishPostHandler;
 use Pri301\Blog\Infrastructure\Middlewares\CreatePostMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\GetPostsBySubstrMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\JWTMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\DeletePostMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\GetPublishedPostsMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\GetUnpublishedPostsMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\PublishPostMiddleware;
 use Slim\App;
 use Pri301\Blog\Application\Handlers\GetPostsBySubstrHandler;
 return function (App $app) {
@@ -27,7 +30,10 @@ return function (App $app) {
     $app->post('/posts', CreatePostHandler::class) // +
         ->add(CreatePostMiddleware::class)
         ->add(JWTMiddleware::class);
-
+    $app->get('/categories', GetCategoriesHandler::class);
+    $app->patch('/posts/publish', PublishPostHandler::class)
+        ->add(PublishPostMiddleware::class)
+        ->add(JWTMiddleware::class);
     $app->get('/post/substr' , GetPostsBySubstrHandler::class)
         ->add(GetPostsBySubstrMiddleware::class);
 };

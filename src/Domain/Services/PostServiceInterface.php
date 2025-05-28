@@ -5,6 +5,7 @@ namespace Pri301\Blog\Domain\Services;
 
 
 use Pri301\Blog\Domain\Entity\Post;
+use Pri301\Blog\Domain\Entity\Type;
 
 interface PostServiceInterface{
 
@@ -20,4 +21,6 @@ interface PostServiceInterface{
     public function getPendingPosts(): array;
     public function getPostsBySubstrAtContent(string $substr): array;
     public function getPostsBySubstrAtTitle(string $substr): array;
+    public function findCategoryByName(string $categoryName): ?Type;
+    public function publishPost(int $postId, int $categoryId): void;
 }

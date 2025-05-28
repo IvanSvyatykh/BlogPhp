@@ -19,4 +19,5 @@ interface PostRepositoryInterface
     public function updatePostStatusById(int $postId, int $statusId): void;
     public function getPostBySubstrAtContent(string $substr): array;
     public function getPostsBySubstrAtTitle(string $substr): array;
+    public function updatePostTypeAndStatusById(int $postId, int $typeId, int $statusId): void;
 }

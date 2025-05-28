@@ -16,10 +16,10 @@ class CommentService implements CommentServiceInterface
         private EntityManager $entityManager
     ) {}
 
-    public function addComment(array $data, int $postId, int $authorId): Comment
+    public function addComment(string $content, int $postId, int $authorId): Comment
     {
         $comment = new Comment(
-            $data['content'],
+            $content,
             $this->entityManager->getReference(Post::class, $postId),
             $this->entityManager->getReference(User::class, $authorId),
         );

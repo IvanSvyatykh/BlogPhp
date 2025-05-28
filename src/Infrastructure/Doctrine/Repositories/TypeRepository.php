@@ -22,7 +22,19 @@ class TypeRepository implements TypeRepositoryInterface
             ->select('t')
             ->from(Type::class, 't')
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getArrayResult();
+    }
+
+    public function findCategoryByName(string $name): ?Type
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('t')
+            ->from(Type::class, 't')
+            ->andWhere('t.type = :name')
+            ->setParameter('name', $name)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     public function getTypeById(int $id): string
