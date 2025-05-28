@@ -169,10 +169,10 @@ class PostRepository implements PostRepositoryInterface
         return $query_builder
             ->select('p')
             ->from(Post::class, 'p')
-            ->where('to_tsvector(\'english\', p.content) @@ plainto_tsquery(\'english\', :query) = true')
-            ->setParameter('query', $substr)
+            ->where('p.content LIKE :substr and p.type is not null')
+            ->setParameter('substr', '%' .$substr. '%')
             ->getQuery()
-            ->getArrayResult();
+            ->getResult();
     }
 
     public function getPostsBySubstrAtTitle(string $substr): array
@@ -181,9 +181,9 @@ class PostRepository implements PostRepositoryInterface
         return $query_builder
             ->select('p')
             ->from(Post::class, 'p')
-            ->where('to_tsvector(\'english\', p.title) @@ plainto_tsquery(\'english\', :query) = true')
-            ->setParameter('query', $substr)
+            ->where('p.title LIKE :substr and p.type is not null')
+            ->setParameter('substr', '%' .$substr. '%')
             ->getQuery()
-            ->getArrayResult();
+            ->getResult();
     }
 }
