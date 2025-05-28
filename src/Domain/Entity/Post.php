@@ -48,7 +48,7 @@ class Post
     public function getCreatedAt(): \DateTime { return $this->createdAt; }
     public function getAuthor(): ?User { return $this->author; }
     public function getStatus(): Status { return $this->status; }
-    public function getType(): Type { return $this->type; }
+    public function getType(): ?Type { return $this->type; }
     public function setTitle(string $title): void
     {
         $this->title = $title;

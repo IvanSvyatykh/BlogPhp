@@ -66,7 +66,7 @@ final class GetPostsBySubstrHandler
             $posts = $this -> postService->getPostsBySubstrAtTitle($substr);
             foreach ($posts as $post)
             {
-                $author = $this->userService->getUserByLogin($post->getAuthor()->getId());
+                $author = $this->userService->getUserById($post->getAuthor()->getId());
                 $article = new ArticleResponse(
                     article_id: $post->getId(),
                     article_title: $post->getTitle(),
@@ -86,7 +86,7 @@ final class GetPostsBySubstrHandler
             $posts = $this -> postService->getPostsBySubstrAtContent($substr);
             foreach ($posts as $post)
             {
-                $author = $this->userService->getUserByLogin($post->getAuthor()->getId());
+                $author = $this->userService->getUserById($post->getAuthor()->getId());
                 $article = new ArticleResponse(
                     article_id: $post->getId(),
                     article_title: $post->getTitle(),

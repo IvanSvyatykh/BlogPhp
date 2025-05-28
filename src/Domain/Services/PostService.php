@@ -122,4 +122,10 @@ class PostService implements PostServiceInterface
         $publishedStatusId = $this->statusRepository->getPublishStatusId();
         $this->postRepository->updatePostTypeAndStatusById($postId, $categoryId, $publishedStatusId);
     }
+
+    public function getAllUnpublishedPosts(): array
+    {
+        $pendingStatusId = $this->statusRepository->getPendingStatusId();
+        return $this->postRepository->getUnpublished($pendingStatusId);
+    }
 }

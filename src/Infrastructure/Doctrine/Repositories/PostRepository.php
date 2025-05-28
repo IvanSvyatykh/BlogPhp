@@ -136,6 +136,18 @@ class PostRepository implements PostRepositoryInterface
             ->getArrayResult();
     }
 
+    public function getUnpublished(int $publishedStatusId): array
+    {
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('p')
+            ->from(Post::class, 'p')
+            ->where('p.status = :statusId')
+            ->setParameter('statusId', $publishedStatusId)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function getPostBySubstrAtContent(string $substr): array
     {
         $query_builder = $this -> entityManager ->createQueryBuilder();
