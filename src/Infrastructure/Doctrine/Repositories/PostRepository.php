@@ -169,7 +169,7 @@ class PostRepository implements PostRepositoryInterface
         return $query_builder
             ->select('p')
             ->from(Post::class, 'p')
-            ->where('p.content LIKE :substr and p.type is not null')
+            ->where('p.content LIKE :substr and p.type is not null and p.status =1')
             ->setParameter('substr', '%' .$substr. '%')
             ->getQuery()
             ->getResult();
@@ -181,7 +181,7 @@ class PostRepository implements PostRepositoryInterface
         return $query_builder
             ->select('p')
             ->from(Post::class, 'p')
-            ->where('p.title LIKE :substr and p.type is not null')
+            ->where('p.title LIKE :substr and p.type is not null and p.status =1')
             ->setParameter('substr', '%' .$substr. '%')
             ->getQuery()
             ->getResult();
@@ -193,7 +193,7 @@ class PostRepository implements PostRepositoryInterface
             ->createQueryBuilder()
             ->select(' p')
             ->from(Post::class, 'p')
-            ->where('p.type IN (:type) and p.type is not null')
+            ->where('p.type IN (:type) and p.type is not null and p.status =1')
             ->setParameter('type', $typeIds)
             ->getQuery()
             ->getResult();

@@ -13,7 +13,7 @@ final class GetUserCommentsMiddleware extends BaseValidationMiddleware
 {
     public function process(Request $request, Handler $handler): Response
     {
-        $data = $request->getParsedBody();
+        $data = $request->getQueryParams();
 
         $dto = new GetUserCommentsRequest();
         $dto->userLogin = $data['userLogin'] ?? '';

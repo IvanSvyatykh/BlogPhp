@@ -12,7 +12,7 @@ final class GetUnpublishedPostsMiddleware extends BaseValidationMiddleware
 {
     public function process(Request $request, Handler $handler): Response
     {
-        $data = $request->getParsedBody();
+        $data = $request->getQueryParams();
         $dto = new GetUnpublishedPostsRequest();
 
         $dto->userLogin = $data['userLogin'] ?? '';

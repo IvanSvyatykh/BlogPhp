@@ -14,7 +14,7 @@ class GetPostPartMiddleware implements MiddlewareInterface
 
     public function process(Request $request, Handler $handler): Response
     {
-        $data = $request->getParsedBody();
+        $data = $request->getQueryParams();
 
         $dto = new GetPostsRequest();
         $dto->substring = $data['substring'] ?? $data;

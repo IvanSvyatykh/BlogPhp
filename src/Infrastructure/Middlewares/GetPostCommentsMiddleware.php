@@ -11,7 +11,7 @@ class GetPostCommentsMiddleware extends BaseValidationMiddleware
 {
     public function process(Request $request, Handler $handler): Response
     {
-        $data = $request->getParsedBody();
+        $data = $request->getQueryParams();
 
         $dto = new GetCommentsByPostIdRequest();
         $dto->postId = $data['article_id'] ?? '';

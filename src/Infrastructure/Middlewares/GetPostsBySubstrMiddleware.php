@@ -15,7 +15,7 @@ final class GetPostsBySubstrMiddleware extends BaseValidationMiddleware
 {
     public function process(Request $request, Handler $handler): Response
     {
-        $body = (array)$request->getParsedBody();
+        $body = (array)$request->getQueryParams();
 
         $routeContext = RouteContext::fromRequest($request);
         $route = $routeContext->getRoute();
