@@ -3,6 +3,7 @@ import { JetView } from "webix-jet";
 import MainToolBar from "./maintoolbar";
 import { template } from "webix";
 import { checkAuthResponse } from "../auth"
+import { updateToolbarButtons } from "../utils";
 
 export default class Article extends JetView {
     posts = [];
@@ -22,21 +23,20 @@ export default class Article extends JetView {
                     $subview: MainToolBar
                 },
                 {
-                    
-                        
-                            view: "scrollview",
-                            scroll: "y",
-                            body: {
-                                localId: "postsLayout",
-                                rows: []
-                            }
-                        
+
+
+                    view: "scrollview",
+                    scroll: "y",
+                    body: {
+                        localId: "postsLayout",
+                        rows: []
+                    }
+
                 },
                 {
                     view: "form",
-                    id: "postForm",
-                    width: 400,
-                    gravity: 1,
+                    localId: "postForm",
+                    width: 600,
                     hidden: true,
                     margin: 10,
                     padding: { top: 10, right: 10, left: 10, bottom: 10 },
@@ -45,30 +45,104 @@ export default class Article extends JetView {
                         {
                             cols: [
                                 {
-                                    view: "button",
-                                    template: `<img src = './src/styles/add.svg', class='add_button'>`,
-                                    click: () => this.publishPost(id, category)
-                                },
-
-                                {
                                     rows: [
-                                        { template: `<img src = './src/styles/user.svg', class='user_post_form'>` },
-                                        { view: "text", name: "login", readonly: true, css: "auth-text" },
+                                        {
+                                            template: `
+                                                <div style='text-align:center'>
+                                                    <img src='./src/styles/user.svg' class='user_post_edit_form' style='width:60px;height:60px;'/>
+                                                </div>`,
+                                            borderless: true,
+                                            height: 70
+                                        },
+                                        {
+                                            cols: [
+                                                {},
+                                                {
+                                                    view: "label",
+                                                    localId: "postAuthorLabel",
+                                                    label: "",
+                                                    align: "center",
+                                                    css: "auth-text"
+                                                },
+                                                {}
+                                            ]
+                                        },
+                                        { height: 10 }
                                     ]
                                 },
-
-                                {
-                                    view: "button",
-                                    template: `<img src = './src/styles/delete.svg', class='add_button'>`,
-                                    click: () => this.rejectPost(id)
-                                }
+                                { width: 30 }
                             ]
                         },
+                        
                         {
-                            view: "text", name: "content"
+                            cols: [
+                                {
+                                    
+                                    rows: [
+                                        {
+                                            template: "<div style='text-align:center;'>Категория</div>",
+                                            borderless: true,
+                                            height: 40
+                                        },
+                                        {
+                                            view: "combo",
+                                            name: "category",
+                                            localId: "categoryCombo",
+                                            placeholder: "Выберите категорию",
+                                            options: [],
+                                            required: true,
+                                            height: 50
+                                        },
+                                        {
+                                            view: "textarea",
+                                            name: "content",
+                                            height: 150,
+                                            readonly: true,
+                                            css: "readonly-area"
+                                        }
+                                    ]
+                                },
+                                { width: 30 }
+                            ]
+                        },
+                        
+                        {
+                            cols: [
+                                
+                                {
+                                    view: "button",
+                                    localId: "publishBtn",
+                                    width: 50,
+                                    css: "icon-button",
+                                    tooltip: "Опубликовать",
+                                    template: `<img src='./src/styles/add.svg' class='add_button'>`,
+                                    click: () => {
+                                        const form = this.$$("postForm");
+                                        const values = form.getValues();
+                                        this.publishPost(values.id, values.category);
+                                    }
+                                },
+                                {},
+                                {
+                                    view: "button",
+                                    localId: "rejectBtn",
+                                    width: 50,
+                                    css: "icon-button",
+                                    tooltip: "Отклонить",
+                                    template: `<img src='./src/styles/delete.svg' class='add_button'>`,
+                                    click: () => {
+                                        const form = this.$$("postForm");
+                                        const values = form.getValues();
+                                        this.rejectPost(values.id);
+                                    }
+                                }
+                                
+                            ]
                         }
                     ]
                 }
+                
+
             ]
         };
     }
@@ -86,7 +160,7 @@ export default class Article extends JetView {
     }
 
     async init() {
-        await this.loadCategories(), 
+        await this.loadCategories(),
         await this.loadPosts();
     }
 
@@ -104,11 +178,12 @@ export default class Article extends JetView {
             checkAuthResponse(response);
             this.categories = response;
 
-            const combo = this.$$("postForm")?.elements.find(el => el.name === "category");
+            const combo = this.$$("categoryCombo");
             if (combo) {
                 combo.define("options", this.categories);
                 combo.refresh();
             }
+
         } catch (error) {
             console.log(error);
         }
@@ -120,16 +195,14 @@ export default class Article extends JetView {
             category_name: category
         }
         try {
-            const raw = await webix.ajax().patch(`${BASE_URL}/posts/publish`, JSON.stringify(payload)).then(() => {
-                webix.message("Пост опубликован");
-                this.loadPosts();
-                $$("postForm").hide();
-            });
+            const raw = await webix.ajax().patch(`${BASE_URL}/posts/publish`, JSON.stringify(payload));
             const response = await raw.json();
             checkAuthResponse(response);
-
-
+            webix.message("Пост опубликован");
+            await this.loadPosts();
+            this.$$("postForm").hide();
         } catch (error) {
+            webix.message(error.responseText);
             console.log(error);
         }
     }
@@ -139,14 +212,12 @@ export default class Article extends JetView {
             postId: id
         }
         try {
-            const raw = await webix.ajax().patch(`${BASE_URL}/posts/reject`, JSON.stringify(payload)).then(() => {
-                webix.message("Пост отклонен");
-                this.loadPosts();
-                $$("postForm").hide();
-            });
+            const raw = await webix.ajax().patch(`${BASE_URL}/posts/reject`, JSON.stringify(payload));
             const response = await raw.json();
-            checkAuthResponse(response);
 
+            webix.message("Пост отклонен");
+            this.loadPosts();
+            this.$$("postForm").hide();
         } catch (error) {
             console.log(error);
         }
@@ -154,7 +225,8 @@ export default class Article extends JetView {
 
     renderPosts() {
         const layout = this.$$("postsLayout");
-        layout.clearAll();
+        layout.getChildViews().forEach(v => layout.removeView(v));
+
 
         const postViews = this.posts.map(post => {
             return {
@@ -162,38 +234,61 @@ export default class Article extends JetView {
                     {
                         rows: [
                             {
+                                view: "button",
                                 template: `<img src='./src/styles/user.svg' class='user_post_form'>`,
-                                height: 100,
-                                borderless: true
+                                height: 50,
+                                borderless: true,
+                                click: () => {
+                                    this.openPostForm(post);
+                                }
                             },
                             { view: "label", label: post.author.name, align: "center" }
                         ],
                         width: 120
                     },
                     {
-                        rows: [
+                        cols: [
+                            {
+                                view: "text",
+                                name: "id",
+                                hidden: true
+                            },
+
                             {
                                 view: "label",
                                 label: post.title,
-                                css: "post-title"
+                                css: "post-title",
+                                align: "center"
                             },
                             {
                                 view: "label",
                                 label: this.translateStatus(post.status.status),
-                                css: "post-status"
+                                css: "post-status",
+                                align: "center"
                             }
                         ]
                     }
                 ],
                 css: "post-container",
                 borderless: true,
-                padding: 10,
-                on: {
-                    onItemClick: () => this.openPostForm(post)
-                }
+                padding: 10
             };
         });
 
         layout.addView({ rows: postViews });
+    }
+
+    openPostForm(post) {
+        const form = this.$$("postForm");
+        form.setValues({
+            id: post.id,
+            content: post.content,
+            category: this.categories.includes(post.type?.type) ? post.type.type : ""
+        });
+        this.$$("postAuthorLabel").setValue(post.author.name);
+        form.show();
+    }
+    ready() {
+        updateToolbarButtons($$("articleButton"));
     }
 }

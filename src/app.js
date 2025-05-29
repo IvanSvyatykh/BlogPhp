@@ -32,8 +32,6 @@ class MyApp extends JetApp {
     }
 }
 
-
-
 document.addEventListener("DOMContentLoaded", () => {
     const app = new MyApp();
     setupAuthRedirect(app);
