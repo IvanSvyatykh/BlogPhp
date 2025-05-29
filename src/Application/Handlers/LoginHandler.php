@@ -13,7 +13,8 @@ final class LoginHandler
 {
     public function __construct(
         private RegistrationAndAuthorizationServiceInterface $registrationAndAuthorizationService,
-    ){}
+    ) {
+    }
 
     public function __invoke(Request $request, Response $response): Response
     {

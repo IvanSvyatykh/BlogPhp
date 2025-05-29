@@ -13,7 +13,10 @@ use Firebase\JWT\Key;
 
 class ModeratorMiddleware implements MiddlewareInterface
 {
-    public function __construct(private UserServiceInterface $userService) {}
+    public function __construct(private UserServiceInterface $userService)
+    {
+    }
+
     public function process(Request $request, Handler $handler): Response
     {
         $email = $this->extractEmailFromToken($request, $handler);

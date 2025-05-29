@@ -11,7 +11,6 @@ use Symfony\Component\Validator\Validation;
 
 class GetPostPartMiddleware implements MiddlewareInterface
 {
-
     public function process(Request $request, Handler $handler): Response
     {
         $data = $request->getQueryParams();

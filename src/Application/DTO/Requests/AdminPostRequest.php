@@ -9,5 +9,4 @@ class AdminPostRequest
     #[Assert\NotBlank(message: "Post ID is required")]
     #[Assert\Type(type: "int")]
     public int $postId;
-
 }

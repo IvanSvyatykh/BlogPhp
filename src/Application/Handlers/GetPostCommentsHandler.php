@@ -10,7 +10,8 @@ class GetPostCommentsHandler
 {
     public function __construct(
         private readonly CommentServiceInterface $commentService,
-    ){}
+    ) {
+    }
 
     public function __invoke(Request $request, Response $response): Response
     {

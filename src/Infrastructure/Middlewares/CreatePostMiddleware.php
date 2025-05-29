@@ -1,7 +1,6 @@
 <?php
 
 
-
 namespace Pri301\Blog\Infrastructure\Middlewares;
 
 use Pri301\Blog\Application\DTO\Requests\CreatePostRequest;
@@ -12,7 +11,6 @@ use Symfony\Component\Validator\Validation;
 
 final class CreatePostMiddleware extends BaseValidationMiddleware
 {
-
     public function process(Request $request, Handler $handler): Response
     {
         $data = $request->getParsedBody();

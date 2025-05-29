@@ -1,7 +1,7 @@
 let jetApp = null;
 
 export function setupAuthRedirect(appInstance) {
-	jetApp = appInstance;
+    jetApp = appInstance;
 }
 
 const TOKEN_KEY = "jwt_token";
@@ -52,6 +52,7 @@ export function setupAuthInterceptor() {
         }
     });
 }
+
 export async function checkAuthResponse(response) {
     if (response?.error?.message === "Unauthorized" || response === null) {
         clearToken();

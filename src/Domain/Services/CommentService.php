@@ -14,7 +14,8 @@ class CommentService implements CommentServiceInterface
     public function __construct(
         private CommentRepositoryInterface $commentRepository,
         private EntityManager $entityManager
-    ) {}
+    ) {
+    }
 
     public function addComment(string $content, int $postId, int $authorId): Comment
     {

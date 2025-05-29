@@ -1,8 +1,8 @@
-import { JetView } from "webix-jet";
+import {JetView} from "webix-jet";
 import "webix/webix.js";
 import MainToolBar from "./maintoolbar";
-import { objectToQueryString, updateToolbarButtons } from "../utils";
-import { checkAuthResponse } from "../auth";
+import {objectToQueryString, updateToolbarButtons} from "../utils";
+import {checkAuthResponse} from "../auth";
 
 export default class UserView extends JetView {
     config() {
@@ -14,7 +14,7 @@ export default class UserView extends JetView {
 
                 {
                     margin: 10,
-                    padding: { top: 10, right: 10, left: 10, bottom: 10 },
+                    padding: {top: 10, right: 10, left: 10, bottom: 10},
                     gravity: 3,
                     cols: [
                         {
@@ -26,11 +26,11 @@ export default class UserView extends JetView {
                                     select: true,
                                     columns: [
 
-                                        { id: "id", header: "ID", hidden: true },
+                                        {id: "id", header: "ID", hidden: true},
 
-                                        { id: "login", header: "Логин", readonly: true, fillspace: true },
+                                        {id: "login", header: "Логин", readonly: true, fillspace: true},
 
-                                        { id: "role", header: "Роль", readonly: true, fillspace: true },
+                                        {id: "role", header: "Роль", readonly: true, fillspace: true},
 
                                         {
                                             id: "isBanned",
@@ -45,16 +45,16 @@ export default class UserView extends JetView {
                                     ],
                                     scroll: false,
                                     on:
-                                    {
-                                        onItemClick: (id) => this.editItem(id),
-                                        onCheck: (rowId, columnId, state) => {
-                                            const datatable = this.$$("userDataTable");
-                                            const banned = !!state;
+                                        {
+                                            onItemClick: (id) => this.editItem(id),
+                                            onCheck: (rowId, columnId, state) => {
+                                                const datatable = this.$$("userDataTable");
+                                                const banned = !!state;
 
-                                            const item = datatable.getItem(rowId);
-                                            this.switchActive(item.id, banned);
+                                                const item = datatable.getItem(rowId);
+                                                this.switchActive(item.id, banned);
+                                            }
                                         }
-                                    }
                                 }
                             ]
                         },
@@ -68,7 +68,7 @@ export default class UserView extends JetView {
                             gravity: 1,
                             hidden: true,
                             margin: 10,
-                            padding: { top: 10, right: 10, left: 10, bottom: 10 },
+                            padding: {top: 10, right: 10, left: 10, bottom: 10},
                             css: "user_edit_form",
                             elements: [
                                 {
@@ -82,10 +82,10 @@ export default class UserView extends JetView {
                                     name: "name",
                                     readonly: true,
                                     attributes: {
-                                        style: "text-align: center; border : none; font-weight: bold"    
-                                      }
-                                    
-                                },                          
+                                        style: "text-align: center; border : none; font-weight: bold"
+                                    }
+
+                                },
 
                                 {
                                     view: "label",
@@ -99,7 +99,7 @@ export default class UserView extends JetView {
                                     readonly: true,
                                     css: "auth-text"
                                 },
-                                                                
+
                                 {
                                     view: "label",
                                     label: "Создан",
@@ -112,7 +112,7 @@ export default class UserView extends JetView {
                                     readonly: true,
                                     css: "auth-text"
                                 },
-                                
+
                                 {
                                     view: "label",
                                     label: "Роль",
@@ -138,7 +138,7 @@ export default class UserView extends JetView {
                                     align: "center",
                                     css: "auth-label"
                                 },
-                        
+
                                 {
                                     view: "button",
                                     value: "Закрыть",
@@ -201,7 +201,7 @@ export default class UserView extends JetView {
             });
             const response = await raw.json();
             checkAuthResponse(response);
-        } catch(error) {
+        } catch (error) {
             console.log(error);
         }
     }

@@ -11,7 +11,8 @@ final class ToggleLikeHandler
 {
     public function __construct(
         private LikeServiceInterface $likeService,
-    ){}
+    ) {
+    }
 
     public function __invoke(Request $request, Response $response): Response
     {

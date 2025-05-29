@@ -12,7 +12,6 @@ use Symfony\Component\Validator\Validation;
 
 class AdminPostMiddleware implements MiddlewareInterface
 {
-
     public function process(Request $request, Handler $handler): Response
     {
         $data = $request->getParsedBody();

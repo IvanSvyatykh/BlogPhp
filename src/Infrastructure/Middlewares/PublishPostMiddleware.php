@@ -9,7 +9,6 @@ use Psr\Http\Server\RequestHandlerInterface as Handler;
 
 class PublishPostMiddleware extends BaseValidationMiddleware
 {
-
     public function process(Request $request, Handler $handler): Response
     {
         $data = $request->getParsedBody();

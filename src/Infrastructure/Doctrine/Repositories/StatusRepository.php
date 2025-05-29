@@ -29,10 +29,11 @@ class StatusRepository implements StatusRepositoryInterface
             ->getQuery()
             ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
 
-        return $result ? (int) $result : null;
+        return $result ? (int)$result : null;
     }
 
-    public function getPendingStatusId(): ?int{
+    public function getPendingStatusId(): ?int
+    {
         $result = $this->entityManager
             ->createQueryBuilder()
             ->select('s.id')
@@ -44,7 +45,8 @@ class StatusRepository implements StatusRepositoryInterface
         return $result ? (int)$result : null;
     }
 
-    public function getRejectedStatusId(): ?int{
+    public function getRejectedStatusId(): ?int
+    {
         $result = $this->entityManager
             ->createQueryBuilder()
             ->select('s.id')
@@ -54,6 +56,6 @@ class StatusRepository implements StatusRepositoryInterface
             ->getQuery()
             ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
 
-        return $result ? (int) $result : null;
+        return $result ? (int)$result : null;
     }
 }

@@ -16,13 +16,12 @@ use Slim\Psr7\Response;
 final class GetPublishedPostsHandler
 {
     public function __construct(
-        private readonly PostServiceInterface     $postService,
-        private readonly UserServiceInterface     $userService,
-        private readonly LikeServiceInterface     $likeService,
-        private readonly TypeServiceInterface     $typeService,
+        private readonly PostServiceInterface $postService,
+        private readonly UserServiceInterface $userService,
+        private readonly LikeServiceInterface $likeService,
+        private readonly TypeServiceInterface $typeService,
         private readonly PostTagsServiceInterface $postTagsService,
-    )
-    {
+    ) {
     }
 
     public function __invoke(Request $request, Response $response): Response

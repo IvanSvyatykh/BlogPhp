@@ -12,8 +12,7 @@ final class DeletePostHandler
     public function __construct(
         private readonly PostServiceInterface $postService,
         private readonly UserServiceInterface $userService,
-    )
-    {
+    ) {
     }
 
     public function __invoke(Request $request, Response $response): Response

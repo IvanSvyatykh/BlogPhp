@@ -10,7 +10,7 @@ use Pri301\Blog\Infrastructure\Middlewares\JWTMiddleware;
 use Slim\App;
 
 return function (App $app) {
-    $app->get('/comments/by-user', GetUserCommentsHandler::class) // +
+    $app->get('/comments/by-user', GetUserCommentsHandler::class)
         ->add(GetUserCommentsMiddleware::class)
         ->add(JWTMiddleware::class);
     $app->post('/comments', CreateCommentHandler::class)

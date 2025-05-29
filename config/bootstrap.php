@@ -1,4 +1,5 @@
 <?php
+
 use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
@@ -18,12 +19,12 @@ $paths = [__DIR__ . '/../src/Domain/Entity'];
 $isDevMode = true;
 
 $dbParams = [
-    'driver'   => 'pdo_pgsql',
-    'host'     => $_ENV['POSTGRES_DOMAIN'] ?? 'localhost',
-    'user'     => $_ENV['POSTGRES_USER'] ??'postgres',
+    'driver' => 'pdo_pgsql',
+    'host' => $_ENV['POSTGRES_DOMAIN'] ?? 'localhost',
+    'user' => $_ENV['POSTGRES_USER'] ?? 'postgres',
     'password' => $_ENV['POSTGRES_PASSWORD'] ?? 'postgres',
-    'dbname'   => $_ENV['POSTGRES_DB'] ??'postgres',
-    'port'     => $_ENV['POSTGRES_PORT'] ?? 5432,
+    'dbname' => $_ENV['POSTGRES_DB'] ?? 'postgres',
+    'port' => $_ENV['POSTGRES_PORT'] ?? 5432,
 ];
 
 $config = ORMSetup::createAttributeMetadataConfiguration($paths, $isDevMode);

@@ -13,7 +13,7 @@ class GetPostsRequest
 
     #[Assert\NotBlank(message: "Article part is required")]
     #[Assert\Choice(
-        choices: ["AUTHOR", "ARTICLE_TEXT", "ARTICLE_NAME" , "NONE"],
+        choices: ["AUTHOR", "ARTICLE_TEXT", "ARTICLE_NAME", "NONE"],
         message: "Article part must be one of: AUTHOR, ARTICLE_TEXT, ARTICLE_NAME , NONE"
     )]
     public string $articlePart;

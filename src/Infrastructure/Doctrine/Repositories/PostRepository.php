@@ -27,11 +27,10 @@ class PostRepository implements PostRepositoryInterface
             ->setParameter('id', $id)
             ->getQuery()
             ->getOneOrNullResult();
-
     }
 
     //it's for getting articles that make user
-    public function findAllByUser(int $authorId , int $limit = 10, int $offset = 0): array
+    public function findAllByUser(int $authorId, int $limit = 10, int $offset = 0): array
     {
         return $this->entityManager
             ->createQueryBuilder()
@@ -47,7 +46,7 @@ class PostRepository implements PostRepositoryInterface
     }
 
 
-    public function getArticlesByStatus(int $statusId , int $limit = 10, int $offset = 0 ): array
+    public function getArticlesByStatus(int $statusId, int $limit = 10, int $offset = 0): array
     {
         return $this->entityManager
             ->createQueryBuilder()
@@ -61,7 +60,7 @@ class PostRepository implements PostRepositoryInterface
             ->getArrayResult();
     }
 
-    public function findAll( int $limit = 10, int $offset = 0 ) : array
+    public function findAll(int $limit = 10, int $offset = 0): array
     {
         return $this->entityManager
             ->createQueryBuilder()
@@ -119,10 +118,11 @@ class PostRepository implements PostRepositoryInterface
             ->getQuery()
             ->execute();
     }
+
     /**
      * @return Post[]
      */
-    public function findPublishedByUserId(int $userId,int $publishStatusId): array
+    public function findPublishedByUserId(int $userId, int $publishStatusId): array
     {
         return $this->entityManager
             ->createQueryBuilder()
@@ -165,24 +165,24 @@ class PostRepository implements PostRepositoryInterface
 
     public function getPostBySubstrAtContent(string $substr): array
     {
-        $query_builder = $this -> entityManager ->createQueryBuilder();
+        $query_builder = $this->entityManager->createQueryBuilder();
         return $query_builder
             ->select('p')
             ->from(Post::class, 'p')
             ->where('p.content LIKE :substr and p.type is not null and p.status =1')
-            ->setParameter('substr', '%' .$substr. '%')
+            ->setParameter('substr', '%' . $substr . '%')
             ->getQuery()
             ->getResult();
     }
 
     public function getPostsBySubstrAtTitle(string $substr): array
     {
-        $query_builder = $this -> entityManager ->createQueryBuilder();
+        $query_builder = $this->entityManager->createQueryBuilder();
         return $query_builder
             ->select('p')
             ->from(Post::class, 'p')
             ->where('p.title LIKE :substr and p.type is not null and p.status =1')
-            ->setParameter('substr', '%' .$substr. '%')
+            ->setParameter('substr', '%' . $substr . '%')
             ->getQuery()
             ->getResult();
     }

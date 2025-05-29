@@ -9,5 +9,6 @@ class CommentResponse
         public string $comment_text,
         public string $comment_author_login,
         public string $comment_author_name
-    ) {}
+    ) {
+    }
 }

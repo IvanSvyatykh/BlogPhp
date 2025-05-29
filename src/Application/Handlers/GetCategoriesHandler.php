@@ -10,7 +10,8 @@ class GetCategoriesHandler
 {
     public function __construct(
         private readonly PostServiceInterface $postService
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request, Response $response): Response
     {

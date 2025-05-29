@@ -20,7 +20,10 @@ use Pri301\Blog\Application\Handlers\GetPostsHandler;
 use Pri301\Blog\Domain\Repository\PostTagsRepositoryInterface;
 use Pri301\Blog\Application\Handlers\GetUserCommentsHandler;
 use Pri301\Blog\Domain\Repository\LikeRepositoryInterface;
-use Pri301\Blog\Domain\Repository\CommentRepositoryInterface;;
+use Pri301\Blog\Domain\Repository\CommentRepositoryInterface;
+
+;
+
 use Pri301\Blog\Domain\Repository\PostRepositoryInterface;
 use Pri301\Blog\Domain\Repository\StatusRepositoryInterface;
 use Pri301\Blog\Domain\Repository\TagRepositoryInterface;
@@ -80,18 +83,18 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 return function (Container $container) {
     $entityManager = require __DIR__ . '/bootstrap.php';
     #Зависимости для Middleware
-    $container->set(ValidatorInterface::class,function (Container $container) {
+    $container->set(ValidatorInterface::class, function (Container $container) {
         return Validation::createValidatorBuilder()
             ->enableAttributeMapping()
             ->getValidator();
     });
-    $container->set(GetUserNameByLoginMiddleware::class,function (Container $container) {
+    $container->set(GetUserNameByLoginMiddleware::class, function (Container $container) {
         return new GetUserNameByLoginMiddleware();
     });
-    $container->set(GetPostsBySubstrForUserMiddleware::class,function (Container $container) {
+    $container->set(GetPostsBySubstrForUserMiddleware::class, function (Container $container) {
         return new GetPostsBySubstrForUserMiddleware();
     });
-    $container->set(LoginUserMiddleware::class,function(Container $container){
+    $container->set(LoginUserMiddleware::class, function (Container $container) {
         return new LoginUserMiddleware($container->get(ValidatorInterface::class));
     });
     $container->set(RegisterUserMiddleware::class, function ($container) {
@@ -100,35 +103,47 @@ return function (Container $container) {
     $container->set(JWTMiddleware::class, function ($container) {
         return new JWTMiddleware($_ENV['JWT_SECRET'], $_ENV["ALGORITHM"]);
     });
-    $container->set(GetPostCommentsMiddleware::class,fn() => new GetPostCommentsMiddleware($container->get(ValidatorInterface::class)));
-    $container->set(PublishPostMiddleware::class, fn() => new PublishPostMiddleware($container->get(ValidatorInterface::class)));
-    $container->set(CreateCommentMiddleware::class, fn() => new CreateCommentMiddleware($container->get(ValidatorInterface::class)));
+    $container->set(
+        GetPostCommentsMiddleware::class,
+        fn() => new GetPostCommentsMiddleware($container->get(ValidatorInterface::class))
+    );
+    $container->set(
+        PublishPostMiddleware::class,
+        fn() => new PublishPostMiddleware($container->get(ValidatorInterface::class))
+    );
+    $container->set(
+        CreateCommentMiddleware::class,
+        fn() => new CreateCommentMiddleware($container->get(ValidatorInterface::class))
+    );
     $container->set(ToggleLikeMiddleware::class, fn() => new ToggleLikeMiddleware());
-    $container->set(CreatePostMiddleware::class, fn() => new CreatePostMiddleware($container->get(ValidatorInterface::class)));
-    $container->set(DeletePostMiddleware::class, function(Container $container){
+    $container->set(
+        CreatePostMiddleware::class,
+        fn() => new CreatePostMiddleware($container->get(ValidatorInterface::class))
+    );
+    $container->set(DeletePostMiddleware::class, function (Container $container) {
         return new DeletePostMiddleware($container->get(ValidatorInterface::class));
     });
-    $container->set(GetPublishedPostsMiddleware::class, function(Container $container) {
+    $container->set(GetPublishedPostsMiddleware::class, function (Container $container) {
         return new GetPublishedPostsMiddleware($container->get(ValidatorInterface::class));
     });
-    $container->set(GetUnpublishedPostsMiddleware::class, function(Container $container) {
+    $container->set(GetUnpublishedPostsMiddleware::class, function (Container $container) {
         return new GetUnpublishedPostsMiddleware($container->get(ValidatorInterface::class));
     });
-    $container->set(GetUserCommentsMiddleware::class, function(Container $container) {
+    $container->set(GetUserCommentsMiddleware::class, function (Container $container) {
         return new GetUserCommentsMiddleware($container->get(ValidatorInterface::class));
     });
-    $container->set(ToggleLikeMiddleware::class,fn() => new ToggleLikeMiddleware());
+    $container->set(ToggleLikeMiddleware::class, fn() => new ToggleLikeMiddleware());
     $container->set(AdminPostMiddleware::class, fn() => new AdminPostMiddleware());
     $container->set(GetAllPostsMiddleware::class, fn() => new GetAllPostsMiddleware());
     $container->set(GetUserListMiddleware::class, fn() => new GetUserListMiddleware());
     $container->set(SwitchUserActivityMiddleware::class, fn() => new SwitchUserActivityMiddleware());
-    $container->set(AdminMiddleware::class, function(Container $c) {
+    $container->set(AdminMiddleware::class, function (Container $c) {
         return new AdminMiddleware($c->get(UserServiceInterface::class));
     });
-    $container->set(ModeratorMiddleware::class, function(Container $c) {
+    $container->set(ModeratorMiddleware::class, function (Container $c) {
         return new ModeratorMiddleware($c->get(UserServiceInterface::class));
     });
-    $container->set(AdminModeratorMiddleware::class, function(Container $c) {
+    $container->set(AdminModeratorMiddleware::class, function (Container $c) {
         return new AdminModeratorMiddleware($c->get(UserServiceInterface::class));
     });
     #Зависимости для БД
@@ -165,14 +180,20 @@ return function (Container $container) {
         );
     });
     $container->set(LikeServiceInterface::class, function (Container $c) {
-        return new LikeService($c->get(LikeRepositoryInterface::class), $c->get(UserRepositoryInterface::class), $c->get(EntityManager::class));
+        return new LikeService(
+            $c->get(LikeRepositoryInterface::class),
+            $c->get(UserRepositoryInterface::class),
+            $c->get(EntityManager::class)
+        );
     });
     $container->set(PostServiceInterface::class, function (Container $c) {
-        return new PostService($c->get(PostRepositoryInterface::class), $c->get(EntityManager::class),
+        return new PostService(
+            $c->get(PostRepositoryInterface::class), $c->get(EntityManager::class),
             $c->get(StatusRepositoryInterface::class),
             $c->get(TagRepositoryInterface::class),
             $c->get(PostTagsRepositoryInterface::class),
-            $c->get(TypeRepositoryInterface::class),);
+            $c->get(TypeRepositoryInterface::class),
+        );
     });
     $container->set(RegistrationAndAuthorizationServiceInterface::class, function (Container $c) {
         return new RegistrationAndAuthorizationAndAuthorizationService($c->get(UserRepositoryInterface::class));
@@ -200,7 +221,9 @@ return function (Container $container) {
         return new CreatePostHandler($c->get(PostServiceInterface::class), $c->get(UserServiceInterface::class));
     });
     $container->set(GetUserCommentsHandler::class, function (Container $c) {
-        return new GetUserCommentsHandler($c->get(CommentServiceInterface::class), $c->get(UserServiceInterface::class));
+        return new GetUserCommentsHandler(
+            $c->get(CommentServiceInterface::class), $c->get(UserServiceInterface::class)
+        );
     });
 
     $container->set(GetPublishedPostsHandler::class, function (Container $c) {
@@ -271,7 +294,7 @@ return function (Container $container) {
             $c->get(PostTagsServiceInterface::class),
         );
     });
-    $container->set(GetUserNameByLoginHandler::class,function (Container $c) {
+    $container->set(GetUserNameByLoginHandler::class, function (Container $c) {
         return new GetUserNameByLoginHandler($c->get(UserServiceInterface::class));
     });
 };

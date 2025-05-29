@@ -1,4 +1,4 @@
-import { JetView } from "webix-jet";
+import {JetView} from "webix-jet";
 import MainToolBar from "./maintoolbar";
 
 export default class MainLayout extends JetView {

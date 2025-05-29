@@ -17,7 +17,6 @@ class RegistrationAndAuthorizationAndAuthorizationService implements Registratio
     {
     }
 
-
     public function register(string $username, string $login, string $password): RegisterUserResponse
     {
         $anotherUserWithThisLogin = $this->userRepository->findByLogin($login);

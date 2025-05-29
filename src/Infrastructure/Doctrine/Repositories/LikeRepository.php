@@ -46,12 +46,12 @@ class LikeRepository implements LikeRepositoryInterface
             ->getQuery()
             ->getSingleScalarResult();
 
-        return (bool) $result;
+        return (bool)$result;
     }
 
     public function countLikes(int $postId): int
     {
-        return $this ->entityManager
+        return $this->entityManager
             ->createQueryBuilder()
             ->select('count(l.id)')
             ->from(Like::class, 'l')

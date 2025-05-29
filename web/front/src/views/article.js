@@ -1,12 +1,13 @@
-import { JetView } from "webix-jet";
+import {JetView} from "webix-jet";
 
 import MainToolBar from "./maintoolbar";
-import { template } from "webix";
-import { checkAuthResponse } from "../auth"
+import {template} from "webix";
+import {checkAuthResponse} from "../auth"
 
 export default class Article extends JetView {
     posts = [];
     categories = [];
+
     translateStatus(status) {
         const map = {
             "PENDING": "Ожидает",
@@ -15,6 +16,7 @@ export default class Article extends JetView {
         };
         return map[status] || status;
     }
+
     config() {
         return {
             cols: [
@@ -22,15 +24,15 @@ export default class Article extends JetView {
                     $subview: MainToolBar
                 },
                 {
-                    
-                        
-                            view: "scrollview",
-                            scroll: "y",
-                            body: {
-                                localId: "postsLayout",
-                                rows: []
-                            }
-                        
+
+
+                    view: "scrollview",
+                    scroll: "y",
+                    body: {
+                        localId: "postsLayout",
+                        rows: []
+                    }
+
                 },
                 {
                     view: "form",
@@ -39,7 +41,7 @@ export default class Article extends JetView {
                     gravity: 1,
                     hidden: true,
                     margin: 10,
-                    padding: { top: 10, right: 10, left: 10, bottom: 10 },
+                    padding: {top: 10, right: 10, left: 10, bottom: 10},
                     css: "post_form",
                     elements: [
                         {
@@ -52,8 +54,8 @@ export default class Article extends JetView {
 
                                 {
                                     rows: [
-                                        { template: `<img src = './src/styles/user.svg', class='user_post_form'>` },
-                                        { view: "text", name: "login", readonly: true, css: "auth-text" },
+                                        {template: `<img src = './src/styles/user.svg', class='user_post_form'>`},
+                                        {view: "text", name: "login", readonly: true, css: "auth-text"},
                                     ]
                                 },
 
@@ -86,8 +88,8 @@ export default class Article extends JetView {
     }
 
     async init() {
-        await this.loadCategories(), 
-        await this.loadPosts();
+        await this.loadCategories(),
+            await this.loadPosts();
     }
 
     postItem(id) {
@@ -166,7 +168,7 @@ export default class Article extends JetView {
                                 height: 100,
                                 borderless: true
                             },
-                            { view: "label", label: post.author.name, align: "center" }
+                            {view: "label", label: post.author.name, align: "center"}
                         ],
                         width: 120
                     },
@@ -194,6 +196,6 @@ export default class Article extends JetView {
             };
         });
 
-        layout.addView({ rows: postViews });
+        layout.addView({rows: postViews});
     }
 }

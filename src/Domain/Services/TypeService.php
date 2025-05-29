@@ -11,11 +11,12 @@ class TypeService implements TypeServiceInterface
 {
     public function __construct(
         private TypeRepositoryInterface $typeRepository
-    ) {}
+    ) {
+    }
+
     public function getTypeById(int $typeId): string
     {
-        return  $this->typeRepository->getTypeById($typeId);
-
+        return $this->typeRepository->getTypeById($typeId);
     }
 
 }

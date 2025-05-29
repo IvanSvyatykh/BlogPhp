@@ -1,4 +1,5 @@
 <?php
+
 namespace Pri301\Blog\Application\DTO\Requests;
 
 use Pri301\Blog\DTO\Assert;

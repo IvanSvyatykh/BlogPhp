@@ -10,11 +10,12 @@ class UserService implements UserServiceInterface
 {
     public function __construct(
         private UserRepositoryInterface $userRepository
-    ) {}
+    ) {
+    }
 
     public function switchBanUser(int $userId, bool $active): void
     {
-       $this->userRepository->setUserBannedStatus($userId, $active);
+        $this->userRepository->setUserBannedStatus($userId, $active);
     }
 
     public function getUsersList(): array
@@ -35,6 +36,5 @@ class UserService implements UserServiceInterface
     public function getUserIdBySubstrAtName(string $substr): array
     {
         return $this->userRepository->getUsersIdBySubstrAtName($substr);
-
     }
 }

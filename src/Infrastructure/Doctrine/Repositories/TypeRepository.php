@@ -1,4 +1,5 @@
 <?php
+
 namespace Pri301\Blog\Infrastructure\Doctrine\Repositories;
 
 use Doctrine\ORM\AbstractQuery;
@@ -55,7 +56,7 @@ class TypeRepository implements TypeRepositoryInterface
             ->select('t.id')
             ->from(Type::class, 't')
             ->where('t.type like :name')
-            ->setParameter('name', '%'.$substr.'%')
+            ->setParameter('name', '%' . $substr . '%')
             ->getQuery()
             ->getResult();
         return $result;

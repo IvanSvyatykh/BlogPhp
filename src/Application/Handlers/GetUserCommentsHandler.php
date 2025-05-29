@@ -12,8 +12,7 @@ final class GetUserCommentsHandler
     public function __construct(
         private readonly CommentServiceInterface $commentService,
         private readonly UserServiceInterface $userService,
-    )
-    {
+    ) {
     }
 
     public function __invoke(Request $request, Response $response): Response
@@ -21,7 +20,7 @@ final class GetUserCommentsHandler
         $dto = $request->getAttribute('dto');
 
         $login = $dto->userLogin;
-        $user  = $this->userService->getUserByLogin($login);
+        $user = $this->userService->getUserByLogin($login);
 
         if (!$user) {
             return $this->errorResponse('Author not found', 404);

@@ -41,12 +41,12 @@ class UserRepository implements UserRepositoryInterface
             ->getOneOrNullResult();
     }
 
-    public function setUserBannedStatus(int $userId , bool $isBanned): void
+    public function setUserBannedStatus(int $userId, bool $isBanned): void
     {
         $this->entityManager
             ->createQueryBuilder()
             ->update(User::class, 'u')
-            ->set('u.isBanned',':is_banned')
+            ->set('u.isBanned', ':is_banned')
             ->where('u.id = :userId')
             ->setParameter('userId', $userId)
             ->setParameter('is_banned', $isBanned)
@@ -61,7 +61,7 @@ class UserRepository implements UserRepositoryInterface
 
     public function getAllUsers(): array
     {
-        return $this -> entityManager
+        return $this->entityManager
             ->createQueryBuilder()
             ->select('u')
             ->from(User::class, 'u')

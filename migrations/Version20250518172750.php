@@ -20,16 +20,20 @@ final class Version20250518172750 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql(<<<'SQL'
+        $this->addSql(
+            <<<'SQL'
             ALTER TABLE "user" ADD is_banned BOOLEAN NOT NULL
-        SQL);
+        SQL
+        );
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql(<<<'SQL'
+        $this->addSql(
+            <<<'SQL'
             ALTER TABLE public."user" DROP is_banned
-        SQL);
+        SQL
+        );
     }
 }

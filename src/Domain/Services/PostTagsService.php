@@ -19,9 +19,11 @@ use Pri301\Blog\Domain\Repository\TagRepositoryInterface;
 class PostTagsService implements PostTagsServiceInterface
 {
     public function __construct(
-        private  readonly PostTagsRepositoryInterface $postTagsRepository
-    ) {}
-    public function getTagsByPostId(int $postId):array
+        private readonly PostTagsRepositoryInterface $postTagsRepository
+    ) {
+    }
+
+    public function getTagsByPostId(int $postId): array
     {
         return $this->postTagsRepository->getAllPostTags($postId);
     }

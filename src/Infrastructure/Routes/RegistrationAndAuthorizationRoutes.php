@@ -7,6 +7,6 @@ use Pri301\Blog\Infrastructure\Middlewares\RegisterUserMiddleware;
 use Slim\App;
 
 return function (App $app) {
-    $app->post('/register', RegisterHandler::class)->add(RegisterUserMiddleware::class); //+
-    $app->post('/login', LoginHandler::class)->add(LoginUserMiddleware::class); //+
+    $app->post('/register', RegisterHandler::class)->add(RegisterUserMiddleware::class);
+    $app->post('/login', LoginHandler::class)->add(LoginUserMiddleware::class);
 };

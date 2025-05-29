@@ -26,19 +26,20 @@ use Pri301\Blog\Infrastructure\Middlewares\AdminModeratorMiddleware;
 use Pri301\Blog\Application\Handlers\GetPostsBySubstrForUserHandler;
 use Slim\App;
 use Pri301\Blog\Application\Handlers\GetPostsBySubstrHandler;
+
 return function (App $app) {
-    $app->get('/posts/published', GetPublishedPostsHandler::class) // +
+    $app->get('/posts/published', GetPublishedPostsHandler::class)
         ->add(GetPublishedPostsMiddleware::class);
 
-    $app->get('/posts/unpublished', GetUnpublishedPostsHandler::class) // +
+    $app->get('/posts/unpublished', GetUnpublishedPostsHandler::class)
         ->add(GetUnpublishedPostsMiddleware::class)
         ->add(JWTMiddleware::class);
 
-    $app->delete('/posts/{id:[0-9]+}', DeletePostHandler::class) // Добавить чеки на модератора и админа
+    $app->delete('/posts/{id:[0-9]+}', DeletePostHandler::class)
         ->add(DeletePostMiddleware::class)
         ->add(JWTMiddleware::class);
 
-    $app->post('/posts', CreatePostHandler::class) // +
+    $app->post('/posts', CreatePostHandler::class)
         ->add(CreatePostMiddleware::class)
         ->add(JWTMiddleware::class);
     $app->get('/posts/list', GetPostsHandler::class)
@@ -58,11 +59,11 @@ return function (App $app) {
 
     $app->get('/categories', GetCategoriesHandler::class);
 
-    $app->get('/post/substrwithlogin',GetPostsBySubstrForUserHandler::class)
+    $app->get('/post/substrwithlogin', GetPostsBySubstrForUserHandler::class)
         ->add(GetPostsBySubstrForUserMiddleware::class)
         ->add(JWTMiddleware::class);
 
-    $app->get('/post/substr' , GetPostsBySubstrHandler::class)
+    $app->get('/post/substr', GetPostsBySubstrHandler::class)
         ->add(GetPostsBySubstrMiddleware::class);
 
     $app->get('/posts/unpublished/all', GetAllUnpublishedHandler::class)

@@ -10,8 +10,7 @@ class LimitedArticleResponse
         public readonly string $article_text,
         public readonly string $author_login,
         public readonly string $author_name,
-        public readonly int $article_likes_count)
-    {
-
+        public readonly int $article_likes_count
+    ) {
     }
 }

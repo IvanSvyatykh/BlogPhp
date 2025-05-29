@@ -16,27 +16,27 @@ use Slim\Psr7\Response;
 final class GetUnpublishedPostsHandler
 {
     public function __construct(
-        private readonly PostServiceInterface     $postService,
-        private readonly UserServiceInterface     $userService,
-        private readonly LikeServiceInterface     $likeService,
-        private readonly TypeServiceInterface     $typeService,
+        private readonly PostServiceInterface $postService,
+        private readonly UserServiceInterface $userService,
+        private readonly LikeServiceInterface $likeService,
+        private readonly TypeServiceInterface $typeService,
         private readonly PostTagsServiceInterface $postTagsService,
-    ){}
+    ) {
+    }
 
     public function __invoke(Request $request, Response $response): Response
     {
-        $dto   = $request->getAttribute('dto');
+        $dto = $request->getAttribute('dto');
         $login = $dto->userLogin;
-        $user  = $this->userService->getUserByLogin($login);
+        $user = $this->userService->getUserByLogin($login);
 
         if (!$user) {
-            return $this->errorResponse('Author not found' , 404);
+            return $this->errorResponse('Author not found', 404);
         }
 
         $result = array();
         $posts = $this->postService->getUnpublishedPostsByUser($user->getId());
-        foreach ($posts as $post)
-        {
+        foreach ($posts as $post) {
             $author = $this->userService->getUserById($post->getAuthor()->getId());
             $article = new LimitedArticleResponse(
                 article_id: $post->getId(),
@@ -46,7 +46,7 @@ final class GetUnpublishedPostsHandler
                 author_name: $author->getName(),
                 article_likes_count: $this->likeService->countLikes($post->getId()),
             );
-            $result[]=$article;
+            $result[] = $article;
         }
 
         return $this->json($response, $result);

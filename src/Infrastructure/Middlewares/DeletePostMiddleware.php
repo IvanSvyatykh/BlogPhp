@@ -7,6 +7,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
 use Slim\Psr7\Response;
 use Slim\Routing\RouteContext;
+
 use function count;
 
 final class DeletePostMiddleware extends BaseValidationMiddleware

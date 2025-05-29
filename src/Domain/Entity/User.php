@@ -5,7 +5,7 @@ namespace Pri301\Blog\Domain\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'user',schema: "public")]
+#[ORM\Table(name: 'user', schema: "public")]
 class User
 {
     #[ORM\Id]
@@ -13,35 +13,35 @@ class User
     #[ORM\Column(type: "integer")]
     private int $id;
 
-    #[ORM\Column(type:"string", length:255,nullable:false)]
+    #[ORM\Column(type: "string", length: 255, nullable: false)]
     private string $name;
 
-    #[ORM\Column(type:"string", length:255,unique: true,nullable:false)]
+    #[ORM\Column(type: "string", length: 255, unique: true, nullable: false)]
     private string $login;
 
-    #[ORM\Column(type:"string", length:255,nullable:false)]
+    #[ORM\Column(type: "string", length: 255, nullable: false)]
     private string $password;
 
-    #[ORM\Column(type:"boolean", name:'is_admin',nullable:false)]
+    #[ORM\Column(type: "boolean", name: 'is_admin', nullable: false)]
     private bool $isAdmin = false;
 
-    #[ORM\Column(type:"boolean", name:'is_moderator',nullable:false)]
+    #[ORM\Column(type: "boolean", name: 'is_moderator', nullable: false)]
     private bool $isModerator = false;
 
-    #[ORM\Column(type:"boolean", name:'is_banned',nullable:false)]
+    #[ORM\Column(type: "boolean", name: 'is_banned', nullable: false)]
     private bool $isBanned = false;
 
-    #[ORM\Column(type:"datetime", name: 'created_at',nullable:false)]
+    #[ORM\Column(type: "datetime", name: 'created_at', nullable: false)]
     private \DateTime $createdAt;
 
 
-    public function __construct(string $name,string $login,string $password)
+    public function __construct(string $name, string $login, string $password)
     {
         $this->name = $name;
         $this->login = $login;
         $this->password = $password;
         $this->createdAt = new \DateTime();
-        $this -> isBanned = false;
+        $this->isBanned = false;
     }
 
     public function isBanned(): bool

@@ -14,7 +14,8 @@ class CreateCommentHandler
     public function __construct(
         private CommentServiceInterface $commentService,
         private readonly UserServiceInterface $userService,
-    ){}
+    ) {
+    }
 
     public function __invoke(Request $request, Response $response): Response
     {

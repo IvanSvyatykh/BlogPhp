@@ -5,7 +5,7 @@ namespace Pri301\Blog\Domain\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'posts',schema: "public")]
+#[ORM\Table(name: 'posts', schema: "public")]
 class Post
 {
     #[ORM\Id]
@@ -25,13 +25,14 @@ class Post
     #[ORM\JoinColumn(name: 'status_id', referencedColumnName: 'id', nullable: false)]
     private Status $status;
     #[ORM\ManyToOne(targetEntity: Type::class)]
-    #[ORM\JoinColumn(name:'post_type_id', referencedColumnName: 'id')]
-    private ?Type $type=null;
+    #[ORM\JoinColumn(name: 'post_type_id', referencedColumnName: 'id')]
+    private ?Type $type = null;
+
     public function __construct(
-        string     $title,
-        string     $content,
-        User       $author,
-        Status     $status,
+        string $title,
+        string $content,
+        User $author,
+        Status $status,
     ) {
         $this->title = $title;
         $this->content = $content;
@@ -41,27 +42,63 @@ class Post
     }
 
     // Getters and setters
-    public function getId(): int { return $this->id; }
-    public function getTitle(): string { return $this->title; }
-    public function getContent(): string { return $this->content; }
-    public function getCreatedAt(): \DateTime { return $this->createdAt; }
-    public function getAuthor(): ?User { return $this->author; }
-    public function getStatus(): Status { return $this->status; }
-    public function getType(): ?Type { return $this->type; }
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function getContent(): string
+    {
+        return $this->content;
+    }
+
+    public function getCreatedAt(): \DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function getStatus(): Status
+    {
+        return $this->status;
+    }
+
+    public function getType(): ?Type
+    {
+        return $this->type;
+    }
+
     public function setTitle(string $title): void
     {
         $this->title = $title;
     }
-    public function setContent(string $content): void{
+
+    public function setContent(string $content): void
+    {
         $this->content = $content;
     }
 
-    public function setStatus(Status $status): void{
+    public function setStatus(Status $status): void
+    {
         $this->status = $status;
     }
-    public function setType(Type $type): void{
 
+    public function setType(Type $type): void
+    {
         $this->type = $type;
     }
-    public function setAuthor(User $author): void { $this->author = $author; }
+
+    public function setAuthor(User $author): void
+    {
+        $this->author = $author;
+    }
 }

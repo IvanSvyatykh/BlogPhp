@@ -16,6 +16,7 @@ use DomainException;
 use InvalidArgumentException;
 
 use UnexpectedValueException;
+
 class JWTMiddleware implements MiddlewareInterface
 {
 
@@ -43,14 +44,13 @@ class JWTMiddleware implements MiddlewareInterface
             $decoded = JWT::decode($jwt, new Key($this->secretKey, $this->algorithm));
             $request = $request->withAttribute('token', $decoded);
             return $handler->handle($request);
-
         } catch (ExpiredException $e) {
             return $this->createErrorResponse('Token has expired', 401);
         } catch (SignatureInvalidException $e) {
             return $this->createErrorResponse('Invalid token signature', 401);
         } catch (BeforeValidException $e) {
             return $this->createErrorResponse('Token not yet valid', 401);
-        } catch (DomainException | InvalidArgumentException | UnexpectedValueException $e) {
+        } catch (DomainException|InvalidArgumentException|UnexpectedValueException $e) {
             return $this->createErrorResponse('Invalid token', 401);
         }
     }

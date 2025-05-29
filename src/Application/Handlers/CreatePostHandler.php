@@ -14,11 +14,12 @@ final class CreatePostHandler
     public function __construct(
         private PostServiceInterface $postService,
         private readonly UserServiceInterface $userService,
-    ){}
+    ) {
+    }
 
     public function __invoke(Request $request, Response $response): Response
     {
-        $dto  = $request->getAttribute('dto');
+        $dto = $request->getAttribute('dto');
         $user = $this->userService->getUserByLogin($dto->authorLogin);
 
         if (!$user) {
@@ -29,7 +30,6 @@ final class CreatePostHandler
             'content' => $dto->content,
             'tags' => $dto->postTags,
         ], $user->getId());
-
 
 
         return $this->json($response, ['article_id' => $post->getId()], 201);

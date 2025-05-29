@@ -20,22 +20,30 @@ final class Version20250529083939 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql(<<<'SQL'
+        $this->addSql(
+            <<<'SQL'
             ALTER TABLE posts ALTER title TYPE TEXT
-        SQL);
-        $this->addSql(<<<'SQL'
+        SQL
+        );
+        $this->addSql(
+            <<<'SQL'
             ALTER TABLE posts ALTER content TYPE TEXT
-        SQL);
+        SQL
+        );
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql(<<<'SQL'
+        $this->addSql(
+            <<<'SQL'
             ALTER TABLE public.posts ALTER title TYPE VARCHAR(50)
-        SQL);
-        $this->addSql(<<<'SQL'
+        SQL
+        );
+        $this->addSql(
+            <<<'SQL'
             ALTER TABLE public.posts ALTER content TYPE VARCHAR(255)
-        SQL);
+        SQL
+        );
     }
 }

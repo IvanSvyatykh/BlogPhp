@@ -20,22 +20,30 @@ final class Version20250527052741 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql(<<<'SQL'
+        $this->addSql(
+            <<<'SQL'
             DROP INDEX uniq_b98cdb9ea76ed395
-        SQL);
-        $this->addSql(<<<'SQL'
+        SQL
+        );
+        $this->addSql(
+            <<<'SQL'
             CREATE INDEX IDX_B98CDB9EA76ED395 ON posts (user_id)
-        SQL);
+        SQL
+        );
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql(<<<'SQL'
+        $this->addSql(
+            <<<'SQL'
             DROP INDEX public.IDX_B98CDB9EA76ED395
-        SQL);
-        $this->addSql(<<<'SQL'
+        SQL
+        );
+        $this->addSql(
+            <<<'SQL'
             CREATE UNIQUE INDEX uniq_b98cdb9ea76ed395 ON public.posts (user_id)
-        SQL);
+        SQL
+        );
     }
 }

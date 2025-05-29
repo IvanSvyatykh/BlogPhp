@@ -24,22 +24,22 @@ class CommentRepository implements CommentRepositoryInterface
 
     public function findByPost(int $postId): array
     {
-       return   $this->entityManager
-           ->createQueryBuilder()
-           ->select('c')
-           ->from(Comment::class, 'c')
-           ->join('c.author', 'a')
-           ->where('c.post = :postId')
-           ->orderBy('c.createdAt', 'DESC')
-           ->setParameter('postId', $postId)
-           ->getQuery()
-           ->getResult();
+        return $this->entityManager
+            ->createQueryBuilder()
+            ->select('c')
+            ->from(Comment::class, 'c')
+            ->join('c.author', 'a')
+            ->where('c.post = :postId')
+            ->orderBy('c.createdAt', 'DESC')
+            ->setParameter('postId', $postId)
+            ->getQuery()
+            ->getResult();
     }
 
     public function addComment(Comment $comment): void
     {
-       $this->entityManager->persist($comment);
-       $this->entityManager->flush();
+        $this->entityManager->persist($comment);
+        $this->entityManager->flush();
     }
 
     public function deleteComment(int $id): int

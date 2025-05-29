@@ -26,7 +26,8 @@ class PostService implements PostServiceInterface
         private TagRepositoryInterface $tagRepository,
         private PostTagsRepositoryInterface $postTagsRepository,
         private TypeRepositoryInterface $typeRepository
-    ) {}
+    ) {
+    }
 
     public function createPost(array $data, int $authorId): Post
     {
@@ -40,13 +41,13 @@ class PostService implements PostServiceInterface
         $postId = $this->postRepository->addPost($post);
         $tags = $data['tags'];
         foreach ($tags as $tag_name) {
-
             $tagId = $this->tagRepository->getTagIdByName($tag_name);
             if (!$tagId) {
                 $tag = new Tag($tag_name);
                 $this->tagRepository->addTag($tag);
-                $tagId = $tag->getId();            }
-            $postTag = new PostTag($post,$this->entityManager->getReference(Tag::class, $tagId));
+                $tagId = $tag->getId();
+            }
+            $postTag = new PostTag($post, $this->entityManager->getReference(Tag::class, $tagId));
             $this->postTagsRepository->addTag($postTag);
         }
 
@@ -68,6 +69,7 @@ class PostService implements PostServiceInterface
     {
         return $this->postRepository->findAllByUser($authorId, $limit, $offset);
     }
+
     /**
      * @return Post[]
      */
@@ -80,7 +82,7 @@ class PostService implements PostServiceInterface
     public function getUnpublishedPostsByUser(int $userId): array
     {
         $publishStatusId = $this->statusRepository->getPendingStatusId();
-        return $this->postRepository->findUnpublishedByUserId($userId,$publishStatusId);
+        return $this->postRepository->findUnpublishedByUserId($userId, $publishStatusId);
     }
 
     public function rejectPost(int $postId): void
@@ -92,22 +94,22 @@ class PostService implements PostServiceInterface
     public function getPendingPosts(int $limit = 10, int $offset = 0): array
     {
         $pendingStatusId = $this->statusRepository->getPendingStatusId();
-        return $this->postRepository->getArticlesByStatus($pendingStatusId,$limit,$offset);
+        return $this->postRepository->getArticlesByStatus($pendingStatusId, $limit, $offset);
     }
 
     public function getPostsBySubstrAtContent(string $substr): array
     {
-        $result =  $this->postRepository->getPostBySubstrAtContent($substr);
-        return  $result;
+        $result = $this->postRepository->getPostBySubstrAtContent($substr);
+        return $result;
     }
 
     public function getPostsBySubstrAtTitle(string $substr): array
     {
-        $result =  $this->postRepository->getPostsBySubstrAtTitle($substr);
-        return  $result;
+        $result = $this->postRepository->getPostsBySubstrAtTitle($substr);
+        return $result;
     }
 
-    public function publishPost(int $postId , int $categoryId): void
+    public function publishPost(int $postId, int $categoryId): void
     {
         $publishStatusId = $this->statusRepository->getPublishStatusId();
         $this->postRepository->updatePostTypeAndStatusById($postId, $categoryId, $publishStatusId);
@@ -133,8 +135,7 @@ class PostService implements PostServiceInterface
     public function getPostsBySubstrAtTag(string $substr): array
     {
         $tags = $this->tagRepository->getTagsBySubstr($substr);
-        if (!$tags)
-        {
+        if (!$tags) {
             return [];
         }
         $postsId = $this->postTagsRepository->getPostsIdsByTag($tags);
@@ -144,8 +145,7 @@ class PostService implements PostServiceInterface
     public function getPostsBySubstrAtType(string $substr): array
     {
         $type = $this->typeRepository->getTypeIdsBySubstr($substr);
-        if (!$type)
-        {
+        if (!$type) {
             return [];
         }
 

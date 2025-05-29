@@ -1,4 +1,5 @@
 <?php
+
 namespace Pri301\Blog\Application\Handlers;
 
 use Pri301\Blog\Domain\Services\PostServiceInterface;
@@ -9,7 +10,8 @@ final class GetPostsHandler
 {
     public function __construct(
         private PostServiceInterface $postService,
-    ){}
+    ) {
+    }
 
     public function __invoke(Request $request, Response $response): Response
     {

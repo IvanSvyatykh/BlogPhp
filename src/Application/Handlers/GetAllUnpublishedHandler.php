@@ -18,14 +18,14 @@ class GetAllUnpublishedHandler
         private readonly LikeServiceInterface $likeService,
         private readonly PostTagsServiceInterface $postTagsService,
         private readonly UserServiceInterface $userService
-    ) {}
+    ) {
+    }
 
     public function __invoke(Request $request, Response $response): Response
     {
         $posts = $this->postService->getAllUnpublishedPosts();
         $result = array();
-        foreach ($posts as $post)
-        {
+        foreach ($posts as $post) {
             $author = $post->getAuthor();
             $article = new ArticleResponse(
                 article_id: $post->getId(),
@@ -33,11 +33,11 @@ class GetAllUnpublishedHandler
                 article_text: $post->getContent(),
                 author_login: $author->getLogin(),
                 author_name: $author->getName(),
-                article_likes_count:  $this->likeService->countLikes($post->getId()),
+                article_likes_count: $this->likeService->countLikes($post->getId()),
                 article_category: "",
                 article_tags: $this->postTagsService->getTagsByPostId($post->getId()),
             );
-            $result[]=$article;
+            $result[] = $article;
         }
 
         return $this->json($response, $result);

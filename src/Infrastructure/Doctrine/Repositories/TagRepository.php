@@ -2,6 +2,7 @@
 
 
 namespace Pri301\Blog\Infrastructure\Doctrine\Repositories;
+
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
 use Pri301\Blog\Domain\Entity\Tag;
@@ -33,7 +34,7 @@ class TagRepository implements TagRepositoryInterface
             ->select('t')
             ->from(Tag::class, 't')
             ->where('t.tag LIKE :substr')
-            ->setParameter('substr', '%'.$substr.'%')
+            ->setParameter('substr', '%' . $substr . '%')
             ->getQuery()
             ->getResult();
     }
@@ -42,7 +43,6 @@ class TagRepository implements TagRepositoryInterface
     {
         $this->entityManager->persist($tag);
         $this->entityManager->flush();
-
     }
 
     public function getTagIdByName(string $name): ?int
@@ -56,7 +56,7 @@ class TagRepository implements TagRepositoryInterface
             ->getQuery()
             ->getOneOrNullResult(AbstractQuery::HYDRATE_SINGLE_SCALAR);
 
-        return $result ? (int) $result : null;
+        return $result ? (int)$result : null;
     }
 
 

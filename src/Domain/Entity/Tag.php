@@ -1,17 +1,19 @@
 <?php
+
 namespace Pri301\Blog\Domain\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[Orm\Table(name: 'tags',schema: "public")]
-class Tag {
+#[Orm\Table(name: 'tags', schema: "public")]
+class Tag
+{
 
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
     #[ORM\Column(type: 'integer', unique: true, nullable: false)]
     private int $id;
-    #[ORM\Column(type: 'string', length: 50, unique: true,nullable: false)]
+    #[ORM\Column(type: 'string', length: 50, unique: true, nullable: false)]
     private string $tag;
 
     public function __construct(string $tag)

@@ -8,6 +8,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
 use Symfony\Component\Validator\Validation;
+
 class GetAllPostsMiddleware implements MiddlewareInterface
 {
     public function process(Request $request, Handler $handler): Response

@@ -11,7 +11,9 @@ final class PublishPostHandler
 {
 
 
-    public function __construct(private PostServiceInterface $postService){}
+    public function __construct(private PostServiceInterface $postService)
+    {
+    }
 
 
     public function __invoke(Request $request, Response $response): Response

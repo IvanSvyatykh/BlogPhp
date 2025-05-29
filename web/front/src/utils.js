@@ -10,7 +10,7 @@ export function setTableColumns(table, columns) {
 }
 
 export function updateToolbarButtons(activeBtn) {
-    
+
     const buttons = $$("toolbarButtons").getChildViews();
     buttons.forEach(btn => {
         webix.html.removeCss(btn.$view, "selected")

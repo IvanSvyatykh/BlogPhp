@@ -4,9 +4,11 @@
 namespace Pri301\Blog\Domain\Repository;
 
 
-interface StatusRepositoryInterface{
-
+interface StatusRepositoryInterface
+{
     public function getPublishStatusId(): ?int;
+
     public function getPendingStatusId(): ?int;
+
     public function getRejectedStatusId(): ?int;
 }

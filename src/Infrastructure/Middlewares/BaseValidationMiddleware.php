@@ -20,7 +20,7 @@ abstract class BaseValidationMiddleware implements MiddlewareInterface
         $response = new Response($status);
         $response->getBody()->write(json_encode([
             'success' => false,
-            'errors'  => $errors
+            'errors' => $errors
         ]));
         return $response->withHeader('Content-Type', 'application/json');
     }

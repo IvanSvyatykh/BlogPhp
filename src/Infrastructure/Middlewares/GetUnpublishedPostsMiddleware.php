@@ -6,6 +6,7 @@ use Pri301\Blog\Application\DTO\Requests\GetUnpublishedPostsRequest;
 use Slim\Psr7\Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\RequestHandlerInterface as Handler;
+
 use function count;
 
 final class GetUnpublishedPostsMiddleware extends BaseValidationMiddleware

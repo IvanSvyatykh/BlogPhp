@@ -24,7 +24,6 @@ return function (App $app) {
         ->add(JWTMiddleware::class)
         ->add(AdminMiddleware::class);
 
-    $app->get('/users/namebylogin',GetUserNameByLoginHandler::class)
-    ->add(GetUserNameByLoginMiddleware::class);
-
+    $app->get('/users/namebylogin', GetUserNameByLoginHandler::class)
+        ->add(GetUserNameByLoginMiddleware::class);
 };

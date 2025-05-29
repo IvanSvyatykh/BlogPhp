@@ -12,7 +12,6 @@ use Symfony\Component\Validator\Validation;
 
 class GetPostsBySubstrForUserMiddleware implements MiddlewareInterface
 {
-
     public function process(Request $request, Handler $handler): Response
     {
         $data = $request->getQueryParams();

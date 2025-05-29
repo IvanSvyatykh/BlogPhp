@@ -7,6 +7,7 @@ use Doctrine\Migrations\DependencyFactory;
 use Symfony\Component\Console\Application;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider;
+
 $entityManager = require __DIR__ . '/../config/bootstrap.php';
 
 $config = new PhpFile(__DIR__ . '/../config/migrations.php');

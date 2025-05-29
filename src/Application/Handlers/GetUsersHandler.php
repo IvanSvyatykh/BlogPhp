@@ -10,9 +10,10 @@ final class GetUsersHandler
 {
     public function __construct(
         private UserServiceInterface $userService,
-    ){}
+    ) {
+    }
 
-    public function __invoke(Request $request, Response $response) : Response
+    public function __invoke(Request $request, Response $response): Response
     {
         $userList = $this->userService->getUsersList();
         return $this->json($response, $userList);

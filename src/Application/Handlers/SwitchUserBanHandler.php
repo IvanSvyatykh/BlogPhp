@@ -10,7 +10,9 @@ final class SwitchUserBanHandler
 {
     public function __construct(
         private UserServiceInterface $userService,
-    ){}
+    ) {
+    }
+
     public function __invoke(Request $request, Response $response): Response
     {
         $dto = $request->getAttribute('dto');

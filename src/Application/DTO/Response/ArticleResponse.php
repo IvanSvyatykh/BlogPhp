@@ -12,8 +12,7 @@ class ArticleResponse
         public readonly string $author_name,
         public readonly string $article_category,
         public readonly array $article_tags,
-        public readonly int $article_likes_count)
-    {
-
+        public readonly int $article_likes_count
+    ) {
     }
 }

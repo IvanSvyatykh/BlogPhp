@@ -1,6 +1,6 @@
 import "webix/webix.js";
-import { setupAuthInterceptor, setupAuthRedirect } from "./auth.js";
-import { JetApp, JetView } from "webix-jet";
+import {setupAuthInterceptor, setupAuthRedirect} from "./auth.js";
+import {JetApp, JetView} from "webix-jet";
 import UserView from "./views/user.js";
 import MainLayout from "./views/main.js";
 import MainToolBar from "./views/maintoolbar.js";
@@ -31,7 +31,6 @@ class MyApp extends JetApp {
         });
     }
 }
-
 
 
 document.addEventListener("DOMContentLoaded", () => {

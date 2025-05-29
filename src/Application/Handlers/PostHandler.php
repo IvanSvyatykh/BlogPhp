@@ -12,8 +12,7 @@ class PostHandler
     public function __construct(
         private readonly PostServiceInterface $postService,
         private readonly UserServiceInterface $userService,
-    )
-    {
+    ) {
     }
 
     public function getPublishedPosts(Request $req, Response $res): Response

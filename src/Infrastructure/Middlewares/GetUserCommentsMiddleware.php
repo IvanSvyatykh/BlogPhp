@@ -1,7 +1,6 @@
 <?php
 
 
-
 namespace Pri301\Blog\Infrastructure\Middlewares;
 
 use Pri301\Blog\Application\DTO\Requests\GetUserCommentsRequest;

@@ -1,25 +1,26 @@
 <?php
 
 namespace Pri301\Blog\Domain\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'likes',schema: "public")]
+#[ORM\Table(name: 'likes', schema: "public")]
 #[ORM\UniqueConstraint(name: 'unique_likes', columns: ['user_id', 'post_id'])]
 class Like
 {
 
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
-    #[ORM\Column(name:'id',type: 'integer', unique: true)]
+    #[ORM\Column(name: 'id', type: 'integer', unique: true)]
     private int $id;
 
     #[ORM\ManyToOne(targetEntity: Post::class)]
-    #[ORM\JoinColumn(name: 'post_id', referencedColumnName: 'id',nullable: false)]
+    #[ORM\JoinColumn(name: 'post_id', referencedColumnName: 'id', nullable: false)]
     private Post $post;
 
     #[ORM\ManyToOne(targetEntity: User::class)]
-    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id',nullable: false)]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false)]
     private User $user;
 
     #[ORM\Column(type: 'datetime', name: 'created_at')]
@@ -35,7 +36,18 @@ class Like
     }
 
     // Getters
-    public function getPost(): Post { return $this->post; }
-    public function getUser(): User { return $this->user; }
-    public function getCreatedAt(): \DateTime { return $this->createdAt; }
+    public function getPost(): Post
+    {
+        return $this->post;
+    }
+
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
+    public function getCreatedAt(): \DateTime
+    {
+        return $this->createdAt;
+    }
 }

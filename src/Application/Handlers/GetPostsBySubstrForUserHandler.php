@@ -15,6 +15,7 @@ use Pri301\Blog\Domain\Services\TypeServiceInterface;
 use Pri301\Blog\Domain\Services\UserServiceInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Psr7\Response;
+
 use function DI\add;
 
 final class GetPostsBySubstrForUserHandler
@@ -25,7 +26,8 @@ final class GetPostsBySubstrForUserHandler
         private readonly LikeServiceInterface $likeService,
         private readonly TypeServiceInterface $typeService,
         private readonly PostTagsServiceInterface $postTagsService,
-    ){}
+    ) {
+    }
 
     public function __invoke(Request $request, Response $response): Response
     {
@@ -35,42 +37,35 @@ final class GetPostsBySubstrForUserHandler
         $userLogin = $dto->userLogin;
         $result = array();
 
-        if ($part === PostPart::Author->value)
-        {
+        if ($part === PostPart::Author->value) {
             $users = $this->userService->getUserIdBySubstrAtName($substr);
 
-            foreach ($users as $user)
-            {
+            foreach ($users as $user) {
                 $user_info = $this->userService->getUserById($user);
 
                 $posts_by_user = $this->postService->getPublishedPostsByUser($user);
 
-                foreach ($posts_by_user as $post)
-                {
-
+                foreach ($posts_by_user as $post) {
                     $article = new ArticleResponseWithLikeState(
                         article_id: $post->getId(),
                         article_title: $post->getTitle(),
                         article_text: $post->getContent(),
                         author_login: $user_info->getLogin(),
                         author_name: $user_info->getName(),
-                        article_likes_count:  $this->likeService->countLikes($post->getId()),
+                        article_likes_count: $this->likeService->countLikes($post->getId()),
                         article_category: $this->typeService->getTypeById($post->getType()->getId()),
                         article_tags: $this->postTagsService->getTagsByPostId($post->getId()),
-                        isLiked: $this->likeService->hasLike($post->getId(),$userLogin)
+                        isLiked: $this->likeService->hasLike($post->getId(), $userLogin)
                     );
-                    $result[]=$article;
+                    $result[] = $article;
                 }
             }
         }
 
-        if ($part === PostPart::Article_name->value)
-        {
+        if ($part === PostPart::Article_name->value) {
             $result = array();
-            $posts = $this -> postService->getPostsBySubstrAtTitle($substr);
-            foreach ($posts as $post)
-            {
-
+            $posts = $this->postService->getPostsBySubstrAtTitle($substr);
+            foreach ($posts as $post) {
                 $author = $this->userService->getUserById($post->getAuthor()->getId());
                 $article = new ArticleResponseWithLikeState(
                     article_id: $post->getId(),
@@ -78,20 +73,18 @@ final class GetPostsBySubstrForUserHandler
                     article_text: $post->getContent(),
                     author_login: $author->getLogin(),
                     author_name: $author->getName(),
-                    article_likes_count:  $this->likeService->countLikes($post->getId()),
+                    article_likes_count: $this->likeService->countLikes($post->getId()),
                     article_category: $this->typeService->getTypeById($post->getType()->getId()),
                     article_tags: $this->postTagsService->getTagsByPostId($post->getId()),
-                    isLiked: $this->likeService->hasLike($post->getId(),$userLogin)
+                    isLiked: $this->likeService->hasLike($post->getId(), $userLogin)
                 );
-                $result[]=$article;
+                $result[] = $article;
             }
         }
-        if ($part === PostPart::ArticleText->value)
-        {
+        if ($part === PostPart::ArticleText->value) {
             $result = array();
-            $posts = $this -> postService->getPostsBySubstrAtContent($substr);
-            foreach ($posts as $post)
-            {
+            $posts = $this->postService->getPostsBySubstrAtContent($substr);
+            foreach ($posts as $post) {
                 $author = $this->userService->getUserById($post->getAuthor()->getId());
 
                 $article = new ArticleResponseWithLikeState(
@@ -100,21 +93,19 @@ final class GetPostsBySubstrForUserHandler
                     article_text: $post->getContent(),
                     author_login: $author->getLogin(),
                     author_name: $author->getName(),
-                    article_likes_count:  $this->likeService->countLikes($post->getId()),
+                    article_likes_count: $this->likeService->countLikes($post->getId()),
                     article_category: $this->typeService->getTypeById($post->getType()->getId()),
                     article_tags: $this->postTagsService->getTagsByPostId($post->getId()),
-                    isLiked: $this->likeService->hasLike($post->getId(),$userLogin)
+                    isLiked: $this->likeService->hasLike($post->getId(), $userLogin)
                 );
-                $result[]=$article;
+                $result[] = $article;
             }
         }
-        if ($part === PostPart::Type->value)
-        {
+        if ($part === PostPart::Type->value) {
             $result = array();
-            $posts = $this -> postService->getPostsBySubstrAtType($substr);
+            $posts = $this->postService->getPostsBySubstrAtType($substr);
 
-            foreach ($posts as $post){
-
+            foreach ($posts as $post) {
                 $author = $this->userService->getUserById($post->getAuthor()->getId());
                 $article = new ArticleResponseWithLikeState(
                     article_id: $post->getId(),
@@ -122,22 +113,20 @@ final class GetPostsBySubstrForUserHandler
                     article_text: $post->getContent(),
                     author_login: $author->getLogin(),
                     author_name: $author->getName(),
-                    article_likes_count:  $this->likeService->countLikes($post->getId()),
+                    article_likes_count: $this->likeService->countLikes($post->getId()),
                     article_category: $this->typeService->getTypeById($post->getType()->getId()),
                     article_tags: $this->postTagsService->getTagsByPostId($post->getId()),
-                    isLiked: $this->likeService->hasLike($post->getId(),$userLogin)
+                    isLiked: $this->likeService->hasLike($post->getId(), $userLogin)
                 );
-                $result[]=$article;
+                $result[] = $article;
             }
         }
         if ($part === PostPart::Tag->value) {
             $result = array();
             $postIds = $this->postService->getPostsBySubstrAtTag($substr);
             foreach ($postIds as $postId) {
-
                 $post = $this->postService->getPost($postId['post_id']);
-                if ($post->getStatus()->getId() != 1)
-                {
+                if ($post->getStatus()->getId() != 1) {
                     continue;
                 }
                 if ($post->getType() === null) {

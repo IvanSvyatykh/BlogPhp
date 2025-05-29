@@ -11,9 +11,12 @@ use Pri301\Blog\Domain\Repository\UserRepositoryInterface;
 
 class LikeService implements LikeServiceInterface
 {
-    public function __construct(private LikeRepositoryInterface $likeRepository,
-                                private UserRepositoryInterface $userRepository,
-                                private EntityManager $entityManager) {}
+    public function __construct(
+        private LikeRepositoryInterface $likeRepository,
+        private UserRepositoryInterface $userRepository,
+        private EntityManager $entityManager
+    ) {
+    }
 
     public function toggleLike(int $postId, string $userLogin): bool
     {

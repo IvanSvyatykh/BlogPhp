@@ -4,7 +4,6 @@
 namespace Pri301\Blog\Domain\Enum;
 
 enum PostPart: string
-
 {
     case Author = 'AUTHOR';
     case ArticleText = 'ARTICLE_TEXT';

@@ -1,6 +1,6 @@
-import { JetView } from "webix-jet";
+import {JetView} from "webix-jet";
 import MainToolBar from "./maintoolbar";
-import { updateToolbarButtons } from "../utils";
+import {updateToolbarButtons} from "../utils";
 
 export default class Info extends JetView {
     config() {
@@ -14,7 +14,7 @@ export default class Info extends JetView {
                 }
             ]
         };
-    }        
+    }
 
     ready() {
         updateToolbarButtons($$("infoButton"));
