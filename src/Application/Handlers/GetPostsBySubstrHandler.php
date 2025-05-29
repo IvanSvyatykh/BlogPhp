@@ -5,6 +5,7 @@ namespace Pri301\Blog\Application\Handlers;
 
 use Pri301\Blog\Application\DTO\Response\ArticleResponse;
 use Pri301\Blog\Domain\Enum\PostPart;
+use Pri301\Blog\Domain\Enum\PostStatus;
 use Pri301\Blog\Domain\Repository\PostTagsRepositoryInterface;
 use Pri301\Blog\Domain\Services\CommentServiceInterface;
 use Pri301\Blog\Domain\Services\LikeServiceInterface;
@@ -128,6 +129,10 @@ final class GetPostsBySubstrHandler
             foreach ($postIds as $postId){
 
                 $post = $this->postService->getPost($postId['post_id']);
+                if ($post->getStatus()->getStatus() != PostStatus::Published)
+                {
+                    continue;
+                }
                 if($post->getType()===null)
                 {
                     continue;
