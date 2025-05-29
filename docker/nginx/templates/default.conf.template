@@ -3,12 +3,38 @@ server {
     index index.php index.html;
     server_name ${NGINX_HOST};
     error_log /var/log/nginx/error.log;
+    access_log /var/log/nginx/access.log;
     root /var/www/web;
 
-    location / {
-        try_files $uri $uri/ /index.php?$query_string;
+    # Правильные MIME-типы
+    types {
+        application/javascript js mjs;
+        text/javascript jsx;
+        text/css css;
+        image/svg+xml svg;
     }
 
+    # Главная страница
+    location = / {
+        try_files /front/index.html =404;
+    }
+
+    # Статические файлы (JS, CSS, изображения)
+    location /src/ {
+        alias /var/www/web/front/src/;
+        try_files $uri $uri/ =404;
+        
+        # Кэширование статики
+        expires 1y;
+        add_header Cache-Control "public";
+    }
+
+    # Маршрутизация для SPA (если нужно)
+    location / {
+        try_files $uri $uri/ /front/index.html;
+    }
+
+    # Обработка PHP
     location ~ \.php$ {
         try_files $uri =404;
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
@@ -17,5 +43,10 @@ server {
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         fastcgi_param PATH_INFO $fastcgi_script_name;
+    }
+
+    # Запрет доступа к скрытым файлам
+    location ~ /\. {
+        deny all;
     }
 }

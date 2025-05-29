@@ -1,0 +1,154 @@
+@import "./colors.css";
+
+.main_container {
+    background: white;
+    display: flex;
+    height: 100vh;
+}
+
+.bigN_toolbar {
+    height: 100px;
+    width: 100px;
+}
+
+.login_button .webix_button {
+    background-color:var(--main-color);
+    color: white;
+    border: none;
+}
+
+.info_blank {
+    position: absolute;
+    top: 50%;
+    left: 55%;
+    transform: translate(-50%, -50%);
+    max-width: 70%;
+    max-height: 90%;
+}
+
+.user_extra_form {
+    width: 80px; 
+    height: 80px;
+    display: block;
+    margin: 0 auto;
+}
+
+.auth_header {
+    text-align: center;
+  margin: 0 auto;
+  display: block;
+ 
+}
+
+.user_post_form {
+    width: 20px; 
+    height: 20px;
+}
+
+.post_form {
+
+}
+
+.toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1em;
+    background: #415067;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    width: auto;
+}
+
+.logo_toolbar  {
+    height: 45px ;
+    display: block;
+}
+
+.main_toolbar_buttons {
+    margin-top: 150px !important;
+    height: inherit;
+}
+
+.logout_button {
+    position: absolute;
+    bottom: 20px;
+}
+
+.logout_button:hover {
+    color: white;
+}
+
+.main_button .webix_button {
+    font-size: 16px;
+    font-family: "Museo Sans Cyrl 900", sans-serif  !important;
+    font-weight: bold;
+    padding: 10px, 15px;
+    white-space: nowrap;
+    color: #ffffff;
+    background-color: #415067;
+}
+
+.main_button .webix_button:hover {
+    background-color: #415067;
+    color: #ccc;
+}
+
+.main_button.selected .webix_button {
+    background-color: #415067;
+    color: var(--main-color) !important;
+}
+
+.delete_button .webix_button {
+    background-color: red;
+    color: var(--main-color);
+}
+
+.input_required::before {
+    content: "*";
+    color: var(--main-color);
+    position: absolute;
+    left: 5px;
+}
+
+.add_button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    /*background: url('./add.svg') no-repeat center;*/
+}
+
+.user_edit_form {
+    margin-right: 20px;
+    position: relative;
+}
+
+
+.webix_el_box input {
+    box-sizing: border-box;
+    width: calc(100% - 1px) !important;
+}
+
+.webix_property_label {
+    font-family: "Museo Sans Cyrl 900", sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.webix_scroll_cont {
+    position: unset;
+} 
+
+.webix_inp_label {
+    width: auto !important;
+    height: auto !important;
+}
+
+.webix_el_box {
+    height: 100% !important;
+}
+
+.webix_tree .webix_tree_item.webix_selected {
+    background-color: var(--main-color);
+}
+

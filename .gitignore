@@ -1,3 +1,8 @@
 *.env
 .idea
 vendor
+node_modules/
+.vite/
+*.log
+.env*
+dist/
