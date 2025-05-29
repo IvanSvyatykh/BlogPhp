@@ -17,15 +17,3 @@ export function updateToolbarButtons(activeBtn) {
     });
     webix.html.addCss(activeBtn.$view, "selected");
 }
-
-export async function loadDevice() {
-    try {
-        const response = await webix.ajax().get(`${BASE_URL}/device`);
-        const deviceData = response.json();
-        localStorage.setItem("selectedDevice", JSON.stringify(deviceData));
-        webix.message("Устройство успешно загружено");
-    } catch (error) {
-        webix.message( {type: "error", message: error.response} );
-    }
-}
-

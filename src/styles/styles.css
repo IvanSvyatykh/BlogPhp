@@ -1,12 +1,52 @@
+@import "./colors.css";
+
 .main_container {
     background: white;
     display: flex;
     height: 100vh;
 }
 
-.vk_toolbar {
+.bigN_toolbar {
     height: 100px;
     width: 100px;
+}
+
+.login_button .webix_button {
+    background-color:var(--main-color);
+    color: white;
+    border: none;
+}
+
+.info_blank {
+    position: absolute;
+    top: 50%;
+    left: 55%;
+    transform: translate(-50%, -50%);
+    max-width: 70%;
+    max-height: 90%;
+}
+
+.user_extra_form {
+    width: 80px; 
+    height: 80px;
+    display: block;
+    margin: 0 auto;
+}
+
+.auth_header {
+    text-align: center;
+  margin: 0 auto;
+  display: block;
+ 
+}
+
+.user_post_form {
+    width: 20px; 
+    height: 20px;
+}
+
+.post_form {
+
 }
 
 .toolbar {
@@ -38,19 +78,6 @@
     color: white;
 }
 
-.blurred_svg {
-    width: 40vw;
-    height: auto;
-    /* filter: blur(5px); */
-    opacity: 0.7;
-    justify-content: center;
-    align-items: center;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 5%;
-    display: flex;
-}
-
 .main_button .webix_button {
     font-size: 16px;
     font-family: "Museo Sans Cyrl 900", sans-serif  !important;
@@ -68,27 +95,27 @@
 
 .main_button.selected .webix_button {
     background-color: #415067;
-    color: #f69233 !important;
+    color: var(--main-color) !important;
 }
 
 .delete_button .webix_button {
     background-color: red;
-    color: #f69233;
+    color: var(--main-color);
 }
 
 .input_required::before {
     content: "*";
-    color: red;
+    color: var(--main-color);
     position: absolute;
     left: 5px;
 }
 
-.add_user_button {
+.add_button {
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    background: url('./add.svg') no-repeat center;
+    /*background: url('./add.svg') no-repeat center;*/
 }
 
 .user_edit_form {
@@ -96,59 +123,6 @@
     position: relative;
 }
 
-
-.logo_prime {
-    width: 140px;
-    height: 120px; 
-    margin-left: 40px;
-}
-
-.logo_prime_box {
-    border-width: 0px 0px 0px !important;
-    
-}
-
-.device_label_container {
-    border: none !important;
-    background: transparent !important;
-    margin-left: 20px;
-}
-
-.device_info {
-    border: none;
-}
-
-.device_label {
-    font-size: 18px;
-    font-weight: bold;
-    text-align: center;
-    border: none;
-    font-family: "Museo Sans Cyrl 900", sans-serif;
-   
-}
-
-.device_id_title {
-    color: #aeb8c7;
-    font-weight: bold;
-    margin-right: 5px;
-}
-
-.device_id_value {
-    color: #8cabdd;
-    font-weight: bold;    
-}
-
-.scheme_tree {
-    height: fit-content !important;
-    border: none;
-    color: white;
-    background-color: #415067;
-    font-family: "Museo Sans Cyrl 900", sans-serif;
-}
-
-.scheme {
-    white-space: unset !important;
-}
 
 .webix_el_box input {
     box-sizing: border-box;
@@ -175,6 +149,6 @@
 }
 
 .webix_tree .webix_tree_item.webix_selected {
-    background-color: #f69233;
+    background-color: var(--main-color);
 }
 

@@ -1,4 +1,5 @@
 import { JetView } from "webix-jet";
+import { clearToken } from "../auth";
 
 export default class MainToolBar extends JetView {
     config() {
@@ -13,7 +14,7 @@ export default class MainToolBar extends JetView {
             rows: [
                 {
                     view: "button",
-                    template: `<img src = './src/styles/vk.svg', class='vk_toolbar'>`,
+                    template: `<img src = './src/styles/bigN.svg', class='bigN_toolbar'>`,
                     width: 100,
                     height: 100,
                     click: () => this.app.show("/main")
@@ -46,7 +47,7 @@ export default class MainToolBar extends JetView {
                             autowidth: true,
                             css: "main_button",
                             value: "Информация",
-                            click: () => apiInstnc.show("/")
+                            click: () => apiInstnc.show("/info")
                         }
                         
                     ],
@@ -65,6 +66,7 @@ export default class MainToolBar extends JetView {
     }
 
     logout() {
-        
+        clearToken();
+        this.app.show("/login");
     }
 }
