@@ -12,9 +12,9 @@ class Post
     #[ORM\GeneratedValue(strategy: 'SEQUENCE')]
     #[ORM\Column(type: 'integer', unique: true)]
     private int $id;
-    #[ORM\Column(type: 'string', length: 50)]
+    #[ORM\Column(type: 'text')]
     private string $title;
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: 'text')]
     private string $content;
     #[ORM\ManyToOne(targetEntity: User::class)]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
