@@ -15,7 +15,7 @@ class SwitchUserActivityMiddleware implements MiddlewareInterface
         $data = $request->getQueryParams();
 
         $dto = new SwitchUserActivityRequest();
-        $dto->userId = $data['userId'] ?? '';
+        $dto->userId = (int)$data['userId'] ?? '';
         $dto->banned = filter_var($data['banned'] ?? false, FILTER_VALIDATE_BOOLEAN);
 
 
