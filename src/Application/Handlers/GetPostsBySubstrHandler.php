@@ -129,7 +129,7 @@ final class GetPostsBySubstrHandler
             foreach ($postIds as $postId){
 
                 $post = $this->postService->getPost($postId['post_id']);
-                if ($post->getStatus()->getStatus() != PostStatus::Published)
+                if ($post->getStatus()->getId() != 1)
                 {
                     continue;
                 }
