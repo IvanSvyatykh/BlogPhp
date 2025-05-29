@@ -35,6 +35,35 @@ final class GetPostsBySubstrForUserHandler
         $userLogin = $dto->userLogin;
         $result = array();
 
+        if ($part === PostPart::Author->value)
+        {
+            $users = $this->userService->getUserIdBySubstrAtName($substr);
+
+            foreach ($users as $user)
+            {
+                $user_info = $this->userService->getUserById($user);
+
+                $posts_by_user = $this->postService->getPublishedPostsByUser($user);
+
+                foreach ($posts_by_user as $post)
+                {
+
+                    $article = new ArticleResponseWithLikeState(
+                        article_id: $post->getId(),
+                        article_title: $post->getTitle(),
+                        article_text: $post->getContent(),
+                        author_login: $user_info->getLogin(),
+                        author_name: $user_info->getName(),
+                        article_likes_count:  $this->likeService->countLikes($post->getId()),
+                        article_category: $this->typeService->getTypeById($post->getType()->getId()),
+                        article_tags: $this->postTagsService->getTagsByPostId($post->getId()),
+                        isLiked: $this->likeService->hasLike($post->getId(),$userLogin)
+                    );
+                    $result[]=$article;
+                }
+            }
+        }
+
         if ($part === PostPart::Article_name->value)
         {
             $result = array();
