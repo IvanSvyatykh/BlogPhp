@@ -136,6 +136,10 @@ final class GetPostsBySubstrForUserHandler
             foreach ($postIds as $postId) {
 
                 $post = $this->postService->getPost($postId['post_id']);
+                if ($post->getStatus()->getId() != 1)
+                {
+                    continue;
+                }
                 if ($post->getType() === null) {
                     continue;
                 }
