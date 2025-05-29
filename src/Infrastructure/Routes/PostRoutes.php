@@ -22,6 +22,7 @@ use Pri301\Blog\Infrastructure\Middlewares\GetAllPostsMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\AdminMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\ModeratorMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\PublishPostMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\AdminModeratorMiddleware;
 use Pri301\Blog\Application\Handlers\GetPostsBySubstrForUserHandler;
 use Slim\App;
 use Pri301\Blog\Application\Handlers\GetPostsBySubstrHandler;
@@ -48,12 +49,13 @@ return function (App $app) {
     $app->patch('/posts/publish', PublishPostHandler::class)
         ->add(PublishPostMiddleware::class)
         ->add(JWTMiddleware::class)
-        ->add(ModeratorMiddleware::class);
+        ->add(AdminModeratorMiddleware::class);
 
     $app->patch('/posts/reject', RejectPostHandler::class)
         ->add(AdminPostMiddleware::class)
         ->add(JWTMiddleware::class)
-        ->add(ModeratorMiddleware::class);
+        ->add(AdminModeratorMiddleware::class);
+
     $app->get('/categories', GetCategoriesHandler::class);
 
     $app->get('/post/substrwithlogin',GetPostsBySubstrForUserHandler::class)

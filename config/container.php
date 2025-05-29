@@ -67,6 +67,7 @@ use Pri301\Blog\Infrastructure\Middlewares\GetUserListMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\SwitchUserActivityMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\AdminMiddleware;
 use Pri301\Blog\Infrastructure\Middlewares\ModeratorMiddleware;
+use Pri301\Blog\Infrastructure\Middlewares\AdminModeratorMiddleware;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Validation;
 use Pri301\Blog\Infrastructure\Middlewares\GetPostsBySubstrForUserMiddleware;
@@ -121,6 +122,9 @@ return function (Container $container) {
     });
     $container->set(ModeratorMiddleware::class, function(Container $c) {
         return new ModeratorMiddleware($c->get(UserServiceInterface::class));
+    });
+    $container->set(AdminModeratorMiddleware::class, function(Container $c) {
+        return new AdminModeratorMiddleware($c->get(UserServiceInterface::class));
     });
     #Зависимости для БД
     $container->set(EntityManager::class, $entityManager);

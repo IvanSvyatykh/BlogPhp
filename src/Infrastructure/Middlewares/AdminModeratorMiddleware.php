@@ -2,7 +2,6 @@
 
 namespace Pri301\Blog\Infrastructure\Middlewares;
 
-use Pri301\Blog\Application\DTO\Requests\AdminPostRequest;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface;
@@ -12,9 +11,8 @@ use Pri301\Blog\Domain\Services\UserServiceInterface;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-class AdminMiddleware implements MiddlewareInterface
+class AdminModeratorMiddleware implements MiddlewareInterface
 {
-
     public function __construct(private UserServiceInterface $userService) {}
     public function process(Request $request, Handler $handler): Response
     {
@@ -26,7 +24,7 @@ class AdminMiddleware implements MiddlewareInterface
 
         $user = $this->userService->getUserByLogin($email);
 
-        if (!$user || !$user->IsAdmin()) {
+        if (!$user || (!$user->IsModerator() && !$user->IsAdmin())) {
             return $this->errorResponse('Forbidden', 403);
         }
 
@@ -56,8 +54,5 @@ class AdminMiddleware implements MiddlewareInterface
         } catch (\Throwable $e) {
             return null;
         }
-
-//        $request = $request->withAttribute('token', $decoded);
-//        return $handler->handle($request);
     }
 }
